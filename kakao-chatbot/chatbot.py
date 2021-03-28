@@ -16,6 +16,16 @@ def SendReturn(hwnd):
     win32api.PostMessage(hwnd, win32con.WM_KEYUP, win32con.VK_RETURN, 0)
 
 
+
+def timer(sec, command):
+    kakao_sendtext(command)
+    for i in range(sec):
+        print("타이머 : ", (sec - i))
+        time.sleep(1)
+
+
+
+
 # # 핸들
 hwndMain = win32gui.FindWindow(None, kakao_opentalk_name)
 hwndEdit = win32gui.FindWindowEx(hwndMain, None, "RICHEDIT50W", None)
@@ -25,16 +35,17 @@ hwndListControl = win32gui.FindWindowEx(hwndMain, None, "EVA_VH_ListControl_Dblc
 text = "*사냥"
 text2 = "*구매 0"
 # text = "*구매 2" # 2000
-for i in range(50):
-    for j in range(53):
+for i in range(3):
+    for j in range(43):
         kakao_sendtext(text)
         print(j, i)
-        time.sleep(1.5)
-    kakao_sendtext("*내정보")
-    time.sleep(3)
-    kakao_sendtext("*구매 0")
+        time.sleep(0.5)
     time.sleep(3)
     kakao_sendtext("*내정보")
+    time.sleep(3)
+    timer(50, "*회복")
+    kakao_sendtext("*내정보")
+    time.sleep(3)
     
 print("종료")
 # 427135 𝔾
