@@ -35,7 +35,7 @@ hwndListControl = win32gui.FindWindowEx(hwndMain, None, "EVA_VH_ListControl_Dblc
 text = "*사냥"
 text2 = "*구매 0"
 # text = "*구매 2" # 2000
-for i in range(3):
+for i in range(1):
     for j in range(43):
         kakao_sendtext(text)
         print(j, i)
@@ -49,6 +49,7 @@ for i in range(3):
     
 print("종료")
 # 427135 𝔾
+
 
 '''
 
