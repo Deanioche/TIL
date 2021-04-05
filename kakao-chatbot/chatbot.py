@@ -35,17 +35,22 @@ hwndListControl = win32gui.FindWindowEx(hwndMain, None, "EVA_VH_ListControl_Dblc
 text = "*사냥"
 text2 = "*구매 0"
 # text = "*구매 2" # 2000
-for i in range(1):
-    for j in range(43):
-        kakao_sendtext(text)
-        print(j, i)
-        time.sleep(0.5)
-    time.sleep(3)
-    kakao_sendtext("*내정보")
-    time.sleep(3)
-    timer(50, "*회복")
-    kakao_sendtext("*내정보")
-    time.sleep(3)
+# for i in range(1):
+#     for j in range(43):
+#         kakao_sendtext(text)
+#         print(j, i)
+#         time.sleep(0.5)
+#     time.sleep(3)
+#     kakao_sendtext("*내정보")
+#     time.sleep(3)
+#     timer(50, "*회복")
+#     kakao_sendtext("*내정보")
+#     time.sleep(3)
+
+
+while(1):
+    kakao_sendtext("*길드공격 1");
+    time.sleep(0.3);
     
 print("종료")
 # 427135 𝔾
