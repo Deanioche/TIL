@@ -17,3 +17,6 @@ print("나는 {1}색과 {0}색을 좋아해요." .format("첫번째", "두번째
 print("나는 {age} 살이며, {color}색을 좋아해요" .format(age=20, color="빨간"))
 
 # 방법 4
+age = 20
+color = "파랑"
+print(f"응애는 {age}살이고, {color}이 싫어요" .format(age = "응애", color = "핳앟")) # 20, 파랑이 뜸
