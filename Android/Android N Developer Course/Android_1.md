@@ -20,4 +20,3 @@ sp : scale independent pixel. size issame as dp but effected by 'user zoom level
 
 dp is used for everything except text.
 sp is used for text only.
-
