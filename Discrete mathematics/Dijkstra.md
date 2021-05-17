@@ -27,8 +27,8 @@ d[g] <- min{ d[g], d[d] + w(d, g) }; w(d, g) = 4 -> d[g] = 5. /
 Q = {c,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,z}
 
 d[b] = 2, Q' = {c, e}
-d[c] <- min{ d[c], d[b] + w(d, c) }; d[c] = 4. /
-d[e] <- min{ d[e], d[b] + w(d, e) }; d[e] = 3. /
+d[c] <- min{ d[c], d[b] + w(b, c) }; d[c] = 4. /
+d[e] <- min{ d[e], d[b] + w(b, e) }; d[e] = 3. /
 
 다음으로 가까운 e를 Q에서 제거하고
 Q = {c,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,z}
@@ -42,7 +42,7 @@ Q = {f,h,i,j,k,l,m,n,o,p,q,r,s,t,z}
 
 
 d[c] = 4. Q' = { f } (a, b, e는 Q에 존재하지 않음)
-d[f] <- min{ d[f], d[c] + w(c, f) }; d[f] = 6 동일.
+d[f] <- min{ d[f], d[c] + w(c, f) }; d[f] = 6.
 
 d[g] = 5. Q' = { f, k }
 d[f] <- min{ d[f], d[g] + w(g, f) }; (6 < 8) d[f] = 6 /
