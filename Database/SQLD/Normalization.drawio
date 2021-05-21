@@ -1,1 +1,68 @@
-<mxfile host="app.diagrams.net" modified="2021-05-21T08:18:47.697Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36" version="14.6.13" etag="lkgOWusP1k-sPp5ktMkK" type="github"><diagram id="yMqmRxsFKSuYLz45rzKb">UzV2zq1wL0osyPDNT0nNUTV2VTV2LsrPL4GwciucU3NyVI0MMlNUjV1UjYwMgFjVyA2HrCFY1qAgsSg1rwSLBiADYTaQg2Y1AA==</diagram></mxfile>
+<mxfile host="app.diagrams.net" modified="2021-05-21T08:52:42.570Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36" etag="YXqJLR7Mx7tXfaBZoxRa" version="14.6.13" type="github">
+  <diagram id="yMqmRxsFKSuYLz45rzKb" name="Page-1">
+    <mxGraphModel dx="415" dy="219" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="aa_f2ZGC6EdxBAOHI3M5-1" value="사번&lt;br&gt;&lt;br&gt;이름&lt;br&gt;전화번호목록" style="rounded=0;whiteSpace=wrap;html=1;align=left;spacingLeft=0;spacing=5;fontSize=13;horizontal=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="40" width="110" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="aa_f2ZGC6EdxBAOHI3M5-2" value="" style="endArrow=none;html=1;fontSize=13;exitX=0.011;exitY=0.426;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="aa_f2ZGC6EdxBAOHI3M5-1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="50" y="70" as="sourcePoint" />
+            <mxPoint x="150" y="70" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="aa_f2ZGC6EdxBAOHI3M5-11" value="&lt;table border=&quot;1&quot; width=&quot;100%&quot; cellpadding=&quot;4&quot; style=&quot;width: 100% ; height: 100% ; border-collapse: collapse&quot;&gt;&lt;tbody&gt;&lt;tr style=&quot;background-color: #a7c942 ; color: #ffffff ; border: 1px solid #98bf21&quot;&gt;&lt;th align=&quot;left&quot;&gt;사번&lt;/th&gt;&lt;th align=&quot;left&quot;&gt;이름&lt;/th&gt;&lt;th align=&quot;left&quot;&gt;전화번호목록&lt;/th&gt;&lt;/tr&gt;&lt;tr style=&quot;border: 1px solid #98bf21&quot;&gt;&lt;td&gt;1&lt;/td&gt;&lt;td&gt;가나다&lt;/td&gt;&lt;td&gt;010-1234-5678&lt;/td&gt;&lt;/tr&gt;&lt;tr style=&quot;background-color: #eaf2d3 ; border: 1px solid #98bf21&quot;&gt;&lt;td&gt;2&lt;/td&gt;&lt;td&gt;마바사&lt;/td&gt;&lt;td&gt;010-4567-8979, 010-2541-3652&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;" style="text;html=1;strokeColor=#c0c0c0;fillColor=#ffffff;overflow=fill;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="200" y="40" width="280" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="aa_f2ZGC6EdxBAOHI3M5-12" value="[ 데이터 모델 ]" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="40" y="20" width="90" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="aa_f2ZGC6EdxBAOHI3M5-13" value="[ 데이터 ]" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="200" y="20" width="60" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="aa_f2ZGC6EdxBAOHI3M5-14" value="사번&lt;br&gt;&lt;br&gt;이름" style="rounded=0;whiteSpace=wrap;html=1;align=left;spacingLeft=0;spacing=5;fontSize=13;horizontal=1;" vertex="1" parent="1">
+          <mxGeometry x="30" y="170" width="110" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="aa_f2ZGC6EdxBAOHI3M5-15" value="" style="endArrow=none;html=1;fontSize=13;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="aa_f2ZGC6EdxBAOHI3M5-14" target="aa_f2ZGC6EdxBAOHI3M5-14">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="40" y="200" as="sourcePoint" />
+            <mxPoint x="140" y="200" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="aa_f2ZGC6EdxBAOHI3M5-16" value="[ 사원 ]" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="20" y="150" width="60" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="aa_f2ZGC6EdxBAOHI3M5-17" value="사번 (FK)&lt;br&gt;순번&lt;br&gt;&lt;br&gt;전화번호" style="rounded=0;whiteSpace=wrap;html=1;align=left;spacingLeft=0;spacing=5;fontSize=13;horizontal=1;" vertex="1" parent="1">
+          <mxGeometry x="200" y="170" width="110" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="aa_f2ZGC6EdxBAOHI3M5-18" value="" style="endArrow=none;html=1;fontSize=13;entryX=1;entryY=0.624;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.001;exitY=0.611;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="aa_f2ZGC6EdxBAOHI3M5-17" target="aa_f2ZGC6EdxBAOHI3M5-17">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="201" y="190" as="sourcePoint" />
+            <mxPoint x="310" y="200" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="aa_f2ZGC6EdxBAOHI3M5-19" value="[ 전화번호 ]" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="185" y="150" width="90" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="aa_f2ZGC6EdxBAOHI3M5-20" value="" style="endArrow=ERzeroToMany;html=1;fontSize=13;exitX=1;exitY=0.5;exitDx=0;exitDy=0;startArrow=ERone;startFill=0;endFill=1;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="140.0000000000001" y="194.79000000000002" as="sourcePoint" />
+            <mxPoint x="200" y="195.21" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="aa_f2ZGC6EdxBAOHI3M5-23" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERone;endFill=0;jumpSize=6;startSize=7;" edge="1" parent="1" source="aa_f2ZGC6EdxBAOHI3M5-14">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="140" y="195" as="sourcePoint" />
+            <mxPoint x="196" y="195" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="190" y="195" />
+              <mxPoint x="190" y="195" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
