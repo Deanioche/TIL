@@ -369,4 +369,3 @@ SELECT A.고객번호, TO_CHAR(A.주문일자 , 'yyyymmdd') as 주문일자, MIN
 
 #
 
-
