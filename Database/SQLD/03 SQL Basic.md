@@ -36,3 +36,32 @@ SQL문은
 - 행(Row)은 테이블에 저장된 개별 데이터를 의미한다. 데이터 모델 상에 개별 행들을 표시하진 않지만, 개념적으로는 인스턴스(Instance)와 매칭된다.
 - 칼럼(Column)은 데이터 모델 상의 속성(Attribute)와 매칭된다.
 
+#
+
+**# DISTINCT**
+- SELECT DISTINCT val1 FROM Table01;
+- DISTINCT는 SELECT시 해당 컬럼의 중복값을 제외한 결과를 출력한다.
+- 만약 val1이 Primary key거나 unique 속성을 가지고 있다면 중복값이 존재할수 없으므로 DISTINCT를 쓸 필요가 없다.
+
+#
+
+**테이블 별칭 지정**
+
+- 테이블에 별칭을 지정할 경우 테이블명 대신 별칭을 지정해야 한다.
+
+```sql
+1.
+SELECT T1.* FROM T1;
+
+2.
+SELECT A.* FROM T1 A;
+
+3.
+SELECT T1.C1 FROM T1 A;
+
+4.
+SELECT C1 FROM T1 A;
+```
+3. 테이블에 별칭 A를 지정했기 때문에, SELECT 절에서 애스터리스크를 한정할 때 별칭 A를 사용해야 한다. 그러나 테이블명을 사용했으므로 `에러`.
+
+4. 

@@ -8,8 +8,7 @@
 
 ## **1. 주요 용어**
 
-<img src="https://user-images.githubusercontent.com/66513003/117992595-066b2800-b37a-11eb-9800-49d196e8c28d.png
-" width="100">
+<img src="https://user-images.githubusercontent.com/66513003/117992595-066b2800-b37a-11eb-9800-49d196e8c28d.png" width="400">
 
 - (꼭지)점 : `vertex`, node, station
 
@@ -37,8 +36,7 @@
 " width="250">
 
 ### **# 예제**     2
-<img src="https://user-images.githubusercontent.com/66513003/117994387-75954c00-b37b-11eb-913f-7e347d05771d.png
-" width="400">
+<img src="https://user-images.githubusercontent.com/66513003/117994387-75954c00-b37b-11eb-913f-7e347d05771d.png" width="400">
     - 1번과 2번은 둘다 V1과 V3 사이에 Edge가 존재하므로 동일. (직, 곡선 여부 안따짐)
     - 3번은 1번을 90도 시계방향 회전시킨 것과 동일.
     - 4번은 V2와 V4 사이에 Edge가 있으므로 다름. `(E = (v2, v4)) != (E = (v1, v3))`
@@ -80,8 +78,7 @@
     - e 개수가 적음 `𝑬′ ⊆ 𝑬`
 
 ### **# 예제**     
-<img src="https://user-images.githubusercontent.com/66513003/118068341-2849c680-b3dd-11eb-9e09-74d9829d282e.png
-" width="400">
+<img src="https://user-images.githubusercontent.com/66513003/118068341-2849c680-b3dd-11eb-9e09-74d9829d282e.png" width="400">
 
 - G - (V, E) 집합으로 구성
 - V = {v1, v2, v3}
@@ -104,8 +101,7 @@
     - 𝒗 의 `진출차수(out-degree)` : 𝒗 에서 나가는 변의 수
 
 ### **# 예제**    
-<img src="https://user-images.githubusercontent.com/66513003/118069115-888d3800-b3de-11eb-88c6-f6a21caae516.png
-" width="100">
+<img src="https://user-images.githubusercontent.com/66513003/118069115-888d3800-b3de-11eb-88c6-f6a21caae516.png" width="400">
 - G의 총 차수는?
 ```
     𝒅𝒆𝒈 𝒂 = 𝟑
@@ -116,8 +112,7 @@
 ```
 
 ### *정리*
-<img src="https://user-images.githubusercontent.com/66513003/118069683-8d062080-b3df-11eb-87e9-59ace65ff44e.png
-" width="400">
+<img src="https://user-images.githubusercontent.com/66513003/118069683-8d062080-b3df-11eb-87e9-59ace65ff44e.png" width="400">
 
 #### **그래프에서 차수가 홀수인 꼭지점의 수는 짝수이다.**
 
@@ -125,8 +120,7 @@
 
 ### **# 예제**  
 
-<img src="https://user-images.githubusercontent.com/66513003/118070039-29c8be00-b3e0-11eb-9184-59bea5c4d4cf.png
-" width="400">
+<img src="https://user-images.githubusercontent.com/66513003/118070039-29c8be00-b3e0-11eb-9184-59bea5c4d4cf.png" width="400">
 
 - in-deg(𝒗𝟏) = 4
 - in-deg(𝒗𝟐) = 1
@@ -173,8 +167,7 @@ W를 `경로(path)`
     - circuit
 
 ### **# 예제**
-<img src="https://user-images.githubusercontent.com/66513003/118071056-fbe47900-b3e1-11eb-8c4d-07891c20c5d1.png
-" width="400">
+<img src="https://user-images.githubusercontent.com/66513003/118071056-fbe47900-b3e1-11eb-8c4d-07891c20c5d1.png" width="400">
 
 - 𝒗𝟏에서 𝒗𝟒까지의
     1.  워크 : 𝒆𝟏𝒆𝟐𝒆𝟐𝒆𝟑𝒆𝟒
@@ -195,8 +188,7 @@ W는 `닫힌 경로`로서 `사이클(cycle)`
 
 ### **# 예제**
 
-<img src="https://user-images.githubusercontent.com/66513003/118071056-fbe47900-b3e1-11eb-8c4d-07891c20c5d1.png
-" width="400">
+<img src="https://user-images.githubusercontent.com/66513003/118071056-fbe47900-b3e1-11eb-8c4d-07891c20c5d1.png" width="400">
 
 𝒗𝟏에서 𝒗𝟏까지의
 1. 닫힌 워크 : 𝒆𝟏𝒆𝟐𝒆𝟐𝒆𝟑𝒆𝟒𝒆𝟓
@@ -228,8 +220,7 @@ W는 `닫힌 경로`로서 `사이클(cycle)`
 
 ### **# 예제 1**
 
-<img src="https://user-images.githubusercontent.com/66513003/118073299-8929cc80-b3e6-11eb-98fd-eb8e5946105d.png
-" width="400">
+<img src="https://user-images.githubusercontent.com/66513003/118073299-8929cc80-b3e6-11eb-98fd-eb8e5946105d.png" width="400">
 
 1. 무작위로 꼭지점 두개를 선택했을 때, `연결` 되어있는지 (그 사이에 path가 존재하는지)
     - 모든 꼭지점이 하나의 연결 성분이므로 `연결 그래프`이다.
@@ -241,8 +232,7 @@ W는 `닫힌 경로`로서 `사이클(cycle)`
 
 다음 그래프등 중에서 단순 연결 그래프를 찾으시오.
 
-<img src="https://user-images.githubusercontent.com/66513003/118073579-15d48a80-b3e7-11eb-9d4a-ad16098ce56c.png
-" width="400">
+<img src="https://user-images.githubusercontent.com/66513003/118073579-15d48a80-b3e7-11eb-9d4a-ad16098ce56c.png" width="400">
 
 - `단순 그래프`의 조건
     1. 루프가 없음.
@@ -278,8 +268,7 @@ W는 `닫힌 경로`로서 `사이클(cycle)`
 ### **# 예제**
 완전 그래프 𝑲𝟏, 𝑲𝟐, 𝑲𝟑, 𝑲𝟒, 𝑲𝟓, 𝑲𝟔는 다음과 같다.
 
-<img src="https://user-images.githubusercontent.com/66513003/118074301-99db4200-b3e8-11eb-9ffe-9c551305b52a.png
-" width="400">
+<img src="https://user-images.githubusercontent.com/66513003/118074301-99db4200-b3e8-11eb-9ffe-9c551305b52a.png" width="400">
 
 - Kn에서 n은 꼭지점의 갯수
     - G = (V, E)일 때, |V| = n
@@ -310,13 +299,11 @@ W는 `닫힌 경로`로서 `사이클(cycle)`
 
 - 𝑮를 `이분 그래프(bipartite graph)`
 
-<img src="https://user-images.githubusercontent.com/66513003/118074811-b4fa8180-b3e9-11eb-8355-f9df54721625.png
-" width="400">
+<img src="https://user-images.githubusercontent.com/66513003/118074811-b4fa8180-b3e9-11eb-8355-f9df54721625.png" width="400">
 
 ### **# 예제**
 
-<img src="https://user-images.githubusercontent.com/66513003/118075418-ede72600-b3ea-11eb-86e4-7269c0de239c.png
-" width="400">
+<img src="https://user-images.githubusercontent.com/66513003/118075418-ede72600-b3ea-11eb-86e4-7269c0de239c.png" width="400">
 
 - 꼭지점 집합 V1과 V2 의 사이에는 각각 변을 하나씩만 잇는다. (인접)
 - V1끼리, V2끼리는 연결되지 않는다.
@@ -335,8 +322,7 @@ W는 `닫힌 경로`로서 `사이클(cycle)`
 - 𝑲𝒎,𝒏 ∶ 𝑽𝟏 = 𝒎, 𝑽𝟐 = 𝒏인
 완전 이분 그래프
 
-<img src="https://user-images.githubusercontent.com/66513003/118075620-5930f800-b3eb-11eb-8b4d-e50c19cbbde5.png
-" width="400">
+<img src="https://user-images.githubusercontent.com/66513003/118075620-5930f800-b3eb-11eb-8b4d-e50c19cbbde5.png" width="400">
 - G가 이분그래프일때, E의 모든 edge(∀e)에 대해서 edge에 속하는 v1은 V1에, v2는 V2에 속해야 한다.
 
 ### **# 예제**
@@ -363,13 +349,11 @@ W는 `닫힌 경로`로서 `사이클(cycle)`
 ### **# 예제**
 정규그래프
 
-<img src="https://user-images.githubusercontent.com/66513003/118076397-00625f00-b3ed-11eb-8170-57c8cd1473e8.png
-" width="400">
+<img src="https://user-images.githubusercontent.com/66513003/118076397-00625f00-b3ed-11eb-8170-57c8cd1473e8.png" width="400">
 
 - 3-정규 그래프는 K4 `(완전 그래프)`
 
-<img src="https://user-images.githubusercontent.com/66513003/118076405-05bfa980-b3ed-11eb-87ca-68643941ccfa.png
-" width="400">
+<img src="https://user-images.githubusercontent.com/66513003/118076405-05bfa980-b3ed-11eb-87ca-68643941ccfa.png" width="400">
 
 #
 
@@ -392,8 +376,7 @@ W는 `닫힌 경로`로서 `사이클(cycle)`
 ### **# 예제**
 다음 그래프를 발생행렬로 나타내시오.
 
-<img src="https://user-images.githubusercontent.com/66513003/118076949-20dee900-b3ee-11eb-85f8-f0733c632e0b.png
-" width="400">
+<img src="https://user-images.githubusercontent.com/66513003/118076949-20dee900-b3ee-11eb-85f8-f0733c632e0b.png" width="400">
 
 - |𝑽| × |𝑬| 크기의 행렬이 된다.
 
@@ -410,8 +393,7 @@ W는 `닫힌 경로`로서 `사이클(cycle)`
 ### **# 예제**
 방향그래프의 경우
 
-<img src="https://user-images.githubusercontent.com/66513003/118077263-bc705980-b3ee-11eb-82c5-86d4630bcf9b.png
-" width="400">
+<img src="https://user-images.githubusercontent.com/66513003/118077263-bc705980-b3ee-11eb-82c5-86d4630bcf9b.png" width="400">
 
 ### **인접 리스트(adjacency list)**
 
@@ -421,8 +403,7 @@ W는 `닫힌 경로`로서 `사이클(cycle)`
 차례로 연결 리스트로 표현한 것
 
 - 인접리스트
-<img src="https://user-images.githubusercontent.com/66513003/118077497-21c44a80-b3ef-11eb-9607-0ddfb77f43e6.png
-" width="400">
+<img src="https://user-images.githubusercontent.com/66513003/118077497-21c44a80-b3ef-11eb-9607-0ddfb77f43e6.png" width="400">
 
 - null은 끝
 - 순서는 상관 없이, 연결성만 보여주는 리스트

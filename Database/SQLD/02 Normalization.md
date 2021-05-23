@@ -2,8 +2,7 @@
 
 **01**
 
-<img src="https://user-images.githubusercontent.com/66513003/119106881-b36c3180-ba59-11eb-860d-acbc4a40d86b.png
-" width="400">
+<img src="https://user-images.githubusercontent.com/66513003/119106881-b36c3180-ba59-11eb-860d-acbc4a40d86b.png" width="400">
 
 - 사원 엔터티는 1정규화 대상이다.
 - 사원 엔터티의 전화번호목록 속성은 여러개의 값을 포함한 다가속성(Multivalued Attrivute)이다. 다가속성을 포함한 엔터티는 비정규형이며, 1정규화를 수행해야 하는 대상이다.
@@ -28,8 +27,7 @@
 - 사원 엔터티는 1정규화 대상임.
 - 사원 엔터티는 유사한 속성을 나열한 반복속성을 포함하고 있다. 전화번호1, 전화번호2, 속성을 단일 값을 갖는 속성이지만 유사 속성을 반복하여 사용하는 것은 넓은 의미의 다가속성(Multivalued Attribute)으로 볼 수 있다. 반복 속성을 포함한 사원 엔터티는 아래와 같이 전화번호1, 전화번호2 속성을 별도 엔터티로 분리하여 1정규화를 수행할 수 있다.
 
-<img src="https://user-images.githubusercontent.com/66513003/119110649-5a9e9800-ba5d-11eb-8a14-884769b1a4ec.png
-" width="400">
+<img src="https://user-images.githubusercontent.com/66513003/119110649-5a9e9800-ba5d-11eb-8a14-884769b1a4ec.png" width="400">
 
 #
 
@@ -37,8 +35,7 @@
 
 **03 다음 데이터 모델에서 모든 사원의 사번, 이름, 부서명을 출력하는 쿼리**
 
-<img src="https://user-images.githubusercontent.com/66513003/119111437-0647e800-ba5e-11eb-8b03-f7ab60f37b30.png
-" width="400">
+<img src="https://user-images.githubusercontent.com/66513003/119111437-0647e800-ba5e-11eb-8b03-f7ab60f37b30.png" width="400">
 
 ```sql
 SELECT A. 사번, A. 이름, B. 부서명
@@ -67,8 +64,7 @@ WHERE B. 부서번호 = A. 부서번호(+);
 
 **04 다음 데이터 모델에서 `모든` 사원의 사번, 이름, 부서명을 출력하는 쿼리**
 
-<img src="https://user-images.githubusercontent.com/66513003/119113632-40b28480-ba60-11eb-8fd6-8d456d345829.png
-" width="400">
+<img src="https://user-images.githubusercontent.com/66513003/119113632-40b28480-ba60-11eb-8fd6-8d456d345829.png" width="400">
 
 ```sql
 1.

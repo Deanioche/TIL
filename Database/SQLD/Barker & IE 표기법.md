@@ -2,16 +2,14 @@
 
 **속성 (Attribute)**
 
-<img src="https://user-images.githubusercontent.com/66513003/119123802-ed91ff00-ba6a-11eb-9086-203904191636.png
-" width="400">
+<img src="https://user-images.githubusercontent.com/66513003/119123802-ed91ff00-ba6a-11eb-9086-203904191636.png" width="400">
 
 - `*` : 해당 속성에 어떤 값을 반드시 지적해야 하는 경우 (Mandatory)
 - `o` : 해당 속성에 어떤 값이 존재 할수도 있고 존재하지 않을 수도 있는 경우 (Optional)
 
 **관계(Relationship)**
 
-<img src="https://user-images.githubusercontent.com/66513003/119124189-5a0cfe00-ba6b-11eb-9cca-0df71ebc84fd.png
-" width="400">
+<img src="https://user-images.githubusercontent.com/66513003/119124189-5a0cfe00-ba6b-11eb-9cca-0df71ebc84fd.png" width="400">
 
 - 엔터티와 엔터티간 상관 관계의 조건
     - 필수 조건
@@ -19,8 +17,7 @@
     - 선택 조건
         - 선택 사항은 점선으로 표시하고 상대 엔터티에 대해 해당 엔터티에 조건을 만족하는 엔터티가 존재할 수도, 존재하지 않을 수도 있을 경우 표시한다.
 
-<img src="https://user-images.githubusercontent.com/66513003/119124443-a22c2080-ba6b-11eb-8619-a484770ff965.png
-" width="400">
+<img src="https://user-images.githubusercontent.com/66513003/119124443-a22c2080-ba6b-11eb-8619-a484770ff965.png" width="400">
 
 **식별자(Unique Identifier)**
 
@@ -32,8 +29,7 @@
 
 - 식별자 앞에는 # 기호를 표시하고 여러 개# 기호를 반복적으로 표시한다.
 
-<img src="https://user-images.githubusercontent.com/66513003/119124793-064ee480-ba6c-11eb-87f2-135ea93a80ee.png
-" width="400">
+<img src="https://user-images.githubusercontent.com/66513003/119124793-064ee480-ba6c-11eb-87f2-135ea93a80ee.png" width="400">
 
 #
 

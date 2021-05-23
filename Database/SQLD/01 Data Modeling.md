@@ -60,8 +60,7 @@
 
 **7. 데이터 모델**
 
-<img src="https://user-images.githubusercontent.com/66513003/118945798-c0711e00-b990-11eb-9bef-62e3a180c0f6.png
-" width="400">
+<img src="https://user-images.githubusercontent.com/66513003/118945798-c0711e00-b990-11eb-9bef-62e3a180c0f6.png" width="400">
 
 - 부서와 사원은 M:M관계이다.
 - 사원은 반드시 하나 이상의 부서에 속해야 한다.
@@ -86,8 +85,7 @@
 
 **8. 식별자**
 
-<img src="https://user-images.githubusercontent.com/66513003/118949680-725e1980-b994-11eb-85b7-12c34b69c27e.png
-" width="400">
+<img src="https://user-images.githubusercontent.com/66513003/118949680-725e1980-b994-11eb-85b7-12c34b69c27e.png" width="400">
 
 - 고객은 한번 이상 주문을 할 수 있다.
 - 한 주문에 여러 상품을 구매할 수 있다.
@@ -96,15 +94,13 @@
 - 주문상세의 식별자는 양쪽 부모로부터 `상속`한 주문번호와 상품번호다. 두 값을 조합했을 때 중복 인스턴스를 허용하지 않는다는 뜻이다. 따라서 한 주문(=같은 주문번호)에서 여러 상품을 주문할 수는 있지만, 같은 상품을 여러 번 주문할 수는 없다.
 
 #
-<img src="https://user-images.githubusercontent.com/66513003/118951939-7854fa00-b996-11eb-89e1-07df18d79ba3.png
-" width="400">
+<img src="https://user-images.githubusercontent.com/66513003/118951939-7854fa00-b996-11eb-89e1-07df18d79ba3.png" width="400">
 
 - 위 데이터 모델에서는 상품번호가 식별자가 아니므로 한 주문에서 같은 상품을 여러 번 주문할 수 있고, 그때마다 주문순번 값이 달라진다. 고객은 주문을 여러 번 할 수 있고, 한 주문에서 여러 상품을 주문할 수 있으므로 동일 상품을 여러 번 주문할 수 있다.
 
 #
 **9. 주문상세 엔터티의 주식별자에 대한 설명**
-<img src="https://user-images.githubusercontent.com/66513003/118952239-bce09580-b996-11eb-9c9f-15c4f80f48c4.png
-" width="400">
+<img src="https://user-images.githubusercontent.com/66513003/118952239-bce09580-b996-11eb-9c9f-15c4f80f48c4.png" width="400">
 
 - 주문상세 엔터티의 모든 인스턴스를 유일하게 식별할 수 있다.
 - 주식별자 중 주문번호는 주문 엔터티로부터 상속받을 외래 식별자다.
@@ -116,8 +112,7 @@
 
 **10. 부모 엔터티와 자식 엔터티가 식별관계를 가지는 데이터 모델**
 
-<img src="https://user-images.githubusercontent.com/66513003/118955464-ae47ad80-b999-11eb-9293-f6b7bccf725e.png
-" width="400">
+<img src="https://user-images.githubusercontent.com/66513003/118955464-ae47ad80-b999-11eb-9293-f6b7bccf725e.png" width="400">
 
 - 1, 2는 IE 표기법을 사용한 데이터 모델이다. 두 모델은 관계선이 둘 다 `점선`이므로 비식별관계를 표현하고 있다.
 - 3, 4는 Barker 표기법을 사용했으며, 3번은 자식쪽 관계선에 `UID Bar(수직 실선)`를 표시했으므로 식별관계이다.
@@ -133,8 +128,7 @@
 **# 다음 데이터 모델이 틀린 이유**
 
 
-<img src="https://user-images.githubusercontent.com/66513003/119096311-659dfc00-ba4e-11eb-81a3-47407794099c.png
-" width="400">
+<img src="https://user-images.githubusercontent.com/66513003/119096311-659dfc00-ba4e-11eb-81a3-47407794099c.png" width="400">
 
 1. M쪽 엔터티의 주식별자를 1쪽 엔터티의 관계속성으로 정의했으므로 올바르지 않다.
 2. 관계선을 반대로 그렸다. 관계선을 역으로 그린 후에 엔터티2의 속성1을 일반속성으로 정의(#를 *로 변경)하거나 식별자 관계(속성1이 식별속성)임을 표현하기 위해 관계선에 UID Bar를 그려줘야 한다.
@@ -144,8 +138,7 @@
 
 **# 데이터 모델 보기**
 
-<img src="https://user-images.githubusercontent.com/66513003/119098500-dd6d2600-ba50-11eb-8b5e-a9d4607113ee.png
-" width="400">
+<img src="https://user-images.githubusercontent.com/66513003/119098500-dd6d2600-ba50-11eb-8b5e-a9d4607113ee.png" width="400">
 
 - 1명의 쇼핑몰회원은 1명의 통합회원과 연결된다.
 - 1명의 멤버쉽회원은 1명의 통합회원과 연결된다.
@@ -157,15 +150,13 @@
 
 참고로,  아래는 애초에 회원을 통합한 데이터모델이다. 개념 모델 단계에서 회원을 통합설계하고 서브타입을 쇼핑몰회원과 멤버십회원으로 정의했다가 논리 모델 단계에서 필요(서브타입별 속성 정의, 관계 정의 등)에 의해 서브타입별 엔터티를 따로 설계한 것이다. 문제의 데이터 모델과 관계의 방향이 정반대인 점에서 주목하자. 즉, FK를 회원이 아닌 쇼핑몰 회원과 멤버쉽 회원 쪽에 정의하였다.
 
-<img src="https://user-images.githubusercontent.com/66513003/119100202-aa2b9680-ba52-11eb-9a12-d32fb32aac23.png
-" width="400">
+<img src="https://user-images.githubusercontent.com/66513003/119100202-aa2b9680-ba52-11eb-9a12-d32fb32aac23.png" width="400">
 
 #
 
 **# 부모 엔터티와 자식 엔터티가 비식별 관계를 가지는 데이터 모델**
 
-<img src="https://user-images.githubusercontent.com/66513003/119100404-de9f5280-ba52-11eb-8c36-1b1002a44a98.png
-" width="400">
+<img src="https://user-images.githubusercontent.com/66513003/119100404-de9f5280-ba52-11eb-8c36-1b1002a44a98.png" width="400">
 
 - 부모 엔터티의 식별자를 자식 엔터티의 식별자로 상속하면 `식별관계`, 일반속성으로 상속하면 `비식별관계`라고 한다. 식별, 비식별 관계를 표현하는 방식은 모델 표기법에 따라 다른데, 우선 바커(Barker) 표기법에서 두 엔터티를 식별관계로 정의하고자 할 때는 자식 쪽 관계선에 `UID Bar(수직 실선)`을 표시한다. UID Bar가 없으면 비식별 관계다.
 
@@ -185,8 +176,7 @@
 
 주문과 주문상세의 인스턴스 생성을 하나의 트랜잭션에서 처리해야 하는 데이터 모델
 
-<img src="https://user-images.githubusercontent.com/66513003/119214860-efa89c00-bb04-11eb-836d-dd5b1a1a8314.png
-" width="400">
+<img src="https://user-images.githubusercontent.com/66513003/119214860-efa89c00-bb04-11eb-836d-dd5b1a1a8314.png" width="400">
 
 - 위 데이터 모델은 주문은 반드시 주문상세가 있어야 하고, 주문상세는 반드시 주문이 있어야함을 나타낸다. 만약 주문처리와 주문상세처리를 각각 다른 트랜잭션으로 처리한다면, 특정 시점에는 주문이 없는 주문상세나 주문상세 없는 주문이 존재할 수도 있다. 따라서 위와 같은 데이터 발생 규칙을 만족하기 위해서는 하나의 트랜잭션에서 주문과 주문상세를 모두 처리해야 한다.
 
@@ -232,8 +222,7 @@ SUM((급여 * 12) + NVL(수당, 0))
 
 **# 2 정규화**
 
-<img src="https://user-images.githubusercontent.com/66513003/119216231-909b5500-bb0d-11eb-90fc-f7782ea920f5.png
-" width="400">
+<img src="https://user-images.githubusercontent.com/66513003/119216231-909b5500-bb0d-11eb-90fc-f7782ea920f5.png" width="400">
 
 #
 
@@ -247,8 +236,7 @@ SUM((급여 * 12) + NVL(수당, 0))
 
 #
 
-<img src="https://user-images.githubusercontent.com/66513003/119216535-300d1780-bb0f-11eb-945a-732161af9522.png
-" width="400">
+<img src="https://user-images.githubusercontent.com/66513003/119216535-300d1780-bb0f-11eb-945a-732161af9522.png" width="400">
 
 - 사원은 고유한 사번이 부여된다.
 - 사원은 담당 관리자가 1명 있을 수 있다.
