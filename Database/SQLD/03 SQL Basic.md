@@ -56,12 +56,192 @@ SELECT T1.* FROM T1;
 2.
 SELECT A.* FROM T1 A;
 
-3.
-SELECT T1.C1 FROM T1 A;
+3. 
+SELECT T1.C1 FROM T1 A; -- 에러
 
 4.
 SELECT C1 FROM T1 A;
 ```
 3. 테이블에 별칭 A를 지정했기 때문에, SELECT 절에서 애스터리스크를 한정할 때 별칭 A를 사용해야 한다. 그러나 테이블명을 사용했으므로 `에러`.
 
-4. 
+4. 단일 테이블 조회의 경우 테이블명 또는 별칭으로 칼럼을 한정하지 않아도 에러가 발생하지 않는다.
+
+#
+
+**NULL이 포함된 컬럼 계산**
+
+- (100 / 100) * (NULL / 100) = NULL
+- (NULL / 100) * (200 / 100) = NULL
+- (300 / 100) * (400 / 100) = 12
+
+- NULL을 포함한 칼럼에 대해 산술 연산시에는  NVL함수나 CASE 표현식, DECODE 함수 등을 통해 NULL을 특정 값 (ex. NVL(C1, 0))으로 치환 후 연산해야 한다.
+
+#
+
+**# ||**
+
+```sql
+select ENAME || JOB from EMP;
+```
+- ENAME 컬럼 결과와 JOB 컬럼 결과가 합쳐져 출력
+```sql
+KINGPRESIDENT
+JONESMANAGER
+BLAKEMANAGER
+CLARKMANAGER
+SCOTTANALYST
+FORDANALYST
+...
+```
+
+#
+
+## **함수**
+
+- SUBSTR(C1, 2, 4) 
+    - C1 컬럼의 값에서 2번째 문자부터 4개의 문자만 출력 
+    - (0, 1, 2, ..)가 아닌 (1, 2, 3, ...) 순서로 센다.
+    - C1이 ABCDEF라면 `SUBSTR(C1, 2, 4)`의 결과는 `BCDE`
+
+- LTRIM(C2, '0')
+    - C2 컬럼의 값의 맨 왼쪽부터 '0'문자를 제거해나가며 '0'이 아닌 문자가 아닌게 나오면 남은 문자열 반환.
+    - C2가 000123이라면 `LTRIM(C2, '0')`의 결과값은 `123`
+
+- FLOOR 소수점 버림
+    - FLOOR(14.5) = 14
+- CEIL 올림
+    - CEIL(14.5) = 15
+- TRUNC(x, n) 소수점 n 자리에서 자름
+    - TRUNC(15.4, 0) = 15
+    - 만약 x가 DATE 형식 일경우 n은 'MM', 'YY'등을 입력해 날짜를 자를 수 있다.
+- ROUND 반올림
+    - ROUND(15.4) = 15
+
+#
+
+## **DATE**
+```sql
+-- 정규표현식
+SELECT REGEXP_REPLACE('20200616143030', '(.{4})(.{2})(.{2})(.{2})(.{2})(.{2})', '\1-\2-\3 \4:\5:\6') RESULT2
+FROM DUAL; -- 2020-06-16 14:30:30
+
+SELECT TO_DATE (20200616143030 , 'yyyy-mm-dd hh24:mi:ss') M_DATE FROM DUAL; -- 현재시간 -1일
+SELECT SYSDATE - 1 M_DAY FROM DUAL; -- 현재시간 -1일
+SELECT SYSDATE - (1/24) M_TIME FROM DUAL; -- 현재시간 -1시간
+SELECT SYSDATE - (1/1440) M_MINUTE FROM DUAL; -- 현재시간 -1분
+SELECT SYSDATE - (1/86400) M_SECOND FROM DUAL; -- 현재시간 -1초
+```
+
+#
+
+**CASE 표현식**
+
+- IF THEN ELSE 논리
+- 여러개의 WHEN 절 조건이 True일 경우. `먼저` 기술한 WHEN 절과 매칭되는 THEN절의 표현식(값)을 반환한다. 조건의 결과가 TRUE인 WHEN절이 없는 경우, ELSE 절의 값을 반환한다.
+
+#
+**예**
+|C1|C2|
+|--|--|
+|1|ABC|
+|2|NULL|
+|3|CBA|
+
+```sql
+SELECT CASE 
+        WHEN C1 = 3 THEN 'A'
+        WHEN SUBSTR(C2, 2, 1) = 'B' THEN 'B'
+        ELSE 'C'
+    END AS R1
+FROM T1;
+```
+
+- row마다 CASE를 모두 비교해 가장 처음으로 만족하는 WHEN조건의 THEN결과를 반환.
+
+- 첫 번째 행은 두 번째 WHEN 절 조건만 만족하므로, 이와 매칭되는 THEN 절의 'B' 값이 반환된다. 
+- 두 번째 행은 만족하는 WHEN 절이 없으므로, ELSE 절의 'C'값이 반환된다. 
+- 세 번째 행은 첫 번째 WHEN 절 조건과 두 번째 WHEN 절 조건을 모두 만족하지만, 우선순위에 따라 첫 번째 WHEN 절과 매칭되는 THEN 절의 'A' 값이 반환된다.
+
+#
+
+**WHERE**
+
+```sql
+SELECT EMPNO, ENAME
+    FROM EMP
+    WHERE SAL IN (1000,3000);   -- SAL이 1000 또는 3000인 값만 출력
+
+SELECT EMPNO, ENAME
+    FROM EMP
+    WHERE SAL IN ANY (1000,3000);   -- SAL이 1000보다 크거나, 3000보다 큰 값만 출력
+
+SELECT EMPNO, ENAME
+    FROM EMP
+    WHERE SAL NOT BETWEEN 1000 AND 3000; -- 1000과 3000 사이가 아닌 값
+
+SELECT EMPNO, ENAME
+    FROM EMP
+    WHERE SAL < 1000    -- 위와 동일
+    OR SAL > 3000
+```
+
+- IN (a, b, c, ...)
+    - 괄호안에 든 값중 하나와 일치하면 TRUE 반환
+
+- WHERE 절에서 값을 비교할 때 NULL이 포함된 연산은 결과에서 제외된다.
+- NULL > 0 행 출력 x
+
+#
+```sql
+drop table T1;
+Create table T1 (C1 number, C2 varchar2(2));
+
+insert into T1 values(1, 'A');
+insert into T1 values(2, 'B');
+insert into T1 values(3, 'C');
+insert into T1 values(NULL, NULL);
+
+SELECT * FROM T1
+    WHERE (C1 = 1 AND C2 = 'A')
+    OR (C1 = 3 AND C2 = 'C');
+
+SELECT * FROM T1
+    WHERE (C1, C2) IN ((1,'A'),(3,'C'));
+```
+
+- 두 SELECT 절의 결과는 같음.
+
+#
+
+**# DECODE**
+
+- DECODE(컬럼, 조건1, 결과1, 조건2, 결과2, 조건3, 결과3..........) 
+
+```sql
+drop table T1;
+Create table T1 (C1 number, C2 varchar2(2));
+
+insert into T1 values(1, 'A');
+insert into T1 values(2, 'A');
+insert into T1 values(4, 'B');
+insert into T1 values(4, 'C');
+insert into T1 values(NULL, NULL);
+
+select * from T1;
+
+SELECT DECODE(C2, 'A', C1, 'B', 1) AS R1 FROM T1;
+
+```
+- 결과
+    | | R1
+    |--|--|
+    |1|1|
+    |2|2|
+    |3|1|
+    |4|NULL|
+    |5|NULL|
+
+
+
+
+
