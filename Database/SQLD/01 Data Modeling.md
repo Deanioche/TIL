@@ -35,8 +35,7 @@
 
 **5. 관계 (Relationship)**  
 
-<img src="https://user-images.githubusercontent.com/66513003/118942125-66bb2480-b98d-11eb-8662-60f820695850.png
-" width="300">
+<img src="https://user-images.githubusercontent.com/66513003/118942125-66bb2480-b98d-11eb-8662-60f820695850.png" width="300">
 
 - 계좌를 개설한 고객이 반드시 존재해야 한다.
 - 고객과 계좌의 관계에서 고객의 식별자인 고객 번호가 계좌의 일반 속성으로 사용되므로 비식별자 관계이다. 계좌의 주민등록번호는 관계에 의해 생성된 관계속성이 아니며, 중복 속성 으로 볼 수 있다.
@@ -51,8 +50,7 @@
 
 **6. 다른 엔터티와의 관계에 의해 생성된 속성**  
 
-<img src="https://user-images.githubusercontent.com/66513003/118944847-e5b15c80-b98f-11eb-902d-f81c47d9651e.png
-" width="150">
+<img src="https://user-images.githubusercontent.com/66513003/118944847-e5b15c80-b98f-11eb-902d-f81c47d9651e.png" width="150">
 
 - 관계 속성(외래 식별자)에는 FK(Foreign Key)표현을 추가한다.
 
@@ -72,8 +70,7 @@
 
 #
 
-<img src="https://user-images.githubusercontent.com/66513003/118946989-ddf2b780-b991-11eb-976d-30b8e07f078f.png
-" width="300">
+<img src="https://user-images.githubusercontent.com/66513003/118946989-ddf2b780-b991-11eb-976d-30b8e07f078f.png" width="400">
 
 - **선택 관계** : 부모 인스턴스만 등록하고 자식 인스턴스는 등록하지 않아도 된다.
 
