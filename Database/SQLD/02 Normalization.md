@@ -21,8 +21,7 @@
 
 **02**
 
-<img src="https://user-images.githubusercontent.com/66513003/119109679-5756dc80-ba5c-11eb-9fec-bbe639916478.png
-" width="150">
+<img src="https://user-images.githubusercontent.com/66513003/119109679-5756dc80-ba5c-11eb-9fec-bbe639916478.png" width="150">
 
 - 사원 엔터티는 1정규화 대상임.
 - 사원 엔터티는 유사한 속성을 나열한 반복속성을 포함하고 있다. 전화번호1, 전화번호2, 속성을 단일 값을 갖는 속성이지만 유사 속성을 반복하여 사용하는 것은 넓은 의미의 다가속성(Multivalued Attribute)으로 볼 수 있다. 반복 속성을 포함한 사원 엔터티는 아래와 같이 전화번호1, 전화번호2 속성을 별도 엔터티로 분리하여 1정규화를 수행할 수 있다.
