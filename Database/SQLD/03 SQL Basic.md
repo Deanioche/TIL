@@ -752,15 +752,147 @@ where C1 >= 4
 
 #
 
-3
-2 /3
-1 1400 + 1600 /4
-930, 21000 /12400, 21000
-2 하나가 NULL이라 AVG에 포함 안된다??
+**# 8**
 
-1 결과값으로 ORDER BY 하니까 안의 연산식은 신경쓸 필요 없다? /2
-4 
-2 A.C1의 OUTER JOIN /1
-2 C2가 하나로 합쳐짐 
-inner join, group by a.고객번호
+## - `AVG(C1 + C2)`
+- 우선 행별로 C1 + C2 연산이 이루어 진다.
+- 여기서 어느 한쪽이 NULL이면 결과값은 NULL.
+- AVG(모든 결과값)을 하면 결과값이 NULL인 행은 연산에서 제외되므로
+- NULL이 아닌 행들의 평균값이 나온다. (NULL행은 평균값 계산의 나눗셈에서도 제외된다.)
 
+#
+
+**# 9**
+
+## `MIN('문자열')일때`
+  - 문자열을 순차정렬할때 영어는 'A', 한글은 'ㄱ'이 가장 먼저 나오는 것처럼
+  - 각각 값이 '12400', '930', '4670', '2340' 인 문자열 중에 최솟값은 1로 시작하는 '12400'이다.
+  - number로써 비교하기 위해서는 TO_NUMBER()함수를 써야한다. 
+
+#
+
+**# 11**
+```SQL
+-- 11번 p92
+drop table T1;
+CREATE TABLE T1 (C1 NUMBER, C2 NUMBER);
+
+INSERT INTO T1 VALUES (1, 1);
+INSERT INTO T1 VALUES (2, 2);
+INSERT INTO T1 VALUES (3, 3);
+INSERT INTO T1 VALUES (4, 1);
+INSERT INTO T1 VALUES (5, 2);
+
+SELECT 6 - A.C1 AS C1,
+       CASE
+        WHEN A.C1 >=4 THEN 'A'
+        WHEN A.C2 IN(1,3) THEN 'B'
+        ELSE 'C'
+    END AS C2
+    FROM T1 A
+    ORDER BY C2 DESC, A.C1;
+```
+- ORDER BY의 기준이 `C2(별칭)인지, A.C2(컬럼명)`인지를 확인해야 한다.
+- 만약 컬럼의 별칭이 컬럼명과 같다면, 별칭의 우선순위가 더 높다.
+    
+#
+
+**# 12**
+
+```SQL
+-- 오라클 조인 문법
+SELECT *
+  FROM T1 A, T2 B
+  WHERE A.C2 IN('B','C')
+    AND B.C1(+) = A.C1
+    AND B.C2 <= 2;
+```
+- 오라클 조인 문법에서는 이너쪽 테이블에 대한 `모든` 조건절에 (+) 기호를 붙임으로써 아우터 조인을 표현한다.
+- 위 쿼리는 AND B.C1(+) = A.C1 은 (+)기호를 붙였지만,
+- B.C2 <= 2에는 (+)기호가 `없어` OUTER JOIN이 아닌 `INNER JOIN`으로 수행된다.
+
+그러므로 위 쿼리와 항상 동일한 쿼리는
+```SQL
+-- ANSI 표준 조인 문법
+SELECT *
+  FROM T1 A INNER JOIN T2 B
+  ON B.C1 = A.C1
+  WHERE A.C2 IN('B','C')
+  AND B.C2 <= 2;
+```
+이다.
+
+#
+
+**# 14**
+ 
+**USING**
+  - USING 절을 사용하면 USING 절에 지정한 칼럼을 기준으로 두 테이블을 등가 조인 한다 또한, USING 절에 기술하는 칼럼은 양쪽 테이블에 모두 존재해야 하며, 칼럼명이 동일해야한다. (일단 C3 칼럼은 USING 절에 기술 할 수 없다.) 
+  - T2 테이블에서 B.C3 >= 200 조건을 만족하는 행을 기준으로 아우터 조인을 수행했을 때 문제의 결과 집합이 출력되기 위해 C2 칼럼을 기준으로 조인해야 한다.
+
+#
+
+**# 15**
+
+- 스칼라 서브쿼리의 결과 건이 0건이더라도 메인 집합의 건수에는 영향을 미치지 않는다. 즉, 주문 테이블에 해당 고객의 주문 건이 없더라도 고객 테이블에서 고객번호 IN(3, 4)조건을 만족하는 모든 고객에 대해 고객번호와 주문합계금액이 출력된다. 단, 주문 테이블에 해당 고객의 주문 건이 없으면 스칼라 서브쿼리는 null을 반환한다. 
+
+```sql
+-- 15번 문제 p96
+drop table 고객;
+create table 고객 (고객번호 number, 고객명 varchar2(20));
+
+insert into 고객 values (1, '김대원');
+insert into 고객 values (2, '노영미');
+insert into 고객 values (3, '김경진');
+insert into 고객 values (4, '박하연');
+
+drop table 주문;
+create table 주문 (주문번호 number, 고객번호 number, 주문금액 number);
+
+insert into 주문 values (2001, 1, 40000);
+insert into 주문 values (2002, 2, 15000);
+insert into 주문 values (2003, 2, 7000);
+insert into 주문 values (2004, 2, 8000);
+insert into 주문 values (2005, 2, 20000);
+insert into 주문 values (2006, 3, 5000);
+insert into 주문 values (2007, 3, 9000);
+
+SELECT a.고객번호,
+       (select sum(x.주문금액)
+        from 주문 x
+           where x.고객번호 = a.고객번호) as 합계
+from 고객 a
+where a."고객번호" in (3,4); -- outer join
+
+```
+- 두 SELECT의 결과
+  ||고객번호|합계|
+  |--|:--:|:--:|
+  |1|3|14000|
+  |2|4|NULL|
+
+- SELECT 문 (스칼라 서브쿼리)
+  - where 절의 조건이 가장 높은 우선순위로 들어가므로, 
+    a.고객번호가 3, 4가 아닌 행은 바로 제외된다. 
+  - 따라서, `b."고객번호" = a."고객번호"`로 join된 결과도 3,4만 계산이 된다.
+  - 주문 테이블에는 3만 존재하므로 일단 첫번째 행은 `3, 14000`이 출력된다.
+  - 그 다음으로 a.고객번호가 4의 주문금액을 주문 테이블에서 찾는데, 주문 테이블에는 고객번호가 4인 행이 존재하지 않는다.
+  - 하지만 스칼라 서브쿼리는 `where a."고객번호" in (3,4)`로 잡힌 조건절의 결과의 갯수에 영향을 미치지 않으므로 주문합계금액이 존재여부에 상관없이 고객번호가 3, 4인 행이 모두 출력된다.
+  - 즉, 두번째 행은 `4, NULL`.
+
+  - 오른쪽 테이블의 해당하는 컬럼의 행에 NULL 유무에 상관없이 조건에 맞는 왼쪽 테이블의 컬럼(고객번호)이 모두 출력 결과에 포함되고,  
+  그 다음 순위로 오른쪽 테이블의 컬럼이 추가되는 방식의 JOIN은 `LEFT OUTER JOIN`이다.
+
+  - 그리고 SUM함수를 계산하려면 b.주문금액 컬럼의 행 각각의 값을 출력할 수 있는 그룹이 필요하며, `select a.고객번호, sum(b.주문금액)`으로 출력할수 있는 방법은 a.고객번호를 group by로 묶는 방법밖에 없다.
+
+즉, 위 SELECT 문과 동일한 쿼리는
+```sql
+select a.고객번호, sum(b.주문금액) as 합계
+    from 고객 a left outer join 주문 b
+    on b."고객번호" = a."고객번호"
+where a."고객번호" in (3, 4)
+group by a.고객번호;
+```
+가 된다.
+
+#
