@@ -369,3 +369,398 @@ SELECT A.고객번호, TO_CHAR(A.주문일자 , 'yyyymmdd') as 주문일자, MIN
 
 #
 
+```sql
+-- OUTER JOIN
+drop table 고객;
+Create table 고객 (고객번호 number, 고객명 varchar(10));
+
+insert into 고객 values (1, '김대원');
+insert into 고객 values (2, '노영미');
+insert into 고객 values (3, '김경진');
+insert into 고객 values (4, '박하연');
+
+drop table 주문;
+Create table 주문 (주문번호 number, 고객번호 number, 주문금액 number);
+
+insert into 주문 values (2001, 1, 40000);
+insert into 주문 values (2002, 2, 15000);
+insert into 주문 values (2003, 2, 7000);
+insert into 주문 values (2004, 2, 8000);
+insert into 주문 values (2005, 2, 20000);
+insert into 주문 values (2006, 3, 5000);
+insert into 주문 values (2007, 3, 9000);
+
+COMMIT;
+
+SELECT *
+    FROM 고객 A, 주문 B
+    WHERE B."고객번호"(+) = A."고객번호"
+    AND B.주문금액(+) > 10000;
+    -- (+)가 없는 쪽은 아우터 조인이기 때문에 조건에 맞지 않아도(NULL이 포함된 행이 생겨도) 고객테이블의 모든 행이 JOIN된다.
+
+SELECT *
+FROM 고객 A, 주문 B
+WHERE A."고객번호" = B."고객번호"
+  AND B.주문금액 > 10000;
+    --일반  JOIN은 조건에 맞는 행만 집합에 포함시켜 출력한다. (JOIN 결과로서 NULL이 생기지 않는다)
+
+SELECT SUM(B.주문금액) / COUNT(DISTINCT A.고객번호) AS R1
+FROM 고객 A, 주문 B
+WHERE B."고객번호"(+) = A."고객번호"
+  AND B.주문금액(+) > 10000; -- 75000 / 4 = 18750
+```
+
+**# 카티션 곱**
+
+- 조인 조건이 누락되면 카티션 곱(cartesian product) 집합이 생성된다. 의도적으로 카티션 곱 집합을 만드릭도 하지만, 실로 조인 조건을 누락하는 경우도 있으므로 주의해야 한다.
+
+#
+
+- T1 테이블
+  |C1|C2|
+  |--|--|
+  |1|A|
+  |2|B|
+  |3|C|
+  |4|D|
+
+- T2 테이블
+  |C1|C2|
+  |--|--|
+  |1|A|
+  |1|B|
+  |2|A|
+  |3|B|
+  |4|C|
+
+```sql
+SELECT COUNT(*) AS R1
+  FROM T1 A, T2 B
+  WHERE A.C1 >= 2
+  AND B.C2 IN ('A', 'C') -- 9
+```
+
+- 위 SQL문은 T1과 T2 테이블에 대해 제이터를 제한하는 일반 조건은 있지만, 조인 조건은 없다. 따라서 `카티션 곱 집합`이 생성된다. 즉, T1 테이블에서 C1 >= 2 조건을 만족하는 3행과 T2 테이블에서 C2 IN ('A', 'C') 조건을 만족하는 3행을 곱해 9행을 가진 결과집합이 생성된다.
+
+#
+
+## **표준 조인**
+
+**# INNER JOIN**
+
+- INNER JOIN 절은 이너 조인을 수행한다. ON절에 조인 조건을 기술하며, 일반 조건은 WHERE 절에 기술할 수 있다. 조인 조건과 일반 조건을 분리하여 가독성을 향상시킬 수 있다.
+
+```SQL
+-- INNER JOIN
+DROP TABLE T1;
+CREATE TABLE T1 (C1 NUMBER, C2 VARCHAR(2));
+
+INSERT INTO T1 VALUES (1, 'A');
+INSERT INTO T1 VALUES (2, 'B');
+INSERT INTO T1 VALUES (3, 'C');
+
+DROP TABLE T2;
+CREATE TABLE T2 (C1 NUMBER, C2 NUMBER);
+
+INSERT INTO T2 VALUES (1, 1);
+INSERT INTO T2 VALUES (2, 1);
+INSERT INTO T2 VALUES (3, 1);
+INSERT INTO T2 VALUES (3, 2);
+INSERT INTO T2 VALUES (4, 1);
+
+SELECT *
+    FROM T1 A INNER JOIN T2 B
+    ON B.C1 = A.C1
+    WHERE A.C1 >= 2; -- A.C1가 2 이상이도 양쪽 테이블의 값이 일치하면 출력 (2, 3)
+
+SELECT SUM(B.C2) AS R1
+    FROM T1 A INNER JOIN T2 B
+    ON B.C1 = A.C1
+    WHERE A.C1 >= 2; -- 4
+```
+
+**# NATURAL JOIN**
+
+- 두 테이블의 모든 이름이 같은 컬럼끼리 비교후 모두 일치하는 행만 출력.
+
+```SQL
+--- NATURAL JOIN
+DROP TABLE T1;
+CREATE TABLE T1 (C1 NUMBER, C2 VARCHAR(2));
+
+INSERT INTO T1 VALUES (1, 'A');
+INSERT INTO T1 VALUES (2, 'B');
+INSERT INTO T1 VALUES (3, 'C');
+
+DROP TABLE T2;
+CREATE TABLE T2 (C1 NUMBER, C2 VARCHAR(2));
+
+INSERT INTO T2 VALUES (1, 'A');
+INSERT INTO T2 VALUES (1, 'B');
+INSERT INTO T2 VALUES (2, 'B');
+INSERT INTO T2 VALUES (3, 'C');
+INSERT INTO T2 VALUES (3, 'A');
+INSERT INTO T2 VALUES (4, 'B');
+
+SELECT *
+FROM T1 A NATURAL JOIN T2 B; -- 두 테이블의 모든 컬럼의 교집합만 출력
+
+SELECT SUM(C1)
+FROM T1 A NATURAL JOIN T2 B; -- 6
+
+SELECT * FROM T1 A INNER JOIN T2 B ON A.C1 = B.C1; 
+-- INNER JOIN은 ON 절에 입력한 조건만 만족하면 모두 출력
+SELECT * FROM T1 A NATURAL JOIN T2 B; 
+-- 두 테이블의 C1컬럼과 C2컬럼의 값이 모두 일치하는지 비교 후 출력.
+```
+
+## - **NATURAL 조인에 사용된 열은 식별자를 가질 수 없음**
+```sql
+select A.C1, B.C1
+from T1 A NATURAL JOIN T2 B;
+    -- # 에러 ORA-25155: NATURAL 조인에 사용된 열은 식별자를 가질 수 없음
+```
+#
+
+**# USING**
+
+- USING 절은 지정한 열로 등가 조인한다. 지정한 열은 조인할 테이블에 동일한 이름으로 존재해야 한다.
+
+```SQL
+SELECT A.C1, B.C2
+    FROM T1 A JOIN T2 B
+    USING (C1);
+    -- # 에러 ORA-25154: USING 절의 열 부분은 식별자(A.)를 가질 수 없음
+
+SELECT C1, B.C2
+FROM T1 A JOIN T2 B
+    USING (C1);
+    -- 정상출력
+
+SELECT *
+FROM T1 A JOIN T2 B
+    USING(C1);
+    -- C1 컬럼이 하나로 합쳐져 나온다.
+```
+
+**# RIGHT OUTER JOIN**
+
+```SQL
+-- RIGHT OUTER JOIN
+DROP TABLE T1;
+CREATE TABLE T1 (C1 NUMBER, C2 VARCHAR(2));
+
+INSERT INTO T1 VALUES (1, 'A');
+INSERT INTO T1 VALUES (2, 'B');
+INSERT INTO T1 VALUES (3, 'C');
+INSERT INTO T1 VALUES (4, 'D');
+
+DROP TABLE T2;
+CREATE TABLE T2 (C1 NUMBER, C2 VARCHAR(2));
+
+INSERT INTO T2 VALUES (1, 'A');
+INSERT INTO T2 VALUES (2, 'B');
+INSERT INTO T2 VALUES (3, 'B');
+INSERT INTO T2 VALUES (3, 'C');
+INSERT INTO T2 VALUES (5, 'C');
+
+SELECT A.C1, B.C1
+    FROM T1 A RIGHT OUTER JOIN T2 B 
+      -- 왼쪽 테이블은 오른쪽 테이블에 대해 일치하는 행만, 오른쪽 테이블은 모두 출력.
+    ON B.C1 = A.C1 
+      -- A, B 바뀌어도 결과는 같음.
+    AND B.C1 >= 3; 
+      -- B.C1 든 A.C1든 둘의 일치하는 값 중에 3이상인 값만 출력하므로 결과는 같음.
+```
+- 결과
+  | | A.C1 | B.C1 |
+  |--|:--:|:--:|
+  |1|3|3|
+  |2|3|3|
+  |3|NULL|1|
+  |4|NULL|2|
+  |5|NULL|5|
+
+#
+
+**# LEFT OUTER JOIN**
+
+```sql
+SELECT A.C1, B.C1
+    FROM T1 A LEFT OUTER JOIN T2 B 
+    -- 오른쪽 테이블은 왼쪽 테이블에 대해 일치하는 행만,
+    -- 왼쪽 테이블은 일치하는 행 모두 출력 + 일치하지 않는 행도 출력.
+    ON B.C1 = A.C1
+    AND B.C1 >= 3;
+```
+- 결과
+  | | A.C1 | B.C1 |
+  |--|:--:|:--:|
+  |1|3|3|
+  |2|3|3|
+  |3|1|NULL|
+  |4|2|NULL|
+  |5|4|NULL|
+
+#
+
+**# FULL OUTER JOIN**
+
+```SQL
+-- FULL OUTER JOIN
+SELECT A.C1, A.C2, B.C1, B.C2
+FROM T1 A FULL OUTER JOIN T2 B 
+-- 일치 여부와 상관 없이, 
+-- 일단 B테이블의 A테이블에 대한 OUTER JOIN 결과가 모두 출력되고,
+-- A테이블의 나머지가 출력된다.
+      ON B.C1 = A.C1           
+      AND B.C1 >= 3;
+```
+- 결과
+  | | A.C1 | A.C2 | B.C1 | B.C2 |
+  |--|:--:|:--:|:--:|:--:|
+  |1|NULL|NULL|1|A|
+  |2|NULL|NULL|2|B|
+  |3|3|C|3|B|
+  |4|3|C|3|C|
+  |5|NULL|NULL|5|C|
+  |5|1|A|NULL|NULL|
+  |5|2|B|NULL|NULL|
+  |5|4|D|NULL|NULL|
+
+#
+
+## **핵심문제**
+
+
+**# 1**
+- Create - DDL
+- GRANT - DCL
+
+#
+
+**# 2**
+
+- NATURAL JOIN에 사용된 열은 식별자(A. B.)을 가질 수 없음!!
+
+```sql
+
+select A.C1, B.C1
+from T1 A NATURAL JOIN T2 B;
+    -- # 에러 ORA-25155: NATURAL 조인에 사용된 열은 식별자를 가질 수 없음
+```
+
+- 테이블 A와 B에 각각 C1과 C2 컬럼이 있지만, natural join은 그 모든 컬럼을 비교해 합치므로 결과는 C1, C2 컬럼 `하나씩만` 출력된다.
+- 그러므로 컬럼은 `식별자를 가질 수 없다`.
+
+#
+
+**# 4**
+
+```sql
+-- 4번
+drop table 주문;
+create table 주문 (주문번호 number, 주문일시 date, 주문금액 number);
+
+insert into 주문 values (1, TO_DATE(20200512142020, 'YYYY-MM-DD HH24:MI:SS'), 20000);
+insert into 주문 values (2, TO_DATE(20200627000000, 'yyyy-mm-dd hh24:mi:ss'), 25000);
+insert into 주문 values (3, TO_DATE(20200702123030, 'yyyy-mm-dd hh24:mi:ss'), 10000);
+insert into 주문 values (4, TO_DATE(20200715170000, 'yyyy-mm-dd hh24:mi:ss'), 5000);
+insert into 주문 values (5, TO_DATE(20200726235900, 'yyyy-mm-dd hh24:mi:ss'), 20000);
+insert into 주문 values (6, TO_DATE(20200727123030, 'yyyy-mm-dd hh24:mi:ss'), 30000);
+insert into 주문 values (7, TO_DATE(20200808090015, 'yyyy-mm-dd hh24:mi:ss'), 15000);
+
+select *
+  from 주문
+  where 주문일시 between trunc(add_months(TO_DATE(20200727143000, 'YYYY-MM-DD HH24:MI:SS'), 'DD'))
+  AND TRUNC(TO_DATE(20200727143000, 'YYYY-MM-DD HH24:MI:SS'), 'DD');
+
+select TRUNC(ADD_MONTHS(TO_DATE(20200727143000, 'YYYY-MM-DD HH24:MI:SS'), -1), 'DD') from dual;
+  -- 2020-06-27 00:00:00
+
+select TRUNC(TO_DATE(20200727143000, 'YYYY-MM-DD HH24:MI:SS') -1/24/60/60, 'DD')  from dual;
+  -- 2020-07-27 00:00:00
+  -- TRUNC 전에 1초(-1/24/60/60)를 빼기 때문에 결과값에는 변함이 없다.
+  -- -1/24/60/60 계산 후 값 : 2020-07-27 04:29:59
+```
+
+- 첫번째 SELECT 결과
+  ||주문번호|주문일시|주문금액|
+  |--|:--:|--|:--:|
+  |1|2|2020-06-27 00:00:00|25000|
+  |1|3|2020-07-02 12:30:30|10000|
+  |1|4|2020-07-15 17:00:00|5000
+  |1|5|2020-07-26 23:59:00|20000|
+
+#
+
+**# 5**
+
+**# NULLIF 함수**
+  - 파라미터에 입력된 두 인자(a, b)가 다르면 a, 같으면 NULL을 반환.
+
+```sql
+SELECT NULLIF(C2, 100) FROM T1;
+```
+
+#
+
+**# 조건 우선순위**
+|우선순위|조건|
+|--|--|
+|1|연산자|
+|2|비교조건 (=, <>, >, <, >=, <=)|
+|3|IN 조건, LIKE 조건, BETWEEN 조건, NULL 조건|
+|4|논리조건(NOT)|
+|5|논리조건(AND)|
+|6|논리조건(OR)|
+
+#
+
+**# 7**
+
+```sql
+-- 7번
+drop table T1;
+create table T1(C1 number, C2 varchar2(2), C3 number);
+
+insert into T1 values (1, 'A', 1000);
+insert into T1 values (2, 'B', 800);
+insert into T1 values (3, 'A', NULL);
+insert into T1 values (4, 'B', 1200);
+insert into T1 values (5, 'C', 3000);
+insert into T1 values (6, 'A', 1500);
+
+select *
+From T1
+where C1 >= 4; -- C1이 4, 5, 6인 결과값
+
+select *
+From T1
+where C2 IN ('A', 'B')
+    AND C3 NOT BETWEEN 1000 AND 2000; -- B, 800
+
+select *
+From T1
+where C1 >= 4
+   or C2 IN ('A', 'B')
+    AND C3 NOT BETWEEN 1000 AND 2000; -- 위 두 결과값을 합친 결과(OR 연산)
+```
+- 맨 아래 SELECT문의 where 절에서 여러 조건이 or과 and구문으로 이어져있다.
+- 연산 우선순위는 `AND > OR` 이므로
+- `C1 >= 4` 와` C2 IN ('A', 'B') AND C3 NOT BETWEEN 1000 AND 2000`으로 조건문이 나뉘게 된다.
+
+#
+
+3
+2 /3
+1 1400 + 1600 /4
+930, 21000 /12400, 21000
+2 하나가 NULL이라 AVG에 포함 안된다??
+
+1 결과값으로 ORDER BY 하니까 안의 연산식은 신경쓸 필요 없다? /2
+4 
+2 A.C1의 OUTER JOIN /1
+2 C2가 하나로 합쳐짐 
+inner join, group by a.고객번호
+
