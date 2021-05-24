@@ -1,5 +1,9 @@
 # Memo
 
+### **`# 함수 사용법 검색하기`**
+- RANK(), ROW_NUMBER(), DENSE_RANK(), LEAD(), LAG(), NTITLE()
+
+
 **# DECODE 함수 써보기**
 https://gent.tistory.com/227
 
@@ -126,3 +130,6 @@ group by a.고객번호;
 가 된다.
 
 #
+
+- 서브쿼리에서 `X.C1 = C1`는 `X.C1 = X.C1`과 동일하다. (P109 2.)
+
