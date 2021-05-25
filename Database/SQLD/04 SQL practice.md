@@ -1007,5 +1007,3 @@ ___
 13. 4 아니면 2 INCLUDE NULLS면 NULL도 세나?
 14. 2/`4` -> AB
 15. 2
-
-git commit --amend --no-edit --date "Tue 25 May 2021 23:52:09 KST"
