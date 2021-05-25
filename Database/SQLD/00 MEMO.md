@@ -7,7 +7,7 @@
 **# DECODE 함수 써보기**
 https://gent.tistory.com/227
 
-#
+___
 
 **# OUTER JOIN 표시**
 ```sql
@@ -18,7 +18,7 @@ A.id(+) = b.id  -- RIGHT OUTER
 
 https://blog.edit.kr/entry/Oracle-%EC%BF%BC%EB%A6%AC%EC%A4%91%EC%97%90-%EC%9D%98-%EC%9D%98%EB%AF%B8
 
-#
+___
 
 **# USING 절 에러**
 ```SQL
@@ -28,7 +28,7 @@ SELECT A.C1, B.C2
     -- # 에러 ORA-25154: USING 절의 열 부분은 식별자(A.)를 가질 수 없음
 ```
 
-#
+___
 
 ## - **`NATURAL 조인에 사용된 열은 식별자를 가질 수 없음`**
 
@@ -44,7 +44,7 @@ from T1 A NATURAL JOIN T2 B;
 - 테이블 A와 B에 각각 C1과 C2 컬럼이 있지만, natural join은 그 모든 컬럼을 비교해 합치므로 결과는 C1, C2 컬럼 `하나씩만` 출력된다.
 - 그러므로 컬럼은 `식별자를 가질 수 없다`.
 
-#
+___
 
 **# 조건 우선순위**
 |우선순위|조건|
@@ -56,7 +56,7 @@ from T1 A NATURAL JOIN T2 B;
 |5|`논리조건(AND)`|
 |6|논리조건(OR)|
 
-#
+___
 
 ## `# AVG(C1 + C2)`
 - 우선 행별로 C1 + C2 연산이 이루어 진다.
@@ -64,7 +64,7 @@ from T1 A NATURAL JOIN T2 B;
 - AVG(모든 결과값)을 하면 결과값이 NULL인 행은 연산에서 제외되므로
 - NULL이 아닌 행들의 평균값이 나온다. (NULL행은 평균값 계산의 나눗셈에서도 제외된다.)
 
-#
+___
 
 **# 15**
 
@@ -129,7 +129,96 @@ group by a.고객번호;
 ```
 가 된다.
 
-#
+___
 
+**# 서브 쿼리에서 식별자를 쓴 컬럼과 안쓴 컬럼 비교**
 - 서브쿼리에서 `X.C1 = C1`는 `X.C1 = X.C1`과 동일하다. (P109 2.)
 
+___
+
+**# SELECT 행의 처리 순서**
+
+FROM -> WHERE -> GROUP BY -> HAVING -> SELECT -> ORDER BY
+
+
+___
+
+**# [SQL Server] TOP**
+
+- TOP ()
+    - 괄호 안에는 반환할 행의 개수나 백분율 입력.
+    - 뒤에 PERCENT를 붙이면 백분율만큼 행을 반환.
+    - 뒤에 WITH TIES : 마지막 행에 대한 동순위를 포함해서 반환.
+
+- TOP () WITH TIES는 RANK 분석 함수와 같은 역할을 한다.
+    - 동 순위를 포함해서 출력.
+
+- `SQL Server`에서만 사용 가능한 함수
+
+___
+
+**# <> 연산자**
+
+- `'컬럼명 <> 컬럼 값'`으로 기술하며, 해당 컬럼에 해당 컬럼 값이 나오는 결과는 제외한다.
+
+#
+
+```SQL
+SELECT EMPNO, ENAME, MGR , JOB
+FROM EMP
+START WITH ENAME = 'JONES'
+CONNECT BY MGR = PRIOR EMPNO
+AND JOB <> 'CLERK';
+```
+
+| EMPNO | ENAME | MGR | JOB |
+| :--- | :--- | :--- | :--- |
+| 7566 | JONES | 7839 | MANAGER |
+| 7788 | SCOTT | 7566 | ANALYST |
+| 7902 | FORD | 7566 | ANALYST |
+- JOB = 'CLERK'인 행을 제외 후 출력.
+- PRIOR는 직전 상위 노드의 값을 반환하는데 `7902 FORD 7566 ANALYST`는 왜 출력됐지?
+
+___
+
+**# CTE(Common Table Expression)**
+- CTE의 WITH절은 UNION ALL 연산자로 구성된다.  
+- UNION ALL의 상단 쿼리가 START WITH 절, 하단 쿼리가 CONNECT BY절의 역할을 수행한다.
+- UNION ALL 상단에서 얻은 쿼리집합을 시작으로 하단 쿼리에서 WITH절을 재귀적으로 조인함으로써 START WITH, CONNECT BY 절과 같은 계층 구조를 얻을 수 있다.
+
+```SQL
+WITH W1 (EMPNO, ENAME, MGR, LV) AS (
+    SELECT EMPNO, ENAME, MGR, 1 AS LV
+    FROM EMP
+    WHERE ENAME = 'JONES'
+    UNION ALL
+    SELECT C.EMPNO, C.ENAME, C.MGR, P.LV + 1
+    FROM W1 P, EMP C
+    WHERE C.MGR = P.EMPNO)
+SELECT EMPNO, ENAME, MGR, LV
+FROM W1;
+```
+
+___
+
+**# PIVOT**
+- PIVOT은 행을 열로 전환한다.
+
+- PIVOT()의 괄호 안에는 집계할 열을 지정
+- FOR 절은 PIVOT할 `열`을 지정
+- IN 절은 PIVOT할 `열 값`을 지정
+
+```SQL
+SELECT *
+    FROM (SELECT JOB, DEPTNO, SAL FROM EMP WHERE DEPTNO IN (10,20))
+        PIVOT (SUM(SAL) FOR DEPTNO IN (10, 20))
+ORDER BY JOB;
+```
+| JOB | 10 | 20 |
+| :--- | :--- | :--- |
+| ANALYST | NULL | 6000 |
+| CLERK | 1300 | 1900 |
+| MANAGER | 2450 | 2975 |
+| PRESIDENT | 5000 | NULL |
+
+____
