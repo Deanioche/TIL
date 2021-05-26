@@ -79,7 +79,7 @@ CREATE TABLE T1 (C1 NUMBER);
 
 INSERT INTO T1 VALUES(1);
 INSERT INTO T1 VALUES(2);
-ALTER TABLE T1 ADD C2 NUMBER;
+ALTER TABLE T1 ADD C2 NUMBER; -- 암시적 COMMIT
 INSERT INTO T1 VALUES (3, 3);
 ROLLBACK;
 ```
@@ -245,3 +245,30 @@ GRANT R1 TO U1;
 ```
 
 ___
+
+**# 핵심 문제**
+
+**# 1**
+- 4
+
+**# 2**
+-  3
+- 가장안쪽 서브쿼리 결과 (1, 3) B
+- 바깥 쿼리 AC2 = NULL, BC2 = 3
+- SET AC2 = 3 이므로
+
+**# 3**
+- 1
+- ?
+
+**# 4**
+- 1
+- C1 = 1 -> 2 COMMIT
+- C1 = 2 -> 4 ROLLBACK 
+- C1 = 2 
+
+**# 5**
+- 4
+
+**# 6**
+
