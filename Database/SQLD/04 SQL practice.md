@@ -986,3 +986,557 @@ SELECT REGEXP_REPLACE('1A2B3C4D', '\d', '_') AS C1 FROM DUAL; -- _A_B_C_D
 - `'\D'` 는 문자, `'\d'`는 숫자를 나타냄.
 
 ___
+
+## **# 핵심 문제**
+
+**# 1**
+
+- 논리 조건
+    - AND 조건은 모든 조건이 TRUE여야 TRUE.
+    - OR 조건은 하나라도 TRUE면 TRUE.
+    - NOT 조건
+        |    | =  |<>  |>   |>=  |<   |<=  |AND |OR  |
+        |:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
+        |NOT|<>|=|<=|<|>=|>|OR|AND|
+
+#
+```SQL
+-- 1
+DROP TABLE T1;
+CREATE TABLE T1 (C1 NUMBER);
+
+INSERT INTO T1 VALUES (1);
+INSERT INTO T1 VALUES (2);
+INSERT INTO T1 VALUES (3);
+
+DROP TABLE T2;
+CREATE TABLE T2 (C1 NUMBER);
+
+INSERT INTO T2 VALUES (1);
+INSERT INTO T2 VALUES (NULL);
+
+SELECT COUNT(*) FROM T1 WHERE C1 NOT IN (SELECT C1 FROM T2); -- 0
+```
+
+- 쿼리의 NOT IN 서브쿼리는 C1 NOT IN (1, NULL) 조건으로 해석된다.
+- NOT IN 조건을 OR 조건으로 변경하면 NOT (C1 = 1 OR C1 = NULL) 조건이 되고,
+- NOT 조건을 분해하면 C1 <> 1 AND C1 <> NULL 조건이 된다.
+- C1 <> NULL 조건은 NULL이므로 결국 C1 <> 1 AND NULL 조건으로 해석된다.
+- AND NULL 조건은 모든 조건이 NULL이 되므로 결과로 0이 반환된다.
+
+| 순서 | 조건 |
+|:-----:|:------:|
+|1| C1 NOT IN (1, NULL)|
+|2| NOT (C1 = 1 OR C1 = NULL)|
+|3| C1 <> 1 AND C1 <> NULL|
+|4| C1 <> 1 AND NULL|
+
+___
+
+**# 2**
+
+```SQL
+-- 2
+DROP TABLE T1;
+CREATE TABLE T1 (C1 VARCHAR(1), C2 NUMBER);
+
+DROP TABLE T2;
+CREATE TABLE T2 (C1 VARCHAR(1), C2 NUMBER);
+
+SELECT C1, C2 FROM T1
+UNION ALL
+SELECT C1 FROM T2;
+-- ORA-01789: 질의 블록은 부정확한 수의 결과 열을 가지고 있습니다.
+
+SELECT C1, C2 FROM T1
+UNION ALL
+SELECT C2, C1 FROM T2;
+-- ORA-01790: 대응하는 식과 같은 데이터 유형이어야 합니다
+
+SELECT C1, C2 FROM T1 ORDER BY C1
+UNION ALL
+SELECT C1, C2 FROM T2 ORDER BY C1; -- ORDER BY 가 두번입력됨.
+-- ORA-00933: SQL 명령어가 올바르게 종료되지 않았습니다
+
+(SELECT C1, C2 FROM T1)
+UNION ALL
+(SELECT C1, C2 FROM T2);
+-- 정상 작동
+```
+- 3번에서 에러가 발생하는 이유는 집합 연산자를 사용한 SQL은 SQL의 끝에 ORDER BY 절을 `1번만 기술`할 수 있기 때문
+
+___
+
+**# 3**
+
+```SQL
+DROP TABLE T1;
+CREATE TABLE T1(C1 NUMBER, C2 NUMBER);
+
+INSERT INTO T1 VALUES (1, 1);
+INSERT INTO T1 VALUES (1, 2);
+INSERT INTO T1 VALUES (2, 1);
+INSERT INTO T1 VALUES (2, 2);
+
+DROP TABLE T2;
+CREATE TABLE T2(C1 NUMBER, C2 NUMBER);
+
+INSERT INTO T2 VALUES (1, 1);
+INSERT INTO T2 VALUES (1, 2);
+INSERT INTO T2 VALUES (2, 1);
+
+SELECT * FROM T1 WHERE (C1 = 1 OR C2 = 1);
+
+SELECT * FROM T1 WHERE C1 = 1
+UNION ALL
+SELECT * FROM T1 WHERE C2 = 1 AND C1 <> 1;
+```
+
+| C1 | C2 |
+| :--- | :--- |
+| 1 | 1 |
+| 1 | 2 |
+| 2 | 1 |
+
+
+- 단일 테이블에 대한 OR 조건은 UNION ALL이나 UNION 집합 연산자로 변경할 수 있다.
+- C1 = 1 조건을 만족하는 집합과 C2 = 1 조건을 만족하는 집합 간에는 중복 행이 UNION ALL 집합 연산자를 사용하는 경우 중복 제거를 위해 C1 <> 1 조건을 추가해야 한다.
+
+___
+
+**# 4**
+
+```SQL
+DROP TABLE T1;
+CREATE TABLE T1 (C1 VARCHAR(2), C2 DATE, C3 NUMBER);
+
+INSERT INTO T1 VALUES ('A', '20500101', 1);
+INSERT INTO T1 VALUES ('A', '20500102', 1);
+INSERT INTO T1 VALUES ('B', '20500101', 1);
+INSERT INTO T1 VALUES ('B', '20500102', 1);
+INSERT INTO T1 VALUES ('C', '20500101', 1);
+INSERT INTO T1 VALUES ('C', '20500102', 1);
+```
+
+```SQL
+SELECT C1, C2, SUM(C3) AS C3
+    FROM T1
+    GROUP BY ROLLUP((C1, C2)); 
+    -- ORDER BY C1, C2, 총합만 출력됨
+```
+
+| C1 | C2 | C3 |
+| :--- | :--- | :--- |
+| A | 2050-01-01 00:00:00 | 1 |
+| A | 2050-01-02 00:00:00 | 1 |
+| B | 2050-01-01 00:00:00 | 1 |
+| B | 2050-01-02 00:00:00 | 1 |
+| C | 2050-01-01 00:00:00 | 1 |
+| C | 2050-01-02 00:00:00 | 1 |
+| NULL | NULL | 6 |
+
+```SQL
+SELECT C1, C2, SUM(C3) AS C3
+FROM T1
+GROUP BY ROLLUP((C2, C1)); 
+-- ORDER BY C2, C1, 총합만 출력됨
+```
+
+| C1 | C2 | C3 |
+| :--- | :--- | :--- |
+| A | 2050-01-01 00:00:00 | 1 |
+| B | 2050-01-01 00:00:00 | 1 |
+| C | 2050-01-01 00:00:00 | 1 |
+| A | 2050-01-02 00:00:00 | 1 |
+| B | 2050-01-02 00:00:00 | 1 |
+| C | 2050-01-02 00:00:00 | 1 |
+| NULL | NULL | 6 |
+
+```SQL
+SELECT C1, C2, SUM(C3) AS C3
+FROM T1
+GROUP BY C1, ROLLUP(C2); 
+-- ORDER BY C1, C2, C1 기준 합계만 출력됨
+```
+
+| C1 | C2 | C3 |
+| :--- | :--- | :--- |
+| A | 2050-01-01 00:00:00 | 1 |
+| A | 2050-01-02 00:00:00 | 1 |
+| A | NULL | 2 |
+| B | 2050-01-01 00:00:00 | 1 |
+| B | 2050-01-02 00:00:00 | 1 |
+| B | NULL | 2 |
+| C | 2050-01-01 00:00:00 | 1 |
+| C | 2050-01-02 00:00:00 | 1 |
+| C | NULL | 2 |
+
+```SQL
+SELECT C1, C2, SUM(C3) AS C3
+FROM T1
+GROUP BY C2, ROLLUP(C1); 
+-- ORDER BY C2, C1, C2 기준 합계만 출력됨
+```
+
+| C1 | C2 | C3 |
+| :--- | :--- | :--- |
+| A | 2050-01-01 00:00:00 | 1 |
+| B | 2050-01-01 00:00:00 | 1 |
+| C | 2050-01-01 00:00:00 | 1 |
+| NULL | 2050-01-01 00:00:00 | 3 |
+| A | 2050-01-02 00:00:00 | 1 |
+| B | 2050-01-02 00:00:00 | 1 |
+| C | 2050-01-02 00:00:00 | 1 |
+| NULL | 2050-01-02 00:00:00 | 3 |
+
+- 
+___
+
+**# 5**
+
+
+- GROUPING 함수는 표현식이 행 그룹에 포함되면 0, 포함되지 않으면 1을 반환한다. 결과의 GP열은 C2가 행 그룹에 포함되지 않은 행에 0을 반환한다. 3, 4번은 에러가 발생한다.
+
+```SQL
+SELECT C1, C2, SUM(C3) AS C3,
+    GROUPING(C1) AS GP
+    FROM T1
+    GROUP BY ROLLUP (C1, C2);
+```
+
+| C1 | C2 | C3 | GP |
+| :--- | :--- | :--- | :--- |
+| A | 2050-01-01 00:00:00 | 1 | 0 |
+| A | 2050-01-02 00:00:00 | 1 | 0 |
+| A | NULL | 2 | 0 |
+| B | 2050-01-01 00:00:00 | 1 | 0 |
+| B | 2050-01-02 00:00:00 | 1 | 0 |
+| B | NULL | 2 | 0 |
+| C | 2050-01-01 00:00:00 | 1 | 0 |
+| C | 2050-01-02 00:00:00 | 1 | 0 |
+| C | NULL | 2 | 0 |
+| NULL | NULL | 6 | 1 |
+
+```SQL
+SELECT C1, C2, SUM(C3) AS C3,
+       GROUPING(C2) AS GP
+FROM T1
+GROUP BY ROLLUP (C1, C2);
+```
+
+| C1 | C2 | C3 | GP |
+| :--- | :--- | :--- | :--- |
+| A | 2050-01-01 00:00:00 | 1 | 0 |
+| A | 2050-01-02 00:00:00 | 1 | 0 |
+| A | NULL | 2 | 1 |
+| B | 2050-01-01 00:00:00 | 1 | 0 |
+| B | 2050-01-02 00:00:00 | 1 | 0 |
+| B | NULL | 2 | 1 |
+| C | 2050-01-01 00:00:00 | 1 | 0 |
+| C | 2050-01-02 00:00:00 | 1 | 0 |
+| C | NULL | 2 | 1 |
+| NULL | NULL | 6 | 1 |
+
+```SQL
+SELECT C1, C2, SUM(C3) AS C3,
+       GROUPING(C1, C2) AS GP
+FROM T1
+GROUP BY ROLLUP (C1, C2);
+-- ORA-00909: 인수의 개수가 부적합합니다
+
+SELECT C1, C2, SUM(C3) AS C3,
+       GROUPING(C2, C1) AS GP
+FROM T1
+GROUP BY ROLLUP (C1, C2);
+-- ORA-00909: 인수의 개수가 부적합합니다
+```
+
+___
+
+
+**# 6**
+```SQL
+SELECT EMPNO, ENAME, SAL, COMM, FIRST_VALUE(COMM) over (ORDER BY SAL) AS C1
+    FROM EMP
+    WHERE DEPTNO = 30;
+```
+
+| EMPNO | ENAME | SAL | COMM | C1 |
+| :--- | :--- | :--- | :--- | :--- |
+| 7900 | JAMES | 950.00 | NULL | NULL |
+| 7521 | WARD | 1250.00 | 500.00 | NULL |
+| 7654 | MARTIN | 1250.00 | 1400.00 | NULL |
+| 7844 | TURNER | 1500.00 | NULL | NULL |
+| 7499 | ALLEN | 1600.00 | 300.00 | NULL |
+| 7698 | BLAKE | 2850.00 | NULL | NULL |
+
+- FIRST_VALUE 함수는 위도우 첫 행의 컬럼 값을 반환한다.
+- IGNORE ULLS 키워드를 기술하면 제외한 첫 행의 값을 반환한다.
+
+___
+
+**# 7**
+```SQL
+SELECT EMPNO, ENAME, SAL, LAG(SAL, 2) OVER ( ORDER BY SAL ) AS C1
+    FROM EMP
+    WHERE DEPTNO = 20; -- SAL을 2행 뒤로 
+```
+| EMPNO | ENAME | SAL | C1 |
+| :--- | :--- | :--- | :--- |
+| 7369 | SMITH | 800.00 | NULL |
+| 7876 | ADAMS | 1100.00 | NULL |
+| 7566 | JONES | 2975.00 | 800 |
+| 7788 | SCOTT | 3000.00 | 1100 |
+| 7902 | FORD | 3000.00 | 2975 |
+
+```SQL
+SELECT EMPNO, ENAME, SAL, LAG(SAL, 2, 0) OVER ( ORDER BY SAL ) AS C1
+FROM EMP
+WHERE DEPTNO = 20;
+```
+| EMPNO | ENAME | SAL | C1 |
+| :--- | :--- | :--- | :--- |
+| 7369 | SMITH | 800.00 | 0 |
+| 7876 | ADAMS | 1100.00 | 0 |
+| 7566 | JONES | 2975.00 | 800 |
+| 7788 | SCOTT | 3000.00 | 1100 |
+| 7902 | FORD | 3000.00 | 2975 |
+
+```SQL
+SELECT EMPNO, ENAME, SAL, LEAD(SAL, 2) OVER ( ORDER BY SAL ) AS C1
+FROM EMP
+WHERE DEPTNO = 20;
+```
+| EMPNO | ENAME | SAL | C1 |
+| :--- | :--- | :--- | :--- |
+| 7369 | SMITH | 800.00 | 2975 |
+| 7876 | ADAMS | 1100.00 | 3000 |
+| 7566 | JONES | 2975.00 | 3000 |
+| 7788 | SCOTT | 3000.00 | NULL |
+| 7902 | FORD | 3000.00 | NULL |
+
+```SQL
+SELECT EMPNO, ENAME, SAL, LEAD(SAL, 2, 0) OVER ( ORDER BY SAL ) AS C1
+FROM EMP
+WHERE DEPTNO = 20;
+```
+| EMPNO | ENAME | SAL | C1 |
+| :--- | :--- | :--- | :--- |
+| 7369 | SMITH | 800.00 | 2975 |
+| 7876 | ADAMS | 1100.00 | 3000 |
+| 7566 | JONES | 2975.00 | 3000 |
+| 7788 | SCOTT | 3000.00 | 0 |
+| 7902 | FORD | 3000.00 | 0 |
+
+- LAG 함수
+    - 현재 행에서 OFFSET 이전 행의 칼럼 값을 반환한다.
+    - OFFSET은 행 기준이며 기본값은 1이다.
+    - 이전 행이 없을 때 반환할 값을 DEFAULT 인자로 지전할 수 있으며, 기본값을 NULL이다.
+- 쿼리 결과는 2행 이전 행의 SAL을 조회한다. 2행 이전 행이 없는 행에서 0이 반환되었으므로 DEFAULT 인자에 0을 지정한 것을 알 수 있다.
+
+___
+
+**# 8**
+
+```SQL
+SELECT * FROM (SELECT A.EMPNO, A.ENAME, A.SAL, A.DEPTNO, B.DNAME
+              FROM EMP A, DEPT B
+              WHERE B.DEPTNO(+) = A.DEPTNO
+              ORDER BY SAL DESC)
+    WHERE ROWNUM <= 3;
+
+SELECT A.*, B.DNAME
+    FROM (SELECT EMPNO, ENAME, SAL, DEPTNO FROM EMP ORDER BY SAL DESC) A, DEPT B
+    WHERE ROWNUM <= 3
+    AND B.DEPTNO(+) = A.DEPTNO;
+```
+
+| EMPNO | ENAME | SAL | DEPTNO | DNAME |
+| :--- | :--- | :--- | :--- | :--- |
+| 7839 | KING | 5000.00 | 10 | ACCOUNTING |
+| 7788 | SCOTT | 3000.00 | 20 | RESEARCH |
+| 7902 | FORD | 3000.00 | 20 | RESEARCH |
+
+- 1번 SQL은 DEPT 테이블을 조인해서 SAL 역순으로 정렬한 후 상위 3개를 선택했고, 
+- 2번 SQL은 SAL 역순으로 정렬한 결괒비합으로 DEPT 테이블과 조인하면서 상위 3개를 선택했다.
+- 1번 SQL은 14행, 2번 SQL은 3행이 조인된다. M:1 아우터 조인인 경우 2번 SQL처럼 TOP-N 처리 후 조인하는 편이 성능 측면에서 유리하다.
+
+- EMP 아우터 조인 14회, WHERE ROWNUM <= 3이 조인보다 먼저 나오므로 3회
+
+___
+
+**# 9**
+
+```SQL
+SELECT EMPNO, ENAME, SAL, DEPTNO
+    FROM EMP
+    ORDER BY SAL DESC; -- 14행
+
+SELECT A.*, ROWNUM AS RN
+    FROM (SELECT EMPNO, ENAME, SAL, DEPTNO
+        FROM EMP
+        ORDER BY SAL DESC ) A
+WHERE ROWNUM <= 10; -- 10행
+
+SELECT A.*
+    FROM (SELECT A.*, ROWNUM AS RN
+        FROM (SELECT EMPNO, ENAME, SAL, DEPTNO
+            FROM EMP
+            ORDER BY SAL DESC) A
+        WHERE ROWNUM <= 10 ) A
+    WHERE RN >= 6; -- 5행
+```
+- 3번째 쿼리는 6 ~ 10 번째 결과가 출력되므로 총 5행이 출력된다.
+
+___
+
+**# 10**
+
+```SQL
+SELECT *
+FROM EMP
+WHERE JOB <> 'ANALYST'
+START WITH ENAME = 'JONES'
+CONNECT BY MGR = PRIOR EMPNO; -- 3
+```
+
+- `START WITH ~ CONNECT BY` 절은 WHERE 절보다 뒤에 작성되지만 실행순서는 WHERE 절보다 앞선다.
+- 그러므로 일단 `START WITH ~ CONNECT BY` 조건에 맞는 모든 절이 불러와지고
+- 그 다음에 `JOB <> 'ANALYST'` 조건이 실행되므로
+- ANALYST행에 의해 불러와진 CLERK 행은 남게된다.
+- 따라서 JONES와 두 CLERK이 남아 총 3이 출력된다.
+
+___
+
+**# 11**
+
+```SQL
+WITH W1 (EMPNO, ENAME, MGR) AS (
+    SELECT EMPNO, ENAME, MGR
+    FROM EMP
+    WHERE ENAME = 'JONES'
+    UNION ALL
+    SELECT C.EMPNO, C.ENAME, C.MGR
+    FROM W1 P, EMP C
+    WHERE P.EMPNO = C.MGR)
+SELECT EMPNO, ENAME, MGR
+FROM W1;
+```
+
+- 관리자가 앞서 읽은 사원의 사원번호와 일치하는 데이터를 찾아 하위 노드로 전개해야 하므로 조인식을 C.MGR = P.EMPNO로 기술해야 한다.
+- 가장 먼저 읽은 JONES의 사원번호(EMPNO)는 7566이다. 관리자(MGR)가 앞서 읽은 JONES의 사원번호 7566과 일치하는 사원은 SCOTT과 FORD다. 예를 하나 더 들면, 관리자가 앞서 읽은 SCOTT의 사원번호 7788과 일치하는 사원은 ADAMS이다.
+___
+
+**# 12**
+
+```SQL
+SELECT  *
+    FROM (SELECT JOB, TO_CHAR (HIREDATE, 'YYYY') AS YYYY, DEPTNO, SAL
+        FROM EMP
+        WHERE DEPTNO IN (10, 30))
+    PIVOT (SUM(SAL) FOR DEPTNO IN(10, 30))
+    ORDER BY JOB, YYYY;
+```
+
+| JOB | YYYY | 10 | 30 |
+| :--- | :--- | :--- | :--- |
+| CLERK | 1981 | NULL | 950 |
+| CLERK | 1982 | 1300 | NULL |
+| MANAGER | 1981 | 2450 | 2850 |
+| PRESIDENT | 1981 | 5000 | NULL |
+| SALESMAN | 1981 | NULL | 5600 |
+
+___
+
+**# 13**
+
+| JOB | D10\_SAL | D20\_SAL | D30\_SAL |
+| :--- | :--- | :--- | :--- |
+| ANALYST | NULL | 6000 | NULL |
+| CLERK | 1300 | 1900 | 950 |
+| MANAGER | 2450 | 2975 | 2850 |
+| PRESIDENT | 5000 | NULL | NULL |
+| SALESMAN | NULL | NULL | 5600 |
+
+
+에서 
+
+```SQL
+SELECT *
+    FROM T1
+    UNPIVOT INCLUDE NULLS
+        (SAL FOR DEPTNO IN (D10_SAL AS 10, D20_SAL AS 20, D30_SAL AS 30))
+    WHERE JOB = 'ANALYST';
+```
+의 결과는 
+| JOB | DEPTNO | SAL |
+| :--- | :--- | :--- |
+| ANALYST | 10 | NULL |
+| ANALYST | 20 | 6000 |
+| ANALYST | 30 | NULL |
+
+이다.
+
+- 일반적으로 COUNT 함수는 NULL을 포함시키지 않지만, 
+- 위 쿼리에는 `INCLUDE NULLS`가 기술되어 있기 때문에 NULL을 포함해 연산한다.
+- 그러므로 아래 쿼리의 결과는 3이다.
+
+```SQL
+SELECT COUNT(*) AS CNT
+    FROM T1
+    UNPIVOT INCLUDE NULLS
+        (SAL FOR DEPTNO IN (D10_SAL AS 10, D20_SAL AS 20, D30_SAL AS 30))
+    WHERE JOB = 'ANALYST'; -- 3
+```
+
+___
+
+**# 14**
+```SQL
+SELECT REGEXP_SUBSTR('12AB34CD', '[A-Z]+$') AS C1 FROM DUAL; -- CD
+```
+- [A-Z]는 영문 대문자,
+- `+`는 1회 또는 그 이상의 횟수로 일치,
+- `$`는 문자열의 끝을 의미하므로
+- 이 표현식에 일치하는 문자는 `CD`이다.
+
+___
+
+**# 15**
+```SQL
+SELECT REGEXP_SUBSTR('AABABCABCD', '(AB)C\1') AS C1 FROM DUAL; -- ABCAB
+```
+
+- 첫 번째 일치한 표현식이 AB이고, C 이후에 첫 번째 일치한 표현식을 AB 일치하므로 ABCAB가 일치한다.
+
+
+```SQL
+SELECT REGEXP_SUBSTR('ABCABCABCABC','(AB)C\1') AS C1 FROM DUAL; -- ABCAB
+SELECT REGEXP_SUBSTR('ABCABCABCABC','(AB)C(ABC)\1') AS C1 FROM DUAL; -- ABCABCAB
+SELECT REGEXP_SUBSTR('ABCABCABCABC','(AB)C(ABC)\2') AS C1 FROM DUAL; -- ABCABCABC
+```
+- 역참조`'(AB)C\1'` 는 `'(AB)C(AB)'`와 일치.
+- `'(AB)C(ABC)\1'`는 `'(AB)C(ABC)(AB)'`와 일치.
+- `'(AB)C(ABC)\2'`는 `'(AB)C(ABC)(ABC)'`와 일치.
+
+#
+
+**# 역참조**
+- 역참조를 사용하면 일치함 서브 표현식을 다시 참조할 수 있다. 반복되는 패턴을 검색하거나 서브 표현식의 위치를 변경하는 용도로 사용할 수 있다.
+
+- \n : n번째 서브 표현식과 일치, n은 1에서 9사이의 정수
+
+
+___
+
+6. 1 -> FIRST_VALUE가 머여?? 첫번째 칸이 NULL이니까
+7. 2 -> LAG는 상위 행 컬럼 값 LEAD는 하위 행 컬럼 값 (얼마나 위 아래?, NULL은 뭘로 대체?)
+8. 3 -> EMP 아우터 조인 14회, WHERE  ROWNUM <= 3이 조인보다 먼저 나오므로 3회
+9. 3/`2` -> ROWNUM <= 10으로 F3와 F2가 10번씩 호출되고 F1는 RN>=6를 비교해 호출하려면 14번 모두 출력해야 한다.
+10. 1/`3` -> 아날리스트가 없어지면 CLERK도 출력될 수 없다.
+
+11. C.MGR = P.EMPNO -> C 현재 매니저넘버 = P 이전 사원번호
+12. 5100/`5600` -> SUM(SAL)
+13. 4 아니면 2 INCLUDE NULLS면 NULL도 세나?
+14. 2/`4` -> AB
+15. 2
