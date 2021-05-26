@@ -1526,17 +1526,4 @@ SELECT REGEXP_SUBSTR('ABCABCABCABC','(AB)C(ABC)\2') AS C1 FROM DUAL; -- ABCABCAB
 
 - \n : n번째 서브 표현식과 일치, n은 1에서 9사이의 정수
 
-
 ___
-
-6. 1 -> FIRST_VALUE가 머여?? 첫번째 칸이 NULL이니까
-7. 2 -> LAG는 상위 행 컬럼 값 LEAD는 하위 행 컬럼 값 (얼마나 위 아래?, NULL은 뭘로 대체?)
-8. 3 -> EMP 아우터 조인 14회, WHERE  ROWNUM <= 3이 조인보다 먼저 나오므로 3회
-9. 3/`2` -> ROWNUM <= 10으로 F3와 F2가 10번씩 호출되고 F1는 RN>=6를 비교해 호출하려면 14번 모두 출력해야 한다.
-10. 1/`3` -> 아날리스트가 없어지면 CLERK도 출력될 수 없다.
-
-11. C.MGR = P.EMPNO -> C 현재 매니저넘버 = P 이전 사원번호
-12. 5100/`5600` -> SUM(SAL)
-13. 4 아니면 2 INCLUDE NULLS면 NULL도 세나?
-14. 2/`4` -> AB
-15. 2
