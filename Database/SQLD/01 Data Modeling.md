@@ -97,6 +97,7 @@
 
 #
 **9. 주문상세 엔터티의 주식별자에 대한 설명**
+
 <img src="https://user-images.githubusercontent.com/66513003/118952239-bce09580-b996-11eb-9c9f-15c4f80f48c4.png" width="400">
 
 - 주문상세 엔터티의 모든 인스턴스를 유일하게 식별할 수 있다.
