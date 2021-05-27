@@ -230,3 +230,61 @@ ____
 - \n : n번째 서브 표현식과 일치, n은 1에서 9사이의 정수
 
 ___
+
+# 
+- DML - DATA-MANIPULATION LANG 
+    - SELECT, UPDATE, DELETE, INSERT, MERGE
+- DDL - DATA-DEFINITION LANG
+    - CREATE ALTER DROP TRUNCATE RENAME
+- TCL - TRANSACTION CONTROL LANG
+    - COMMIT ROLLBACK SAVEPOINT
+- DCL - DATA CONTROL LANG
+    - GRANT REVOKE
+
+___ 
+
+**# 트랜잭션의 특성**
+
+| 특징 | 설명 |
+|---|:---:|
+|원자성|트랜잭션의 작업은 모두 수행되거나 모두 수행되지 않아야 함|
+|일관성|트랜잭션이 완료되면 데이터 무결성이 일관되게 보장되어야 함|
+|고립성|트랜잭션이 다른 트랜잭션으로부터 고립된 상태로 수행되어야 함|
+|지속성|트랜잭션이 완료되면 장애가 발생하더라도 변경 내용이 지속되어야 함|
+
+____
+
+**# 정규형**
+
+1. 제 1 정규형
+    - 모든 속성은 반드시 하나의 값을 가져야 한다.
+    - M:N 관계를 M:1관계로 전환
+
+2. 제 2 정규형
+    - 모든 속성은 반드시 `기본키` 전부에 종속되어야 한다.
+    - 함수의 부분 종속을 분리
+        (기본키에 의해 함수적 종속성을 가지고 있지 않는 것들을 분리)
+    
+3. 제 3 정규형
+    - 기본키가 아닌 모든 속성 간에는 서로 종속될 수 없다.
+    - 모든 속성들이 기본키에 이행적 함수 종속이 아님.
+
+___
+
+**# P198 19번**
+```SQL
+DROP TABLE T1;
+CREATE TABLE T1(C1 NUMBER, C2 VARCHAR2(10));
+
+INSERT INTO T1 VALUES (1, 'ZA');
+INSERT INTO T1 VALUES (2, 'BZZ');
+INSERT INTO T1 VALUES (3, 'CZZ');
+INSERT INTO T1 VALUES (4, 'DZZZ');
+INSERT INTO T1 VALUES (5, 'ZZZE');
+
+SELECT C1, RTRIM(C2, 'Z'), C2 FROM T1 ORDER BY CASE
+    WHEN C1 <= 2 THEN 'B' -- B 1, 2
+    WHEN C1 > 4 THEN 'A' -- 5 A
+    ELSE 'C' -- 3,4
+        END ; -- CASE로 순서랭크 지정이 가능!!
+```
