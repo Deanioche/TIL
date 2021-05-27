@@ -249,45 +249,151 @@ ___
 **# 핵심 문제**
 
 **# 1**
-- 4
+```SQL
+DROP TABLE T1;
+CREATE TABLE T1(C1 NUMBER, C3 NUMBER);
+
+INSERT INTO T1 VALUES (1, 1);
+
+DROP TABLE T2;
+CREATE TABLE T2(C1 NUMBER, C2 NUMBER);
+
+INSERT INTO T2 VALUES (1, 1);
+INSERT INTO T2 VALUES (2, 1);
+INSERT INTO T2 VALUES (3, 1);
+INSERT INTO T2 VALUES (4, 1);
+
+INSERT INTO T1
+    SELECT A.C1, A.C2
+    FROM T2 A
+    WHERE NOT EXISTS (SELECT 1 FROM T1 X WHERE X.C1 = A.C1);
+
+SELECT * FROM T1;
+```
+| C1 | C3 |
+| :--- | :--- |
+| 1 | 1 |
+| 2 | 1 |
+| 4 | 1 |
+| 3 | 1 |
+
+___
 
 **# 2**
--  3
+
+```SQL
+DROP TABLE T1;
+CREATE TABLE T1(C1 NUMBER, C2 NUMBER);
+
+INSERT INTO T1 VALUES (1, 1);
+
+DROP TABLE T2;
+CREATE TABLE T2(C1 NUMBER, C2 NUMBER);
+
+INSERT INTO T2 VALUES (1, 1);
+INSERT INTO T2 VALUES (1, 2);
+INSERT INTO T2 VALUES (1, 3);
+
+UPDATE (SELECT A.C2 AS AC2, B.C2 AS BC2 
+    FROM T1 A
+        , (SELECT C1, MAX(C2) AS C2 FROM T2 GROUP BY C1) B -- (1, 3) B
+    WHERE B.C1 = A.C1) -- 1 = 1로 1행 일치
+SET AC2 = BC2; -- 1(AC2) <- 3(BC2)
+
+SELECT * FROM T1;
+```
+
+| C1 | C2 |
+| :--- | :--- |
+| 1 | 3 |
+
 - 가장안쪽 서브쿼리 결과 (1, 3) B
 - 바깥 쿼리 AC2 = NULL, BC2 = 3
-- SET AC2 = 3 이므로
+- SET AC2 = 3이 됨.
+___
 
 **# 3**
-- 1
-- ?
+```SQL
+DROP TABLE T1;
+CREATE TABLE T1(C1 NUMBER, C2 NUMBER);
+
+INSERT INTO T1 VALUES (1, 1);
+
+DROP TABLE T2;
+CREATE TABLE T2(C1 NUMBER, C2 NUMBER);
+
+INSERT INTO T2 VALUES (2, 2); -- ORA-30926 에러 방지를 위해 (1,2) -> (2,2)로 바꿈
+INSERT INTO T2 VALUES (2, 3); -- ORA-30926 에러 방지를 위해 (1,3) -> (2,2)로 바꿈
+INSERT INTO T2 VALUES (1, 4);
+
+MERGE
+    INTO T1 T
+    USING T2 S
+    ON (T.C1 = S.C1) -- 이 조건에 해당하는 행이 여러개일 경우
+    -- ORA-30926: 원본 테이블의 고정 행 집합을 가져올 수 없습니다 에러 발생
+    WHEN MATCHED THEN
+    UPDATE SET T.C2 = S.C2;
+ --   WHEN NOT MATCHED THEN
+--    INSERT VALUES (S.C1, S.C2);
+
+SELECT * FROM T1; -- T1(1,1) T2(1,4) 일치하므로 C2가 바뀜 1 -> 4
+```
+___
 
 **# 4**
-- 1 `4`
-- C1 = 1 -> 2 COMMIT
-- C1 = 2 -> 4 ROLLBACK 
-- C1 = 2 
+- ㄴ UPDATE를 시작하는 시점에 C1 = 2인 레코드는 없으므로 실행X
+- SQL SERVER라면 S2세션은 ㄱ UPDATE가 끝날때까지 기다렸다가 정상 실행된다.
+
+- S2세션의 ㄷ UPDATE를 시작하는 시점에는 S1세션에서 C1이 1 -> 2로 변경되고 COMMIT된 시점으로
+- ㄷ이 정상 실행된다. 2 -> 4
+- S1의 ㄹ UPDATE는 현재 레코드의 LOCK 은 S2가 획득한 시점이므로 대기상태가 된다.
+- S2 세션이 ROLLBACK되면 S1이 LOCK을 획득하고 ㄹ이 실행된다. C1 = 4 -> 2 -> 5
+- 최종값은 5.
+
+___
 
 **# 5**
-- 4 `1`
+```SQL
+DROP TABLE T1;
+CREATE TABLE T1 (C1 NUMBER(1)); -- 데이터 크기 확인!!
+
+DROP TABLE T2;
+CREATE TABLE T2 (C1 NUMBER);
+
+INSERT INTO T2 VALUES (8);
+INSERT INTO T2 VALUES (9);
+INSERT INTO T2 VALUES (10);
+ COMMIT;
+
+INSERT INTO T1 VALUES (7);
+INSERT INTO T1 SELECT * FROM T2;
+    -- ORA-01438: 이 열에 대해 지정된 전체 자릿수보다 큰 값이 허용됩니다.
+DELETE FROM T1 WHERE C1 = 9;
+
+SELECT * FROM T1; -- 7
+```
 
 **# 6**
-- 2
-- ㄱ에서 Write 후 commit하지 않아서 다른 세션에서 해당 트랜잭션을 획득할 수 없음.
+
+- ㄴ이 블로킹 된 후 S1세션에서 COMMIT을 수행했으므로 S2 세션에서는 ORA-00001 : 무결성 제약 조건에 위배됩니다. 라는 에러가 발생한다. ㄹ은 블로킹 된 후 S2 세션에서 ROLLBACK을 수행했으므로 값이 입력된다.
+
 
 **# 7**
-- 3
-- TRUNCATE는 COMMIT되어서 ROLLBACK이 안됨.
+- DELETE 문은 DML문, TRUNCATE문은 DDL문이다. DDL문은 암시적으로 COMMIT을 수행하기 때문에 ROLLBACK으로 값을 되돌릴 수 없다.
 
 **# 8**
-- 3
-- 혼자 2행 차이나니까?
+- CHAR 타입은 최대크기에 비해 입력된 값이 작아도 뒤쪽에 공백을 채워 남은 공간을 모두 사용한다.
+- VARCHAR2 타입은 입력한 값을 그대로 저장한다.
 - CHAR(2)는 2바이트 다 쓰고 VARCHAR(2)는  1바이트씩 써서 C1이 B일때(4바이트) C2는 D(4바이트)
 
 **# 9**
-- ON FROM
+- REVOKE ALL ON 'TABLE' FROM 'USER'
 
 **# 10**
+- CREATE ROLE
 - DROP ROLE
+
+
 
  
 
