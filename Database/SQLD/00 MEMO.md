@@ -338,4 +338,47 @@ ___
 
 ___
 
-\
+- (.)\1 패턴은 동일한 문자가 2번 반복되는 문자열
+
+___
+
+```SQL
+GRANT CREATE SESSION TO U1, U2; -- 로그인
+GRANT CONNECT TO U3; -- 로그인
+
+GRANT CREATE TABLE TO U3; -- 테이블 생성
+GRANT RESOURCE TO U3; -- 테이블 생성
+
+GRANT UNLIMITED TABLESPACE TO U2;
+
+-- U2 계정에세 USERS 테이블스페이스에 대한 무제한 권한 설정
+ALTER USER U2 QUOTA UNLIMITED ON USERS;
+
+-- 테이블의 모든 권한 부여
+GRANT ALL ON T1 TO U1;
+
+GRANT EXECUTE ON T1 TO U1; -- 에러
+```
+
+**# 다른 사용자의 스키마에 테이블 생성 권한**
+```SQL
+-- U1 사용자
+CREATE TABLE U2.T1 (C1 NUMBER);
+-- 권한이 불충분합니다.
+
+GRANT CREATE ANY TABLE TO U1;
+-- 권한이 부여되었습니다.
+
+CREATE ROLL R1;
+-- 롤이 생성되었습니다.
+
+GRANT ALL ON T1 TO R1;
+GRANT R1 TO U1;
+
+-- 권한 해제
+REVOKE ALL ON 'TABLE' FROM 'USER'
+
+-- 롤 생성, 제거
+CREATE ROLE
+DROP ROLE
+```

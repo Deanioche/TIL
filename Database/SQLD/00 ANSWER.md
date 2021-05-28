@@ -11,9 +11,9 @@ ___
     - 마름모로 관계 표시
 
 - 발생 시점에 따른 엔터티 분류
-    - 기본 엔터티
-    - 중심 엔터티
-    - 행위 엔터티
+    - 기본 엔터티 - 독립적 생성 가능, 상속 없이 고유한 주식별자를 가짐.
+    - 중심 엔터티 - 기본엔티티로부터 발생, 행위를 생성
+    - 행위 엔터티 - 부모가 둘이상, 자주 데이터 변경됨
 
 ___
 
@@ -24,6 +24,10 @@ ___
     - `업무 프로세스에 의해 이용`.
     - 속성이 존재.
     - 다른 엔터티와 1개 이상의 관계를 가짐.
+
+- 도메인
+    - 각 속성이 가질 수 있는 값의 범위
+    - 데이터 타입, check 제약조건, not null 제약조건
 
 - 관계 속성은 자식 엔터티에 생성되므로, `모든` 엔터티에 관계 속성이 `존재하지는 않음`
 
@@ -81,6 +85,12 @@ ___
     - IS NULL, IS NOT NULL을 제외하고는
     - = NULL, <>NULL, != NULL등 수식연산은 UNKNOWN을 반환.
 
+- NULL이 포함된 연산
+    - SELECT '1000' || (40 - NULL) || '0' - 100 FROM DUAL;
+        - '1000' || NULL || '0' - 100
+        - '10000' - 100
+        - 9900
+
     
 
 ```SQL
@@ -94,6 +104,17 @@ SELECT * FROM EMP
 ```
 ___
 08. 함수
+
+    - KEEP 키워드
+        - KEEP (DENSE_RANK FIRST) 정렬된 행 그룹에서 최저 순위 행을 지정
+        - KEEP (DENSE_RANK LASK) 정렬된 행 그룹에서 최고 순위 행을 지정
+
+    - SYS_CONNECT_BY_PATH(ENAME, '>')
+    최초로 읽은 노드부터 현재 노드까지 경로를 '>'로 이어 반환
+
+    - SIGN()
+        - 인자가 양수면 1, 음수면 -1, 0이면 0 반환.
+
     - DECODE(DEPTNO, NULL, 20, 30);
         - DEPTNO가 NULL이면 20, 아니면 30을 반환.
 
@@ -249,6 +270,8 @@ ___
 14. GROUPING SETS
     - ROLLUP()
     - CUBE()
+
+`C1, ROLLUP(C2) = GROUPING SET ((C1, C2), C1)`
 
 ```SQL
 SELECT C1, C2, SUM(C3) AS C3
@@ -451,6 +474,8 @@ ___
 17. UNPIVOT
 
 FOR (UNPIVOT 할 컬럼) IN ((컬럼1, 컬럼2, ...) AS (별칭1, 별칭2, ...))
+- UNPIVOT 뒤에는 일반 컬럼,
+- PIVOIT 뒤에는 SUM() 같은 함수
 
 ___
 
@@ -518,6 +543,8 @@ REGEXP(검색문자열, 검색패턴, 검색시작위치(기본1), 패턴일치�
         - 1 => 첫번째 그룹('010')의 위치 = 1
         - 2 => 두번째 그룹('1234')의 위치 = 5
         - 3 => 세번째 그룹('2345')의 위치 = 10
+
+- (.)\1 패턴은 동일한 문자가 2번 반복되는 문자열
 
 ___
 
@@ -610,9 +637,8 @@ ____
 - A <- B 조인인지 확인할것!!
 
 **X.C1 = C1**
-- 서브쿼리에서 위 식은
-..........0.......... 항상 TRUE
-- 확인할 것!!!!
+- 서브쿼리에서 위 식은 항상 `TRUE`
+- 놓치지 않게 꼭 `확인할 것`!!!!
 
 ___ 
 
@@ -693,8 +719,21 @@ ___
 사용자로 `로그인` 하기 위해서는 `CREATE SESSION 시스템 권한`이 필요한다. ORA-01045 에러는 접속 권한이 없어 로그인이 거절됐을 때 발생한다. 
 
 ```SQL
-GRANT CREATE SESSION TO U1, U2;
-GRANT CONNECT TO U3;
+GRANT CREATE SESSION TO U1, U2; -- 로그인
+GRANT CONNECT TO U3; -- 로그인
+
+GRANT CREATE TABLE TO U3; -- 테이블 생성
+GRANT RESOURCE TO U3; -- 테이블 생성
+
+GRANT UNLIMITED TABLESPACE TO U2;
+
+-- U2 계정에세 USERS 테이블스페이스에 대한 무제한 권한 설정
+ALTER USER U2 QUOTA UNLIMITED ON USERS;
+
+-- 테이블의 모든 권한 부여
+GRANT ALL ON T1 TO U1;
+
+GRANT EXECUTE ON T1 TO U1; -- 에러
 ```
 
 **# 다른 사용자의 스키마에 테이블 생성 권한**
@@ -705,6 +744,12 @@ CREATE TABLE U2.T1 (C1 NUMBER);
 
 GRANT CREATE ANY TABLE TO U1;
 -- 권한이 부여되었습니다.
+
+CREATE ROLL R1;
+-- 롤이 생성되었습니다.
+
+GRANT ALL ON T1 TO R1;
+GRANT R1 TO U1;
 ```
 - 다른 스키마에 테이블을 생성하기 위해서는 CREATE ANY TABLE 시스템 권한이 필요하다.
 - 권한을 부여받지 않으면 기본적으로 자신의 스키마에만 테이블을 생성할 수 있다.
@@ -769,3 +814,8 @@ GRANT R1 TO U1;
 ```
 
 ___
+
+- 스칼라 서브쿼리는 다중 행이 반환되면 에러가 발생한다.
+- ROWNUM 슈도 칼럼을 사용해 단일행을 반환한다.
+- ROWNUM = 1
+- ROWNUM <= 1
