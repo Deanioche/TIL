@@ -288,3 +288,54 @@ SELECT C1, RTRIM(C2, 'Z'), C2 FROM T1 ORDER BY CASE
     ELSE 'C' -- 3,4
         END ; -- CASE로 순서랭크 지정이 가능!!
 ```
+___
+
+```SQL
+-- p207 27번
+
+DROP TABLE T1;
+CREATE TABLE T1 (C1 VARCHAR(2), C2 DATE, C3 NUMBER);
+
+INSERT INTO T1 VALUES ('A', '20500101', 1);
+INSERT INTO T1 VALUES ('A', '20500102', 1);
+INSERT INTO T1 VALUES ('B', '20500101', 1);
+INSERT INTO T1 VALUES ('B', '20500102', 1);
+INSERT INTO T1 VALUES ('C', '20500101', 1);
+INSERT INTO T1 VALUES ('C', '20500102', 1);
+
+SELECT C1, C2, SUM(C3) AS C3
+    FROM T1
+    GROUP BY GROUPING SETS (C1, ROLLUP (C2))
+ORDER BY 1;
+
+-- 일단 GROUP BY에 C1, C2가 모두 나와야 되고
+-- C1 정렬 이 먼저 되있으므로  GROUP BY 다음 C1이 먼저 나오지만
+-- C2의 총합만 있으므로 ROLLUP(C2)
+```
+
+___
+
+11. GROUP BY
+
+- 집계함수 (COUNT)를 GROUP BY 없이 쓰면 항상 결과를 반환한다.
+- `따라서 EXISTS(SELECT COUNT(*) ~)는 FALSE가 되지 않는다.`
+
+___
+
+
+**수행결과가 같거나/다른 SQL 문제에서**
+- B <- A 조인인지
+- A <- B 조인인지 확인할것!!
+
+___
+
+
+**# SORT가 발생하지 않는 연산자**
+- UNION ALL
+    - 이 연산자는 중복을 제거하거나 교집합을 구하지 않고 단순히 나열 순서대로 두 집합을 연결하믑로 `소트가 발생하지 않는다.`
+
+- UNION, MINUS, INTERSECT 는 SORT 발생.
+
+___
+
+\
