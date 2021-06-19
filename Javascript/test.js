@@ -15,9 +15,14 @@ console.log(bb)
 }
 console.log(bb);
 
-(function() {
-    console.log("즉시 실행 함수")
-})()
+// 즉시 실행 함수 (Immediately-invoked function expression)
+(function(aa) {
+    console.log("즉시 실행 함수 > " + aa)
+})('aa')
+
+(function(aa) {
+    console.log("즉시 실행 함수 > " + aa)
+}('aa')) // 파라미터를 받는 괄호 위치가 안쪽에 있음
 
 let x = function(){
     console.log("x 익명 함수")
@@ -31,4 +36,4 @@ let y = function ss(){
     return "[y() 리턴값]"
 }
 
-console.log("y() 실행 결과 : " + y())
+console.log("y() 실행 결과 : " + y()) // ss()는 호출시 에러
