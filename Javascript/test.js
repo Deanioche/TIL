@@ -1,39 +1,29 @@
-function A(n, a) {
-    console.log(n, a);
-}
+const me = {
+    name : 'Fin',
+    job : 'unemployed',
+    age : 15,
+    say : function say() { // input function into object
+        console.log(`I'm ${this.job}!`)
+    },
+    why(){ // short
+        console.log(`I'm only ${this.age} years old!`)
+    },
+    get info() {
+        console.log('get info() 동작')
+        return [this.name, this.job, this.age]
+    },
 
-const a = new A();
+    
+    /**
+     * @param {string} name
+     */
+    set setName(name) { // cannot be existed name
+        console.log('setName() 동작')
+        this.name = name
+    }
+} 
 
-//console.log(a, typeof a);
+console.log(me.info) // [ 'Fin', 'unemployed', 15 ]
+me.setName = 'Hoo'
 
-const bb = 5
-
-{
-const bb = 3 + 5
-console.log(bb)
-
-}
-console.log(bb);
-
-// 즉시 실행 함수 (Immediately-invoked function expression)
-(function(aa) {
-    console.log("즉시 실행 함수 > " + aa)
-})('aa')
-
-(function(aa) {
-    console.log("즉시 실행 함수 > " + aa)
-}('aa')) // 파라미터를 받는 괄호 위치가 안쪽에 있음
-
-let x = function(){
-    console.log("x 익명 함수")
-    return "[x() 리턴값]"
-}
-
-console.log("x() 실행 결과 : " + x())
-
-let y = function ss(){
-    console.log("y 기명 함수 ss")
-    return "[y() 리턴값]"
-}
-
-console.log("y() 실행 결과 : " + y()) // ss()는 호출시 에러
+console.log(me.info) // [ 'Hoo', 'unemployed', 15 ]

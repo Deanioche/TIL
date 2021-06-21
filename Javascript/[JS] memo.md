@@ -27,3 +27,103 @@ console.log(object_style.display); // relative
 // object의 css - display 정보를 출력. 
 ```
 
+# 함수
+
+**# Template Literal**
+- From ES6
+- use Backtick ``
+
+```js
+var name = 'World';
+
+console.log(`Hello, ${name}!`); // Hello, World!
+```
+
+**# Arrow Function**
+
+- 1
+```js
+var name = 'World';
+
+const hello = (name) => {
+    console.log(`Hello, ${name}!`) ;
+}
+
+hello(name); // Hello, World!
+```
+
+- 2
+```js
+var name = 'World'
+
+const hello = (name) => `Hello, ${name}!` 
+
+console.log(hello(name)); // Hello, World!
+```
+
+- map
+```js
+const materials = [
+  'Hydrogen',
+  'Helium',
+  'Lithium',
+  'Beryllium'
+];
+
+console.log(materials.map(material => material.length));
+// Array [8, 6, 7, 9]
+```
+
+# 객체
+
+**# 비구조 할당 (객체 구조 분해)**
+
+- 비구조 할당
+```js
+const me = {
+    name : 'Fin',
+    job : 'unemployed',
+    age : 25
+}
+const {name, job, age} = me;
+console.log(`${name}, ${job}, ${age}`); // Fin, unemployed, 25
+```
+
+- 파라미터에 비구조 할당
+```js
+
+// create the object 'me' as above
+
+const info = ({name, job, age}) => {
+    console.log(`${name}, ${job}, ${age}`);
+}
+
+info(me); // Fin, unemployed, 25
+```
+
+**# this**
+```js
+const me = {
+    name : 'Fin',
+    job : 'unemployed',
+    age : 15,
+    say : function say() { // input function into object
+        console.log(`I'm ${this.job}!`)
+    },
+    why(){ // short
+        console.log(`I'm only ${this.age} years old!`)
+    },
+} 
+
+me.say() // I'm unemployed!
+me.why() // I'm only 15 years old!
+
+const you = {
+    name : 'Din',
+    job : 'employed',
+    age : 35
+}
+
+you.say = me.say // copy the function 'say()'
+you.say() // I'm employed!
+```
