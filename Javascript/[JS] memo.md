@@ -60,6 +60,16 @@ const hello = (name) => `Hello, ${name}!`
 
 console.log(hello(name)); // Hello, World!
 ```
+- 3
+```js
+// Traditional Function
+function bob (a){
+    return a + 100;
+}
+  
+// Arrow Function
+let bob = a => a + 100;  
+```
 
 - map
 ```js
@@ -175,4 +185,6 @@ names.forEach((names, index, array, c, d) => {
     console.log(index, names, array);
 }); // array 'names'
 ```
+
+___
 
