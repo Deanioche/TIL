@@ -185,7 +185,9 @@ names.forEach((names, index, array, c, d) => {
     console.log(index, names, array);
 }); // array 'names'
 ```
+
 ___
+
 
 
 

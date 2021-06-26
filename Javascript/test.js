@@ -5,4 +5,3 @@ function bob (a){
   
 // Arrow Function
 let bob = a => a + 100;  
-
