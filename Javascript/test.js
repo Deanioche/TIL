@@ -1,11 +1,13 @@
-function A(name, age) {
+function A(name) {
     this.name = name
-    this.hello = function(age) {
-         console.log('hello!')
-         return age
+    this.hello = function(name) {
+         return `hello, ${name}\!`
     }
 }
 
 const aa = new A('Din', 23)
 console.log(aa.name)
-console.log(aa.hello())
+console.log(aa.hello('Joe'))
+
+// Din
+// hello, Joe!
