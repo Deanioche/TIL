@@ -3,26 +3,43 @@
 **# 호이스팅**
 - 변수, 함수의 `선언`은 컴파일 단계에서 메모리에 저장됨.
 - 최우선순위로 처리되므로, 코드상에서 나중에 선언되는 변수도 앞선 연산에 사용이 가능.
-- 초기화가 아니므로 해당 변수는 선언만 된 상태로, `값`은 코드상의 순서대로 입력됨. (undefined로 출력된다.)
+- 초기화가 아니므로 해당 변수는 선언만 된 상태로, `값`은 코드상의 순서대로 입력됨. (초기화 되기 전에는 undefined로 출력된다.)
 
+    ```js
+    num = 6;
+    num + 7;
+    var num;
+    /* num이 선언되지 않더라도 에러를 내지 않습니다 */
 
-```js
-num = 6;
-num + 7;
-var num;
-/* num이 선언되지 않더라도 에러를 내지 않습니다 */
+    var x = 1; // x 초기화
+    console.log(x + " " + y); // '1 undefined'
+    var y = 2;
 
-var x = 1; // x 초기화
-console.log(x + " " + y); // '1 undefined'
-var y = 2;
+    // 아래 코드는 이전 코드와 같은 방식으로 동작합니다.
+    var x = 1; // Initialize x
+    var y; // Declare y
+    console.log(x + " " + y); // '1 undefined'
+    y = 2; // Initialize y
+    ```
 
+- 호이스팅 때문에 코드의 구조가 엉성해질 수 있어, `함수 표현식` 형태의 사용이 권장됨.
 
-// 아래 코드는 이전 코드와 같은 방식으로 동작합니다.
-var x = 1; // Initialize x
-var y; // Declare y
-console.log(x + " " + y); // '1 undefined'
-y = 2; // Initialize y
-```
+    ```js
+    // plus(2, 3) - ReferenceError: Cannot access 'plus' before initialization
+
+    // # 함수 표현식 형태
+    const plus = function(x, y){
+        return console.log(x + y)
+    }
+
+    plus(3, 4) // 7
+
+    // # 함수 선언문 형태 (코드 전 후 상관없이 사용 가능.)
+    function minus(x, y){
+        return console.log(x - y)
+    }
+    ```
+
 ref : https://developer.mozilla.org/ko/docs/Glossary/Hoisting
 ___
 
@@ -283,7 +300,6 @@ ___
     ```
     
 - 함수를 인자로 함수 호출
-
     ```js
     function fun1(fun, n){
         console.log('hello')
@@ -294,13 +310,57 @@ ___
     fun1(function(n){
         console.log('funny!', n)
     }, 3)
-
     // hello
     // funny! 4
     ```
 
+- 프로퍼티에 함수 할당
+```js
+const obj = {};
+obj.a = function () {return 200; }
+obj.b = function () {return 300; }
+obj.c = function () {return `four hundred`; }
+
+console.log(obj)
+console.log(obj.a())
+console.log(obj.b())
+console.log(obj.c())
+/*
+{
+    a: [Function (anonymous)],
+    b: [Function (anonymous)],
+    c: [Function (anonymous)]
+}
+200
+300
+four hundred
+*/
+
+/*
+for(const i of obj) {
+    console.log(i)
+} // TypeError: obj is not iterable
+*/
+
+for(const i in obj) {
+    console.log(i, typeof i)
+} 
+/*
+a string
+b string
+c string
+*/
+
+console.log(typeof obj, typeof obj.a(), typeof obj.c());
+// object number string
+```
 ____
 
+**# Object**
 
 
 
+- 프로퍼티
+```js
+arguments, caller, length 등과 같은 기본 프로퍼티
+```
