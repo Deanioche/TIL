@@ -84,6 +84,8 @@ console.log(materials.map(material => material.length));
 // Array [8, 6, 7, 9]
 ```
 
+___
+
 # 객체
 
 **# 비구조 할당 (객체 구조 분해)**
@@ -172,6 +174,7 @@ ___
 
 # foreach
 
+- ex 1
 ```js
 const names = ['James', 'Anna', `Berlin`, `Mina`];
 
@@ -185,11 +188,45 @@ names.forEach((names, index, array, c, d) => {
     console.log(index, names, array);
 }); // array 'names'
 ```
+- ex 2
+```js
+// Arrow function
+forEach((element) => { ... } )
+forEach((element, index) => { ... } )
+forEach((element, index, array) => { ... } )
+
+// Callback function
+forEach(callbackFn)
+forEach(callbackFn, thisArg)
+
+// Inline callback function
+forEach(function callbackFn(element) { ... })
+forEach(function callbackFn(element, index) { ... })
+forEach(function callbackFn(element, index, array){ ... })
+forEach(function callbackFn(element, index, array) { ... }, thisArg)
+```
+
+- ex 3
+```js
+let ratings = [5, 4, 5];
+let sum = 0;
+
+let sumFunction = async function (a, b)
+{
+  return a + b
+}
+
+ratings.forEach(async function(rating) {
+  sum = await sumFunction(sum, rating)
+})
+
+console.log(sum)
+// Naively expected output: 14
+// Actual output: 0
+```
 ___
 
 **#**
-
-
 
 
 
