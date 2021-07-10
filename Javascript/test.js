@@ -1,13 +1,20 @@
-function A(name) {
-    this.name = name
-    this.hello = function(name) {
-         return `hello, ${name}\!`
+// 함수 호출 전
+let menu = {
+  width: 200,
+  height: 300,
+  title: "My menu"
+};
+
+var multiplyNumeric = function (val) {
+    
+    for (let i in val) {
+        if (typeof val[i] == 'number') {
+            val[i] *= 2
+        }
     }
+    
 }
 
-const aa = new A('Din', 23)
-console.log(aa.name)
-console.log(aa.hello('Joe'))
+multiplyNumeric(menu);
 
-// Din
-// hello, Joe!
+console.log(menu)

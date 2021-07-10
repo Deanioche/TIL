@@ -358,6 +358,23 @@ ____
 
 **# Object**
 
+- 객체의 생성과 프로퍼티 설정
+    ```js
+    var item = 'color'
+    var detail = 'black'
+
+    let user = {     // 객체
+        name: "John",  // 키: "name",  값: "John"
+        age: 30,        // 키: "age", 값: 30
+        [`${item}`] : `${detail}`
+    };
+
+    user.isAdmin = true
+    user['my name is'] = '60!'
+
+    console.log(user)
+    ```
+
 - 객체 안 함수
     ```js
     function A(name) {
@@ -373,7 +390,35 @@ ____
     console.log(aa.hello('Joe')) // hello, Joe!
     ```
 
-- 프로퍼티
-```js
-arguments, caller, length 등과 같은 기본 프로퍼티
-```
+- 단축 프로퍼티
+    ```js
+    function makeUser(name, age, color, etc) {
+    return {
+        name : name,
+        age : age,
+        color, // 단축 프로퍼티 -> color : color 와 같음
+        etc, // , 로 끝나도 됨
+    };
+    }
+
+    let user = makeUser("John", 30, 'violet', 'unemployed');
+
+    var alert = function (msg) {
+        console.log(msg)
+    }
+
+    alert(user);
+    // { name: 'John', age: 30, color: 'violet', etc: 'unemployed' }
+
+    alert("name" in user) // true
+
+    for (let i in user) {
+        alert(`${i} : ${user[i]}`)
+    }
+    /*
+    name : John
+    age : 30
+    color : violet
+    etc : unemployed
+    */
+    ```
