@@ -422,3 +422,14 @@ ____
     etc : unemployed
     */
     ```
+
+- 메서드 단축 구문
+    ```js
+    user = {
+    sayHi() { // "sayHi: function()"과 동일합니다.
+        console.log("Hello");
+    }
+    };
+
+    user.sayHi()
+    ```

@@ -1,20 +1,37 @@
-// 함수 호출 전
-let menu = {
-  width: 200,
-  height: 300,
-  title: "My menu"
-};
-
-var multiplyNumeric = function (val) {
-    
-    for (let i in val) {
-        if (typeof val[i] == 'number') {
-            val[i] *= 2
-        }
-    }
-    
+function alert(msg) {
+  console.log(msg)
 }
 
-multiplyNumeric(menu);
+const myObj = function (a, b) { 
+  this.a = a;
+  this.b = b;
+  this.c = function (a, b) {
+    return `${this.a}, ${this.b}`
+  }
+}
 
-console.log(menu)
+const cc = new myObj(3, 4)
+
+console.log(cc.c(1,2))
+
+
+let user = {
+  name: "John",
+  age: 30,
+
+  sayHi() {
+    // 'this'는 '현재 객체'를 나타냅니다.
+    alert(this.name);
+  }
+
+};
+
+user.sayHi(); // John
+
+user = {
+  name: "Mike",
+  sayHi() {
+  alert(this.name);
+}}
+
+user.sayHi(); 
