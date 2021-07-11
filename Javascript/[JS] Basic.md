@@ -194,7 +194,48 @@ for (const i in { a: 1, b: 2, c: 3}) {
 ```
 
 ___
+**# Array**
 
+- 2차원 배열 생성
+    - 초기값을 할당해 생성
+        ```js
+        // arr[5][2]
+        var arr = [['a','b'], ['c', 'd'], ['e', 'f'], ['g', 'h'], ['i', 'j']];
+        ```
+    
+    - 반복문으로 빈 배열 생성
+        ```js
+        // arr[5][2]
+        var arr = new Array(5);
+
+        for (var i = 0; i < arr.length; i++) {
+            arr[i] = new Array(2);
+        }
+        ```
+
+    - 2차원 배열 생성 함수 만들어서 사용
+        ```js
+        function create2DArray(rows, columns) {
+            var arr = new Array(rows);
+            for (var i = 0; i < rows; i++) {
+                arr[i] = new Array(columns);
+            }
+            return arr;
+        }
+
+        // arr[5][2]
+        var arr = create2DArray(5, 2);
+        ```
+
+    - ES6 지원 최신 브라우저에서
+        ```js
+        // arr[5][2] (빈 배열 생성)
+        const arr1 = Array.from(Array(5), () => new Array(2))
+
+        // arr[5][2] (null로 초기화하여 생성)
+        const arr2 = Array.from(Array(5), () => Array(2).fill(null))
+        ```
+___
 **# function**
 
 - 익명 함수와 일반 함수 차이
@@ -274,18 +315,31 @@ ___
     console.log(`${p.name}, ${p.age}`) // Dean, 25
     ```
 
-- Arrow Function은 함수 내부에 this를 생성하지 않아(생성자가 없음) 객체로 생성 불가
-
+- Arrow Fuction
     ```js
-    const Me = (name , age) => {
-        console.log(this) 
-        this.name = name;
-        this.age = age;
-        console.log(this) 
-    }
+    let func = (arg1, arg2, ...argN) => expression
 
-    const m = new Me('me', 10) // TypeError: Me is not a constructor
+    let func = (arg1, arg2, ...argN) => {return expression}
+
+    // 위 코드와 동일
+    let func = function(arg1, arg2, ...argN) {
+    return expression;
+    };
     ```
+    - 바디가 여러 줄로 구성되어 중괄호로 감싸는 경우, 반환값이 있으면 반드시 return을 입력해주어야한다.
+
+    - Arrow Function은 함수 내부에 this를 생성하지 않음
+
+        ```js
+        const Me = (name , age) => {
+            console.log(this) 
+            this.name = name;
+            this.age = age;
+            console.log(this) 
+        }
+
+        const m = new Me('me', 10) // TypeError: Me is not a constructor
+        ```
 
 - 함수 호출시 함수를 생성해 리턴
     ```js
@@ -433,3 +487,99 @@ ____
 
     user.sayHi()
     ```
+
+- **this**
+
+    - 'this'는 '현재 객체'를 나타낸다
+        ```js
+        let user = {
+        name: "John",
+        age: 30,
+
+        sayHi() {
+            console.log(this.name);
+        }
+
+        };
+
+        user.sayHi(); // John
+
+        // user 객체를 덮어씌움
+        user = {
+        name: "Mike",
+        sayHi() {
+        console.log(this.name);
+        }}
+
+        user.sayHi(); // Mike
+        ```
+    - 2
+        ```js
+        const myObj = function (a, b) { 
+        this.a = a;
+        this.b = b;
+        this.c = function (a, b) {
+            return `this.a: ${this.a}, this.b: ${this.b}, a: ${a}, b: ${b}`
+        }
+        }
+
+        const cc = new myObj(3, 4)
+
+        console.log(cc.c(1,2)) // this.a: 3, this.b: 4, a: 1, b: 2
+        ```
+
+___
+
+# **# Methods**
+
+##  **Array.from()**
+
+파라미터로 들어오는 객체를 배열로 만들어 준다.
+
+- 일반 사용
+    ```js
+
+    console.log(Array.from('foo'));
+    // Array ["f", "o", "o"]
+
+    console.log(Array.from(Array(3), (v, i) => i)) 
+    // 첫번째 인수 v는 undefined, 두번째 인수 i는 0부터 시작하는 시퀀스 
+    // [ 0, 1, 2 ]
+    
+    console.log(Array.from({ length: 3 }, (_, i) => i)) 
+    // {length: 숫자}로 생성할 배열 개수 설정
+    // [ 0, 1, 2 ]
+
+    console.log(Array.from([1, 2, 3], x => x + x)); // [ 2, 4, 6 ]
+
+    console.log(Array.from(Array(5).fill(5))); // [ 5, 5, 5, 5, 5 ]
+
+    console.log(Array.from(Array(3).fill([3,4,5]))); 
+    // [ [ 3, 4, 5 ], [ 3, 4, 5 ], [ 3, 4, 5 ] ]
+    
+    console.log(Array.from({length: 5}, (_, i) => Array(i).fill(i))); 
+    // [ [ 1 ], [ 2, 2 ], [ 3, 3, 3 ] ]
+
+    console.log(Array.from(Array(3), () => [1,2,3])) // 각 배열에 배열[1,2,3]을 삽입
+    // [ [ 1, 2, 3 ], [ 1, 2, 3 ], [ 1, 2, 3 ] ]
+
+    console.log(Array.from(Array(5), (_, i) => [i, i+1, i+2]))
+    // [ [ 0, 1, 2 ], [ 1, 2, 3 ], [ 2, 3, 4 ], [ 3, 4, 5 ], [ 4, 5, 6 ] ]
+
+    ```
+
+- range() 구현
+    ```js
+    // Sequence generator function (commonly referred to as "range", e.g. Clojure, PHP etc)
+    const range = (start, stop, step) => Array.from({ length: (stop - start) / step + 1}, (_, i) => start + (i * step));
+
+    // Generate numbers range 0..4
+    console.log(range(0, 4, 1))
+    // [0, 1, 2, 3, 4]
+
+    // Generate numbers range 1..10 with step of 2
+    console.log(range(1, 10, 2))
+    // [1, 3, 5, 7, 9]
+    ```
+
+___
