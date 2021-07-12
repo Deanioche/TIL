@@ -137,7 +137,7 @@ ___
     false, 0, "", null, undefined, NaN  
     ```
 
-- Truethy 한 값
+- Truthy 한 값
     ```js
     true, 12, 'ABC',{}, []
     ```
@@ -154,20 +154,40 @@ if({}){ // true
 
 ___
 
-**# && ||**
+**# `&&` \& `||`**
 
-```js
-let a = 10
-let b = 20
+- 코드 실행 여부
+    ```js
+    let a = 10
+    let b = 20
 
-a % 5 === 0 && console.log(a) // 10
-a % 6 === 0 && console.log(a) // 실행 안됨
-// 앞 조건이 참일 때만 뒤 코드를 실행
+    a % 5 === 0 && console.log(a) // 10
+    a % 6 === 0 && console.log(a) // 실행 안됨
+    // 앞 조건이 참일 때만 뒤 코드를 실행
 
-a % 5 === 0 || console.log(a) // 실행 안됨
-a % 6 === 0 || console.log(a) // 10
-// 앞 조건이 참이면 뒤는 실행 안됨
-```
+    a % 5 === 0 || console.log(a) // 실행 안됨
+    a % 6 === 0 || console.log(a) // 10
+    // 앞 조건이 참이면 뒤는 실행 안됨
+    ```
+
+- 다양한 비교
+    ```js
+    alert( alert(1) || 2 || alert(3) ); 
+    // alert(1)은 실행은 되지만 undefined을 반환하므로, 가장 처음으로 오는 truthy한 값인 2가 출력됨.
+    // OR 연산은 가장 첫 truthy한 값을 출력하고 나머진 무시.
+
+    alert( 1 && null && 2 ); // null
+    // AND 연산은 처음으로 오는 falsy한 값을 출력.
+
+    alert( alert(1) && alert(2) );// 1 undefined
+    // alert(1)는 falsy한 값인 undefined를 반환하므로 전체를 감싸는 alert는 undefined를 출력.
+
+    alert( null || 2 && 3 || 4 ); // 3
+    // &&는 ||보다 우선순위가 높으므로
+    alert( null || 3 || 4 );
+    // 와 같이 볼 수 있다.
+    // 첫번째 truthy한 값인 3이 출력됨.
+    ```
 
 ___
 
