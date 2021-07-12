@@ -583,3 +583,64 @@ ___
     ```
 
 ___
+
+## **Null 병합 연산자**
+
+- null이나 undefined가 아닌 첫 번째 피연산자를 반환한다.
+    ```js
+    console.log(a ?? b); // 아래 코드와 동일한 동작
+
+    console.log((a !== null && a !== undefined) ? a : b)
+
+    let firstName = null;
+    let lastName = null;
+    let nickName = "바이올렛";
+
+    alert(firstName ?? lastName ?? nickName ?? "익명의 사용자"); // 바이올렛
+    ```
+
+- `??`와 `||`의 차이
+
+    `||`는 첫 번째 truthy 값을 반환한다.  
+    `??`는 첫 번째 정의된(defined) 값을 반환한다.
+
+    ```js
+    let height = 0;
+
+    alert(height || 100); // 100
+    alert(height ?? 100); // 0
+    ```
+    `||`는 height를 falsy한 값으로 취급해서 null이나 undefined와 동일하게 처리한다.  
+    `??`는 height가 null이나 undefined일때만 100이 된다.  
+    높이처럼 0을 할당할 수 있는 변수를 사용할 때엔 ||보다 ??가 좋다.
+
+- 연산자 우선순위
+
+    `??`의 연산자 우선순위는 5이므로 대부분의 연산자보다 나중에 평가된다.
+    ```js
+    let height = null;
+    let width = null;
+
+    // 괄호를 추가!
+    let area = (height ?? 100) * (width ?? 50);
+
+    alert(area); // 5000
+    ```
+    에서 괄호가 없으면 의도대로 연산되지 않는다.
+
+- 제약사항
+
+    안전성 관련 이슈로 `??`는 `&&`나 `||`와 함께 사용하지 못한다
+    ```js
+    let x = 1 && 2 ?? 3; // SyntaxError: Unexpected token '??'
+
+    let x = (1 && 2) ?? 3; // 괄호를 사용하면 제대로 동작한다.
+    ```
+
+- null이 아닌 값 할당
+    ```js
+    // height가 null이나 undefined인 경우, 100을 할당
+    height = height ?? 100;
+    ```
+
+___
