@@ -41,6 +41,22 @@ ___
     // 비동기 방식은 일단 코드들을 `호출`만 하고 결과가 돌아오는 순서대로 화면에 출력된다.
     ```
     
+- 서버 만들기 
+    ```js
+    var http = require('http');
+
+    const hostname = '127.0.0.1'
+    const port = 8080;
+
+    http.createServer(function (req, res) {
+        res.writeHead(200, { 'Content-Type': 'text/html;charset=UTF-8' })
+        res.end('Hello World\n');
+    }).listen(port, hostname, () => {
+        console.log(`Server running at http://${hostname}:${port}/`);
+    })
+    ``` 
+
+
 ___
 
 ## **\[npm\]**
@@ -116,9 +132,6 @@ ___
     var _ = require('underscore');
     ```
 
-
-
-
 - nodemon
     - nodemon 은 코드 수정 후 서버를 수동으로 재시작 하지 않아도 바로 반영되게 해줌.
 
@@ -137,3 +150,33 @@ ___
     > set-executionpolicy unrestricted
     ```        
    <img src="https://user-images.githubusercontent.com/66513003/125573131-c3664efd-75aa-4a14-b383-70c314d4b559.png" width="400">
+
+- express
+
+    - 설치
+    ```js
+    npm install express --save
+    ```
+
+    - 서버 만들기
+    ```js
+    var express = require('express');
+
+    var app = express();
+
+    app.get('/', (req, res) => {
+        res.send(`<a href="/login">Hello!!!!</a>`);
+    });
+    app.get('/login', (req, res) => {
+        res.send('Login plz!!!!!!');
+    });
+    app.listen(8080, () => {
+        console.log('Connected 8080 port!');
+    })
+    ```
+
+    - static 폴더 지정
+    ```js
+    app.use(express.static(__dirname + '/static'))
+    ```
+    해당 폴더내에 있는 파일들을 읽을 수 있게 해준다.
