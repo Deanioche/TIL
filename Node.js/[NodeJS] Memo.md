@@ -109,10 +109,10 @@ ___
 
 #
 
-- uglifyjs
-    - 작성한 소스코드를 못생기게 만듬
+### **uglifyjs**
+- 작성한 소스코드를 못생기게 만듬
 
-    - 기본
+- 기본
     ```js
     // 원문
     function alert(message) {
@@ -129,7 +129,7 @@ ___
     function alert(message){console.log(message)}let myName="Kim";let myAge=10;alert(`Hi, I'm ${myName}, ${myAge} yrs old`);
     ```
 
-    - 옵션
+- 옵션
     ```js
     // 변수명을 간단하게 변경
     uglifyjs test.js -m
@@ -143,28 +143,31 @@ ___
     
 #
 
-- underscore
+## **underscore**
 
-    - underscore는 자바스크립트 함수의 빈약한 부분을 채워준다  
-    - 참조 : https://underscorejs.org/#first
+- underscore는 자바스크립트 함수의 빈약한 부분을 채워준다  
+- 참조 : https://underscorejs.org/#first
     ```
     npm i underscore
     ```
-    - unserscore 모듈 import
+- unserscore 모듈 import
     ```js
     var _ = require('underscore');
     ```
 
 #
 
-- express
+## **Express**
 
-    - 설치
+- 참조  
+    https://expressjs.com/en/5x/api.html
+
+- 설치
     ```js
     npm install express --save
     ```
 
-    - 서버 만들기
+- 서버 만들기
     ```js
     var express = require('express');
 
@@ -181,7 +184,7 @@ ___
     })
     ```
 
-    - static 폴더 지정
+- static 폴더 지정
     ```js
     app.use(express.static(__dirname + '/static'))
     ```
@@ -190,13 +193,15 @@ ___
 
 #
 
-- Jade (Templete Engine)
+## **Jade (Templete Engine)**
 
-    ```js
-    npm install jade --save
-    ```
+- 참조 : https://jade-lang.com/reference
 
-    - jade 파일 작성
+```js
+npm install jade --save
+```
+
+- jade 파일 작성
     ```jade
     html 
         head  
@@ -212,7 +217,7 @@ ___
         div= time
     ```
     
-    - 사용
+- 사용
     ```js
     app.set('view engine', 'jade'); // jade 사용
     app.set('views', __dirname + '/views'); // jade 파일을 저장할 폴더 경로
@@ -222,20 +227,20 @@ ___
     }) // 클라이언트가 /template로 접속하면 ../views/temp.jade 를 출력한다.
     ```
 
-    - html -> Jade 변환 사이트  
-        http://html2jade.org/
+- html -> Jade 변환 사이트  
+    http://html2jade.org/
 
 #
 
-- nodemon
-    - nodemon 은 코드 수정 후 서버를 수동으로 재시작 하지 않아도 바로 반영되게 해줌.
+## **nodemon**
+- nodemon 은 코드 수정 후 서버를 수동으로 재시작 하지 않아도 바로 반영되게 해줌.
 
     ```
     npm install -g nodemon
     ```
     `-g`는 현재 폴더 뿐만 아니라 다른 작업 폴더에서도 쓸 수 있게 해줌.(global)
     
-    - 보안 오류가 뜨는 경우
+- 보안 오류가 뜨는 경우
 
     Windows Powershell 관리자 권한 실행 
     ```
@@ -248,20 +253,19 @@ ___
 
 #
 
-- supervisor
+## **supervisor**
 
-    - 설치
+- 설치
     ```js
     npm i supervisor --save
     ```
 
-    - 사용
+- 사용
     ```js
     supervisor server.js
     ```
     server.js의 수정사항이 자동으로 반영되어 수동으로 재실행 할 필요가 없어진다
 
-#
 
 ___
 
@@ -297,3 +301,82 @@ ___
         
 ___
 
+## **웹페이지간 data 전달**
+
+- 데이터 입력 form
+    ```js
+    // JS
+    app.get('/form', (req, res) => {
+        res.render('form');
+    })
+
+    // JADE
+    doctype html 
+    html 
+        head
+            meta(charset='utf-8')
+        body
+            form(action='/form_receiver', method='post') // method로 get, post 변경
+                p // p태그 안에 넣어줌으로써 태그들의 수직 정렬
+                    input(type="text", name='title')
+                p
+                    textarea(name="description", cols="30", rows="10")
+                p
+                    input(type="submit")
+    ```
+
+- GET 방식 데이터 수신 (req.query.~~)
+
+    - 참조 : http://expressjs.com/en/5x/api.html#req.query
+    - 참조 : http://expressjs.com/en/5x/api.html#req.params
+
+    ```js
+    // localhost:8080/form_receiver?title=123&description=456 접속
+
+    app.get('/form_receiver', (req, res) => {
+        var q = req.query; // url 주소로부터 data 획득
+        res.send(`${q.title}, ${q.description}`); // 123, 456
+    })
+    ```
+
+- POST 방식 데이터 수신 (req.body.~~)
+
+    - 참조 : http://expressjs.com/en/5x/api.html#req.body
+
+    POST 방식으로 받은 데이터를 사용하려면 `body-parser` 또는 `multer`라는 middleware(plugin)를 사용해야 한다.  
+
+    app.use()로 bodyParser를 등록해두면 POST 방식으로 보내진 데이터를 사용자가 요청할 때, request 객체가 원래는 가지고 있지 않았던 body 객체를 bodyParser가 request 객체에 추가한다. 그리고 body 객체에 담긴 POST 방식 데이터를 사용할 수 있게된다.
+
+    - req.body 사용
+        ```js
+        var express = require('express');
+        var bodyParser = require('body-parser');
+
+        var app = express();
+
+        // static한 파일들 (html, css, js)을 불러올 폴더 지정
+        app.use(express.static(__dirname + '/static'))
+
+        // # BodyParser - https://www.npmjs.com/package/body-parser
+        // for parsing application/json
+        app.use(bodyParser.json())
+        // for parsing application/x-www-form-urlencoded
+        app.use(bodyParser.urlencoded({ extended: true }))
+
+
+        //POST
+        app.post('/form_receiver', (req, res) => {
+            var q = req.body; // post 방식 데이터 수신
+            res.send(`${q.title}, ${q.description}`);
+        })
+        ```
+
+- **GET & POST의 용도**
+    - GET은 정보가 주소창에 모두 노출됨
+    - URL이 너무 길면 중간에 짤릴 수 있음.
+
+    - POST는 전송할 수 있는 데이터 크기에 제한이 없음
+    - POST는 데이터가 일단 노출은 안되지만 보안이 완벽하진 x
+    - 때문에 HTTPS, SSL을 사용
+
+___
