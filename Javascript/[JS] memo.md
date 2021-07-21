@@ -1,5 +1,109 @@
 **# JS 메모**
 
+___
+
+# **# Methods**
+
+## **String**
+- padStart/padEnd
+
+    ```js
+    // 자릿수 맞추기
+    console.log("1".padStart(3, "0")) // 001
+    console.log("1".padEnd(4, "0")) // 1000
+    ```
+    설정한 자리수만큼 0을 채워줌
+
+___
+
+# **# Objects**
+
+## **Date()**
+
+- Date 출력 설정
+
+    ```js
+        var date = new Date();
+
+        var options = {
+            weekday: "short",
+            year: "numeric",
+            month: "2-digit",
+            day: "numeric"
+        };
+
+    console.log(
+        date.toLocaleDateString("en", options) //en is language option, you may specify..
+    );
+    ```
+- Options
+
+    ```js
+    Option          Values          Sample output
+    ----------------------------------------------------
+    weekday         'narrow'        'M'
+                    'short'         'Mon'
+                    'long'          'Monday'
+
+    year            '2-digit'       '01'
+                    'numeric'       '2001'
+
+    month           '2-digit'       '01'
+                    'numeric'       '1'
+                    'narrow'        'J'
+                    'short'         'Jan'
+                    'long'          'January'
+
+    day             '2-digit'       '01'
+                    'numeric'       '1'
+
+    hour            '2-digit'       '12 AM'
+                    'numeric'       '12 AM'
+
+    minute          '2-digit'       '0'
+                    'numeric'       '0'
+
+    second          '2-digit'       '0'
+                    'numeric'       '0'
+
+    timeZoneName    'short'         '1/1/2001 GMT+00:00'
+                    'long'          '1/1/2001 GMT+00:00'
+    ```
+
+- 한국시간 출력
+
+    ```js
+    var date = new Date();
+
+    var options = {
+        weekday: "short",
+        year: "numeric",
+        month: "2-digit",
+        day: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+        second: "numeric"
+    };
+
+    // Korean uses 12-hour time with AM/PM
+    console.log(date.toLocaleTimeString('ko-KR', options));
+    ```
+___
+
+### **Web Storages**
+- 세션 스토리지
+    - 세션 스토리지(SessionStorage)는 탭 안에서만 유효하며 탭이 닫히면 스토리지도 종료된다.
+    - 저장공간 약 5MB
+    - 동기(Synchronous)방식이기 때문에 메인 스레드의 동작을 막을 수 있다.
+    - 탭 안에서만 유효하기 때문에 웹 워커나 서비스 워커가 접근할 수 없다.
+    - string 타입만 저장이 가능
+
+- 로컬 스토리지
+    - 약 5MB의 저장공간
+    - 동기(Synchronous)방식이며 메인 스레드의 연산을 중단시키기 때문에 사용이 지양됨.
+    - string 타입만 저장이 가능
+
+
 ### **setInterval 에서 함수 호출**
 
 자바스크립트의 function은 객체이다.  
