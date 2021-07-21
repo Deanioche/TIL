@@ -109,6 +109,35 @@ ___
 
 #
 
+
+## **mongoose**
+
+
+- 설치
+    ```js
+    npm i mongoose --save
+    ```
+
+- 사용
+    ```js
+    // 단일 DB연결
+    var mongoose = require('mongoose');
+    // mongoose 5 버전이상 사용시 { useNewUrlParser } 가 없으면 경고메세지가 뜸.
+    mongoose.connect('mongodb://localhost/goormdb', { useNewUrlParser });
+    ```
+    단 하나의 DB만 사용할때만 유효. mongoose.connect() 재호출시 원래 연결은 끊김.  
+    goormdb라는 db가 없으면 자동으로 생성됨.
+
+    ```js
+
+    // 여러 DB 연결
+    var mongoose = require('mongoose');
+    var connection1 = mongoose.createConnection('mongodb://localhost/mydb1');
+    var connection2 = mongoose.createConnection('mongodb://localhost/mydb2');
+    ```
+
+#
+
 ### **uglifyjs**
 - 작성한 소스코드를 못생기게 만듬
 
