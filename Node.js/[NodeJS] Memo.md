@@ -56,6 +56,85 @@ ___
     })
     ``` 
 
+## **웹페이지간 data 전달**
+
+- 데이터 입력 form
+    ```js
+    // JS
+    app.get('/form', (req, res) => {
+        res.render('form');
+    })
+
+    // JADE
+    doctype html 
+    html 
+        head
+            meta(charset='utf-8')
+        body
+            form(action='/form_receiver', method='post') // method로 get, post 변경
+                p // p태그 안에 넣어줌으로써 태그들의 수직 정렬
+                    input(type="text", name='title')
+                p
+                    textarea(name="description", cols="30", rows="10")
+                p
+                    input(type="submit")
+    ```
+
+- GET 방식 데이터 수신 (req.query.~~)
+
+    - 참조 : http://expressjs.com/en/5x/api.html#req.query
+    - 참조 : http://expressjs.com/en/5x/api.html#req.params
+
+    ```js
+    // localhost:8080/form_receiver?title=123&description=456 접속
+
+    app.get('/form_receiver', (req, res) => {
+        var q = req.query; // url 주소로부터 data 획득
+        res.send(`${q.title}, ${q.description}`); // 123, 456
+    })
+    ```
+
+___
+
+- POST 방식 데이터 수신 (req.body.~~)
+
+    - 참조 : http://expressjs.com/en/5x/api.html#req.body
+
+    POST 방식으로 받은 데이터를 사용하려면 `body-parser` 또는 `multer`라는 middleware(plugin)를 사용해야 한다.  
+
+    app.use()로 bodyParser를 등록해두면 POST 방식으로 보내진 데이터를 사용자가 요청할 때, request 객체가 원래는 가지고 있지 않았던 body 객체를 bodyParser가 request 객체에 추가한다. 그리고 body 객체에 담긴 POST 방식 데이터를 사용할 수 있게된다.
+
+    - req.body 사용
+        ```js
+        var express = require('express');
+        var bodyParser = require('body-parser');
+
+        var app = express();
+
+        // static한 파일들 (html, css, js)을 불러올 폴더 지정
+        app.use(express.static(__dirname + '/static'))
+
+        // # BodyParser - https://www.npmjs.com/package/body-parser
+        // for parsing application/json
+        app.use(bodyParser.json())
+        // for parsing application/x-www-form-urlencoded
+        app.use(bodyParser.urlencoded({ extended: true }))
+
+
+        //POST
+        app.post('/form_receiver', (req, res) => {
+            var q = req.body; // post 방식 데이터 수신
+            res.send(`${q.title}, ${q.description}`);
+        })
+        ```
+
+- **GET & POST의 용도**
+    - GET은 정보가 주소창에 모두 노출됨
+    - URL이 너무 길면 중간에 짤릴 수 있음.
+
+    - POST는 전송할 수 있는 데이터 크기에 제한이 없음
+    - POST는 데이터가 일단 노출은 안되지만 보안이 완벽하진 x
+    - 때문에 HTTPS, SSL을 사용
 
 ___
 
@@ -328,84 +407,4 @@ ___
 
         <img src="https://user-images.githubusercontent.com/66513003/125908461-17f89da3-b4f3-4552-b8f4-8a7b2660f464.png" width="400">
         
-___
-
-## **웹페이지간 data 전달**
-
-- 데이터 입력 form
-    ```js
-    // JS
-    app.get('/form', (req, res) => {
-        res.render('form');
-    })
-
-    // JADE
-    doctype html 
-    html 
-        head
-            meta(charset='utf-8')
-        body
-            form(action='/form_receiver', method='post') // method로 get, post 변경
-                p // p태그 안에 넣어줌으로써 태그들의 수직 정렬
-                    input(type="text", name='title')
-                p
-                    textarea(name="description", cols="30", rows="10")
-                p
-                    input(type="submit")
-    ```
-
-- GET 방식 데이터 수신 (req.query.~~)
-
-    - 참조 : http://expressjs.com/en/5x/api.html#req.query
-    - 참조 : http://expressjs.com/en/5x/api.html#req.params
-
-    ```js
-    // localhost:8080/form_receiver?title=123&description=456 접속
-
-    app.get('/form_receiver', (req, res) => {
-        var q = req.query; // url 주소로부터 data 획득
-        res.send(`${q.title}, ${q.description}`); // 123, 456
-    })
-    ```
-
-- POST 방식 데이터 수신 (req.body.~~)
-
-    - 참조 : http://expressjs.com/en/5x/api.html#req.body
-
-    POST 방식으로 받은 데이터를 사용하려면 `body-parser` 또는 `multer`라는 middleware(plugin)를 사용해야 한다.  
-
-    app.use()로 bodyParser를 등록해두면 POST 방식으로 보내진 데이터를 사용자가 요청할 때, request 객체가 원래는 가지고 있지 않았던 body 객체를 bodyParser가 request 객체에 추가한다. 그리고 body 객체에 담긴 POST 방식 데이터를 사용할 수 있게된다.
-
-    - req.body 사용
-        ```js
-        var express = require('express');
-        var bodyParser = require('body-parser');
-
-        var app = express();
-
-        // static한 파일들 (html, css, js)을 불러올 폴더 지정
-        app.use(express.static(__dirname + '/static'))
-
-        // # BodyParser - https://www.npmjs.com/package/body-parser
-        // for parsing application/json
-        app.use(bodyParser.json())
-        // for parsing application/x-www-form-urlencoded
-        app.use(bodyParser.urlencoded({ extended: true }))
-
-
-        //POST
-        app.post('/form_receiver', (req, res) => {
-            var q = req.body; // post 방식 데이터 수신
-            res.send(`${q.title}, ${q.description}`);
-        })
-        ```
-
-- **GET & POST의 용도**
-    - GET은 정보가 주소창에 모두 노출됨
-    - URL이 너무 길면 중간에 짤릴 수 있음.
-
-    - POST는 전송할 수 있는 데이터 크기에 제한이 없음
-    - POST는 데이터가 일단 노출은 안되지만 보안이 완벽하진 x
-    - 때문에 HTTPS, SSL을 사용
-
 ___
