@@ -4,6 +4,13 @@ ___
 
 # **# Methods**
 
+## **Array**
+- reverse()
+    ```js
+    array.reverse()
+    ```
+    배열 순서가 뒤집힘 [1, 2, 3] -> [3, 2, 1]
+
 ## **String**
 - padStart/padEnd
 
@@ -26,10 +33,13 @@ ___
         var date = new Date();
 
         var options = {
-            weekday: "short",
             year: "numeric",
             month: "2-digit",
-            day: "numeric"
+            day: "numeric",
+            hour: 'numeric',
+            minute: 'numeric',
+            second: 'numeric',
+            timezone: 'short'
         };
 
     console.log(
