@@ -10,3 +10,14 @@ ___
 ___
 
 
+[pug]
+
+- 해당 경로에 파일이 존재하지 않음
+```
+Error: Failed to lookup view "main" in views directory "d:\dev\Repositiory\Sandbox\NodeJS\SocketBingo\views"
+```
+
+- extends는 코드 최상단에 위치해야됨
+```
+Declaration of template inheritance ("extends") should be the first thing in the file. There can only be one extends statement per file.  
+```
