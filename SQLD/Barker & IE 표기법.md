@@ -37,20 +37,16 @@
 
 **엔터티(Entity)와 속성(Attribute)**  
 
-<img src="https://user-images.githubusercontent.com/66513003/119125302-955bfc80-ba6c-11eb-8d5d-6b64ee7cd7cb.png
-" width="200">
-<img src="https://user-images.githubusercontent.com/66513003/119125335-9f7dfb00-ba6c-11eb-979d-126563bd7861.png
-" width="200">
+<img src="https://user-images.githubusercontent.com/66513003/119125302-955bfc80-ba6c-11eb-8d5d-6b64ee7cd7cb.png" width="200">
+<img src="https://user-images.githubusercontent.com/66513003/119125335-9f7dfb00-ba6c-11eb-979d-126563bd7861.png" width="200">
 
 **관계(Relationship)**
 
-<img src="https://user-images.githubusercontent.com/66513003/119125198-79585b00-ba6c-11eb-9caa-be94e7655a6a.png
-" width="600">
+<img src="https://user-images.githubusercontent.com/66513003/119125198-79585b00-ba6c-11eb-9caa-be94e7655a6a.png" width="600">
 
 **식별자(Unique Identifier)**
 
-<img src="https://user-images.githubusercontent.com/66513003/119125481-c6d4c800-ba6c-11eb-93ee-c4d37c30971f.png
-" width="300">
+<img src="https://user-images.githubusercontent.com/66513003/119125481-c6d4c800-ba6c-11eb-93ee-c4d37c30971f.png" width="300">
 
 - 식별관계
     - 부모 엔터티의 식별자를 자식 엔터티의 식별자로 상속하는 관계
