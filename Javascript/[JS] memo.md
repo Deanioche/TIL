@@ -361,3 +361,15 @@ ___
 
 **#**
 
+___
+
+- 기존방식과 ES6 ECMA script 방식 차이
+    ```js
+    // 기존 방식
+    const movies = await axios.get("https://yts-proxy.now.sh/list_movies.json")
+    console.log(movies.data.data.movies)
+
+    // ES6 ECMA script 방식
+    const { data: { data: { movies } } } = await axios.get("https://yts-proxy.now.sh/list_movies.json")
+    console.log(movies)  // 받은 데이터(객체) 내부의 필요한 데이터만 저장할 수 있다
+    ```
