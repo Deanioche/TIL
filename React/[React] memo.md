@@ -5,7 +5,7 @@ ___
 
 ## **설치**
 ```
-npx install create-react-app [설치할 폴더]
+npx create-react-app movie_app (movie_app = 생성할 프로젝트명)
 ```
 이 명령어만으로 Webpack, Babel 등을 설치 할 필요 없이 한번에 리액트 개발 세팅을 해줌
 
@@ -360,45 +360,6 @@ ___
 
 
 
-
-
-
-
-
-
-
-
-## **에러**
-
-```
-index.js:1 Warning: Each child in a list should have a unique "key" prop.
-
-Check the render method of `App`. See https://reactjs.org/link/warning-keys for more information.
-    at Potato (http://localhost:3000/static/js/main.chunk.js:25:3)
-    at App
-```
-
-React의 모든 Component는 고유한 id를 가져야 한다.
-
-```js
-var arr = ['Sushi', 'potato', 'Compost', 'Burger'];
-
-function renderFood(dish) {
-  return <Potato key={arr.indexOf(dish)} name={dish} />
-}
-```
-jsx에서 호출하려는 function의 key={}에 해당 컴포넌트만이 가지는 고유값을 담아주어야 한다.
-
-___
-___
-
-
-
-
-
-
-
-
 # **npm packages**
 
 ## **# prop-types**
@@ -455,3 +416,65 @@ axios.get("url")로 데이터를 받아오는 동안 async - await를 걸어준�
 ```
 
 ___
+
+
+## **# gh-pages**
+
+github-page 도메인을 사용할 수 있게 해주는 모듈
+
+```
+npm i gh-pages --save
+```
+
+package.json 파일을 수정해야 한다.
+
+
+1. homepage url 입력
+    ```json
+        ...
+    },
+    "homepage": "https://soksurim.github.io/movie-app" // github-page가 될 주소를 입력
+    }
+    //문서의 끝
+    ```
+
+2. deploy와 predeploy 커맨드 설정
+
+    `"deploy": "gh-pages -d build"`   
+    `"predeploy": "npm run build"`
+
+    ```json
+    ...
+    "scripts": {
+        "start": "react-scripts start",
+        "build": "react-scripts build",
+        "deploy": "gh-pages -d build",
+        "predeploy": "npm run build" // 커맨드 이름에 pre- 가 붙으면 원래 커맨드(deploy) 호출시, predeploy가 앞서 실행된다.
+    },
+    ```
+
+터미널에 "npm run deploy" 커맨드를 입력하면
+먼저 predeploy 커맨드가 실행되어 프로젝트가 build 되고
+그 다음에 deploy 명령어가 실행되어 github page에 업로드된다.
+
+```
+...
+> movie_app@0.1.0 deploy
+> gh-pages -d build
+
+Published
+```
+터미널에 위처럼 뜨면 완료.
+
+https://soksurim.github.io/movie-app 에서 확인이 가능하다.
+
+___
+
+## **# react router dom**
+
+```
+npm install --save react-router-dom
+```
+
+리액트에 네비게이션 기능을 넣어줌
+
