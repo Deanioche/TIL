@@ -11,10 +11,40 @@
 - cd (폴더명) 또는 .. : 디렉토리 이동 / ..은 뒤로가기
     - 폴더명 앞글자만 적고 Tab키로 자동완성 가능
 
+- clear 터미널 초기화
+
+- rm (옵션) (파일명) : 해당 파일 삭제
+    - -r : 해당하는 디렉토리와 그 안의 파일까지 `모두 삭제`
 
 - touch (파일명) : 파일 생성
 - cat (파일명) : 파일 생성 후 내용까지 입력
 - vi (파일명) : 파일 생성 후 vim 편집기 실행
+
+## **파라미터**
+- (명령어) --help : 해당 명령어에 대한 도움말
+    ```
+    root@goorm:/workspace/linux# rm --help
+    사용법: rm [<옵션>]... [<파일>]...
+    Remove (unlink) the FILE(s).
+
+    -f, --force           ignore nonexistent files and arguments, never prompt
+    -i                    prompt before every removal
+    -I                    prompt once before removing more than three files, or
+                            when removing recursively; less intrusive than -i,
+                            while still giving protection against most mistakes
+        --interactive[=WHEN]  prompt according to WHEN: never, once (-I), or
+                            always (-i); without WHEN, prompt always
+        --one-file-system  when removing a hierarchy recursively, skip any
+                            directory that is on a file system different from
+                            that of the corresponding command line argument
+        --no-preserve-root  do not treat '/' specially
+        --preserve-root   do not remove '/' (default)
+    -r, -R, --recursive   remove directories and their contents recursively
+    -d, --dir             remove empty directories
+    -v, --verbose         explain what is being done
+        --help     이 도움말을 표시하고 끝냅니다
+        --version  버전 정보를 출력하고 끝냅니다
+    ```
 
 
 
