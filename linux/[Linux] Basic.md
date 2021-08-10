@@ -44,6 +44,10 @@
 - `sudo (super user do)` : 슈퍼유저 / 루트 권한을 사용
     - sudo apt-get install git : git 설치
 
+- `grep (찾으려는 단어) (파일명)` : 파일에서 지정한 단어가 포함된 행만을 화면에 표시
+
+- `ps` : 현재 실행되고 있는 프로세스 출력
+
 
 ## **파라미터**
 - (명령어) --help : 해당 명령어에 대한 도움말
@@ -81,13 +85,61 @@ ___
 drwxrwxr-x 2 root root 4096  8월  8 05:42 hello_linux
 ```
 파일 권한 앞에 `d`가 붙어있으면 `directory`라는 뜻
+___
+
+
+## **파일 다운로드**
+
+```
+wget -O (파일명 지정) (파일 url)
+```
 
 ___
 
-## **Nano 편집기**
+## **git 소스코드 다운로드**
 
-- 설치
+깃 설치 후
+```
+git clone http://github.com/facebook/react.git react_src
+```
+react_src 디렉토리에 해당 git url의 오픈소스가 다운로드 됨
+
+___
+
+## **GUI vs CLI**
+
+- graphical user interface
+    - 가독성, 사용성 높음
+    - 배우기는 쉽지만 작업의 자동화가 힘듬
+
+- Command Line Interface
+    - 커맨드라인으로만 이루어져 있기 때문에 CPU, 메모리 자원을 적게 먹음
+    - heavy한 작업에 쓰임
+
+___
+
+## Sequence Execution
+
+여러 커맨드를 ;로 구분해서 입력하면 커맨드 동작이 하나하나 완료되며 순차적으로 실행됨.  
+```js
+pwd;mkdir why;cd why;pwd
+// 실행 결과
+/workspace/linux/why
+/workspace/linux/why/why
+```
+
+___
+
+## Pipeline
+
+한 커맨드의 실행 결과를 다른 커맨드의 입력으로 주기.
+
+- ls의 도움말에서 sort가 포함된 행만 찾아서 또 그 안에서 file이 포함된 행을 출력
     ```
-    sudo apt-get install nano
+    ls --help | grep sort | grep file
     ```
 
+- 실행중인 프로세스에서 이름에 bash가 포함된 프로세스만 출력
+    ```
+    ps aux | grep bash
+    ```
