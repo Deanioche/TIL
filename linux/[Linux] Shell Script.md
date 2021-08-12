@@ -34,6 +34,12 @@
     rm re.txt > result.txt 2> error.log
     ```
 
+- 에러를 Standard Output으로 변환해 함께 저장되게 하기
+    ```
+    rm re.txt > result.txt 2>&1
+    ```
+    2>&1는 에러로 출력되는 메세지를 Standard Output으로 표준 출력화해, result.txt에 함께 저장이 된다.
+
 ### **Standard Input Redirection** 
 
 - 파일에 저장된 값으로 입력받음
@@ -171,5 +177,35 @@ ls /bin
     cp *.log bak
     echo "log파일 백업 완료."
     ```
+
+___
+
+## **alias**
+
+- l이 ls -al로 동작한다.
+    ```
+    alias l='ls -al'
+    ```
+
+- c를 clear로
+    ```
+    alias c='clear'
+    ```
+
+ref: https://www.cyberciti.biz/tips/bash-aliases-mac-centos-linux-unix.html
+___
+
+## **Shell Startup Script**
+
+쉘이 실행되면 특정한 스크립트가 실행되도록 설정하기
+
+- .bashrc 파일에 적혀있는 명령어는 shell이 실행되면 자동으로 실행되는 명령어들이다.
+
+    ```
+    nano ~/.bashrc
+    ```
+    로 수정
+
+    - .bashrc에서 $PATH 환경변수 설정이 가능
 
 ___

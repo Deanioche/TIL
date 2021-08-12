@@ -241,3 +241,218 @@ Contains server specific services related data.
 For example, /srv/cvs contains CVS related data.
 
 ref : https://www.thegeekstuff.com/2010/09/linux-file-system-structure/
+
+____
+
+## **파일 찾기**
+
+- locate
+    ```
+    locate (파일명)
+    ```
+
+    locate 명령어는 디렉토리를 뒤지는게 아닌, 데이터베이스를 뒤진다.
+
+- find
+    ```js
+    find (위치) -name (파일명)
+
+    sudo find / -name *.log // root폴더부터 하위폴더까지 범위에서 확장자가 .log인 파일을 찾는다. root폴더는 super user 권한이 있어야 됨.
+
+    find ~ -name *.log // home 디렉토리부터 찾기.
+
+    // 조건에 맞는 '파일'만 찾기 (폴더는 제외됨)
+    find ~ -type f -name *.log
+
+    // 현재 폴더 이하에서 실행가능한 파일 검색
+    find ./ -perm /a=x
+
+    // 빈 파일만 찾기
+    find ./ -type f -empty
+    find ./ -type d -empty // 폴더
+
+    // ./bak 폴더 안의 *.log인 파일 모두 삭제
+    find ./bak/ -type f -name "*.log" -exec rm -f {} \;
+
+    // 숨김 파일 찾기
+    find ./ -type f -name ".*"
+
+    // 최근 50일 안에 수정된 파일 검색
+    find / -mtime 50
+    find / -mtime +50 –mtime -100 // 50일 ~ 100일 사이
+
+    // 최근 1시간 안에 변경된 파일 검색
+    find / -cmin -60
+
+    // 50 ~ 100MB 사이 파일 검색
+    find / -size +50M -size -100M
+
+    // 특정 파일 검색 후 삭제
+    find / -type f -name *.mp3 -size +10M -exec rm {} \; // 10메가 이상 mp3파일
+    ```
+
+    ref : https://www.tecmint.com/35-practical-examples-of-linux-find-command/
+
+- whereis
+
+    실행파일의 위치를 찾아줌
+
+___
+
+## **$PATH**
+
+ls나 rm 등 /bin 폴더에 있는 프로그램을 어느 디렉토리에서나 사용할 수 있는 이유는, $PATH에 /bin폴더가 등록되어있기 때문이다. 이를 `환경변수`라 한다.
+
+```
+echo $PATH
+```
+위 명령어를 실행하면 등록되어있는 경로가 출력된다.
+
+___
+
+## **Background execute**
+
+프로그램 실행 중, Ctrl + z 키를 누르면 실행중이던 프로그램은 background로 들어가고 디렉토리 화면으로 돌아온다
+
+그리고 fg 명령어를 입력하면 다시 실행중이던 프로그램으로 돌아온다.
+
+- 현재 backgound에서 동작중인 프로그램 보기
+    ```js
+    # jobs
+
+    root@goorm:/workspace/linux# jobs
+    [1]   정지됨               nano
+    [2]   정지됨               vim
+    [3]-  정지됨               nano
+    [4]+  정지됨               htop
+
+    // +는 fg명령어 입력시 foreground로 돌아올 프로그램
+    // -는 그 다음 프로그램
+    ```
+
+- 원하는 프로그램을 선택해 실행하고 싶으면 `fg %(프로그램 번호)`를 입력하면 된다.
+    ```js
+    fg %2 //vim 실행
+    fg %1 //nano 실행
+    ```
+
+- 프로그램 종료
+    ```js
+    kill %2 //vim 종료
+    kill %1 //nano 종료
+
+    // 위 명령어로 종료가 안되면
+
+    kill -9 %1 //강력
+    ```
+
+- 프로그램을 바로 백그라운드로 실행
+    ```js
+    ls -alR / > result.txt 2> error.log & // 대충 동작이 오래걸리는 명령어
+    // 명령어 & 앰퍼센드를 뒤에 입력하면 백그라운드에서 동작해서
+    // 바로 다음 명령어를 입력할 수 있다.
+    // 동작이 끝나면 [n] Exit 1 이라고 뜬다.
+    ```
+
+___
+
+## **Daemon**
+
+Daemon 프로그램들은 항상 실행되고 있다는 특성을 가지고있다.
+
+언제 사용할지 알수 없기 때문에 (Server 등)
+
+- Daemon 프로그램들이 위치하는 디렉토리
+    ```
+    /etc/init.d
+    ```
+
+- apache 설치 후 실행
+    ```js
+    // 설치
+    sudo apt-get install apache2
+    
+    // 실행
+    sudo service apache2 start
+
+    // 실행중 여부 확인
+    ps aux | grep apache2
+
+    // 종료
+    sudo service apache2 stop
+    ```
+    Daemon으로써 실행되는 모든 프로그램은 start / stop 명령어가 존재
+
+- 리눅스 실행시 자동으로 실행되게 하기
+    
+    `/etc` 경로에는 rc~로 시작하는 디렉토리가 있는데, `rc3.d`는 `CLI`방식일 때, `rc5.d`는 `GUI` 방식일 때 사용된다.
+
+    rc3.d 디렉토리에 들어가면 `../init.d/apache2`가 들어가있는걸 볼 수 있다.
+
+    ```js
+    lrwxrwxrwx 1 root root 17  8월 12 04:37 S01apache2 -> ../init.d/apache2
+
+    // 맨 앞의 l은 링크라는 뜻 (바로가기)
+    // 바로가기 이름이 S로 시작하면 리눅스 부팅시 실행되는 프로그램
+    // K면 실행되지 않는 프로그램
+    // S뒤에 01, 02는 실행 우선순위
+
+    // etc/rc3.d/ 디렉토리의 S01apache2라는 이름의 바로가기는 리눅스가 CLI방식(rc3.d)으로 구동되었을때 ../init.d/apache2 프로그램이 자동으로 실행되게 한다.
+    ```
+
+    - 리눅스 부팅시 프로그램이 자동으로 실행되게 하려면 CLI 부팅 기준, etc/rc3.d 디렉토리에 해당 프로그램의 `링크`를 걸면 된다.
+
+___
+
+## **CRON**
+
+정기적으로 프로그램을 실행시켜줌.
+ref : https://tecadmin.net/crontab-in-linux-with-20-examples-of-cron-schedule/
+
+- 크론 에디터 열기
+    ```
+    crontab -e
+    ```
+
+- 동작 주기 설정
+    ```js
+    m h dom mon dow command
+
+    // 분
+    10 // 매시간 10분
+    */1 // 1분에 한번
+
+    // 시
+    * // 시간과 상관없이
+
+    // 일 dom
+    24 // 매달 24일
+
+    ...
+    ```
+
+    <img src="https://user-images.githubusercontent.com/66513003/129143475-39a37e8d-0a69-403b-95bf-cbabac2d7ecd.png" width="400">
+
+    - 1분마다 현재시간을 로그에 기록
+        ```
+        */1 * * * * date >> date.log 2>&1
+        ```
+        2>&1 는 에러를 Standard Output으로 바꿔 date.log에 함께 저장되게 한다.
+
+- 동작하는 cron 목록 보기
+    ```
+    crontab -l
+    ```
+
+- 동작되는지 감시 (tail)
+    ```
+    tail -f date.log
+    ```
+    date.log를 감시하다가 파일이 수정되면 자동 리프레시
+
+___
+
+## **Multi User**
+
+- `id` : 현재 사용중인 계정 정보
+- `who` : 현재 접속중인 계정 리스트
