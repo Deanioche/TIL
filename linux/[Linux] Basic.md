@@ -444,6 +444,11 @@ ref : https://tecadmin.net/crontab-in-linux-with-20-examples-of-cron-schedule/
         ```
         2>&1 는 에러를 Standard Output으로 바꿔 date.log에 함께 저장되게 한다.
 
+    - 1분마다 스크립트 파일 실행
+            ```
+        */1 * * * * /workspace/linux/script/auto_rsync.sh
+        ```
+
 - 실행
     ```
     sudo service cron start
