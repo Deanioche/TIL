@@ -23,6 +23,7 @@
 - 패키지 삭제
     ```
     sudo apt-get remove (패키지명)
+    sudo apt-get purge (패키지명) // 강력 - 환경설정 파일까지 날아감
     ```
 
 ___
@@ -67,3 +68,23 @@ ___
     ```
 
 ___
+
+### **openssh**
+    
+    서버가 켜진 다른 컴퓨터에 접속해 원격 제어가 가능
+
+- 설치
+    ```
+    sudo apt-get install openssh-server
+    sudo apt-get install openssh-client
+    ```
+
+- 실행
+    ```
+    sudo service ssh start
+    ```
+
+클라이언트가 설치된 리눅스 기기로 서버가 켜진 다른 리눅스 기기의 ip를 입력해 접속하면 원격 제어가 된다.
+    ```
+    ssh -p (포트) surimi@(ip주소)
+    ```

@@ -30,6 +30,11 @@
     - `-r` : 해당하는 디렉토리와 그 안의 파일까지 `모두 삭제`
 
 - `touch (파일명)` : 파일 생성
+    - 파일 다중 생성
+        ```js
+        touch {1..10}.md // 이름이 1~10인 md 파일이 생성된다.
+        ```
+        
 - `vi (파일명)` : 파일 생성 후 vim 편집기 실행
 
 - `cat (파일명)` : 파일 내용을 출력
@@ -439,6 +444,11 @@ ref : https://tecadmin.net/crontab-in-linux-with-20-examples-of-cron-schedule/
         ```
         2>&1 는 에러를 Standard Output으로 바꿔 date.log에 함께 저장되게 한다.
 
+- 실행
+    ```
+    sudo service cron start
+    ```
+
 - 동작하는 cron 목록 보기
     ```
     crontab -l
@@ -456,3 +466,302 @@ ___
 
 - `id` : 현재 사용중인 계정 정보
 - `who` : 현재 접속중인 계정 리스트
+
+- 새 계정 생성
+    ```js
+    sudo useradd -m (유저명)
+    // -m은 해당 유저의 /home 디렉토리를 같이 생성해준다.
+    ```
+
+- 계정 전환
+    ```
+    su - (유저명)
+    ```
+
+- Ubuntu 기준 특정 유저에게 sudo 권한 할당
+    ```
+    sudo adduser (유저명) sudo
+    ```
+    또는
+    ```js
+    sudo usermod -a -G sudo (유저명)
+    // sudo 그룹에 해당 유저를 넣음으로써 sudo권한 할당
+    ```
+
+### **Permission**
+
+- 다른 사용자가 작성한 파일의 수정을 하는 경우
+    ```
+    duru@goorm:/home/surimi$ echo 'ahahaha' >> test.txt
+    -su: test.txt: Permission denied
+    ```
+    에러가 발생한다.
+
+- 파일 정보
+    ```js
+    -rw-rw-r-- 1 surimi surimi 0 Aug 13 05:14 test.txt
+    // 맨 첫글자는 type
+    // rw-rw-r--는 access mode
+    // surimi : owner
+    // 두번째 surimi : group
+    ```
+    - **type**
+        - `-` : 기본적인 파일
+        - `d` : 디렉토리
+
+    - **access mode**
+        9글자(rw-rw-r--)를 3개씩 3등분해서 보면,
+        1. owner의 권한 : 'rw-'
+        2. group의 권한 : 'rw-'
+        3. other의 권한 : 'r--'
+            - other는 owner와 group을 제외한 모든 사용자
+
+        - 문자의 의미
+            - r : read
+            - w : write
+            - x : execute
+            - \- : no permission
+        
+        - ## **chmod**
+            권한을 변경하는 명령어 
+            ```js
+            // other : o
+            // owner/user : u
+            // group : g
+            // all : a
+
+            chmod o+w (파일명) // other에 write 권한 추가
+            chmod o-rw (파일명) // other에 read, write 권한 제거
+
+            chmod +x (파일명) // 모든 사용자에 대해 실행 권한 부여
+            /bin/bash (파일명) // 으로 권한 없이 실행이 가능
+
+            chmod a=rwx (파일명) // 모든 사용자 전체 권한 허용
+            chmod a= (파일명) // 모든 사용자 권한 모두 제거
+            ```
+
+            - 8진법 권한 설정
+                <img src="https://user-images.githubusercontent.com/66513003/129323490-2f8f7ba2-f3e0-4dca-99c2-790e0b6efa4e.png" width="400">
+                ```js
+                chmod 777 (파일명) // 모든 사용자에게 전체 권한 허용
+                ```
+
+    
+
+    - read 권한이 없는 디렉토리는 들어갈 수 없다.
+    - 디렉토리에 접근 권한이 없으면 그 안의 파일의 접근 권한이 있더라도 읽거나 쓸수 없다.
+___
+
+## **실행 가능한 파일**
+
+```js
+nano hi.sh // .sh 확장자로 지정하지 않아도 실행은 할 수 있다.
+```
+
+___
+
+## **Internet**
+
+- ### `curl` (url)
+    해당 url의 html을 출력
+
+    ```js
+    curl ipinfo.io/ip
+    // ip 주소 확인 사이트
+    ```
+
+- Shell에서 웹 브라우징
+
+    - elinks 설치 & 사용
+        ```
+        sudo apt-get install elinks
+        ```
+
+        ```
+        elinks (url)
+
+        elinks 127.0.0.1 -> apache 서버 접속
+        ```
+    
+- apache2 설정
+    ```
+    nano /etc/apache2/site-enabled/000-default.conf
+    ```
+    위 경로의 파일을 확인하면  
+    DocumentRoot의 경로가 /var/www/html 로 설정되어있다.
+
+    /var/www/html 경로로 들어가면 기본으로 출력되는 index.html이 존재한다.
+
+    ref : https://www.youtube.com/watch?v=4HOqQR2kUGI&list=PLuHgQVnccGMBT57a9dvEtd6OuWpugF9SH&index=51
+    
+    https://linux-lxqrn.run.goorm.io/ 에 접속하면 확인 가능
+
+    서버에 접속할 경우 /var/log/apache2/access.log에서 클라이언트 정보의 확인이 가능하다.
+
+    ```
+    tail -f /var/log/apache2/access.log
+    ```
+    위 코드로 로그파일이 변경될때마다 확인 가능
+
+___
+
+## **SSH**
+
+    서버가 켜진 다른 컴퓨터에 접속해 원격 제어가 가능
+
+- 설치
+    ```
+    sudo apt-get install openssh-server
+    sudo apt-get install openssh-client
+    ```
+
+- 실행
+    ```
+    sudo service ssh start
+    ```
+
+클라이언트가 설치된 리눅스 기기로 서버가 켜진 다른 리눅스 기기의 ip를 입력해 접속하면 원격 제어가 된다.
+    ```
+    ssh -p (포트) surimi@(ip주소)
+    ```
+
+___
+
+## **Domain**
+
+- ### Host
+    접속하려는 url주소가
+    /etc/hosts에 입력되어 있으면 DNS서버에서 도메인을 받는걸 생략한다.
+
+    ```
+    127.0.0.1       localhost
+    ::1     localhost ip6-localhost ip6-loopback
+    fe00::0 ip6-localnet
+    ff00::0 ip6-mcastprefix
+    ff02::1 ip6-allnodes
+    ff02::2 ip6-allrouters
+    172.17.0.29     goorm
+    127.0.0.1 lh --> 새로 추가
+    ```
+    curl lh를 입력하면 아파치 서버의 index.html이 출력된다.
+
+___
+
+## **rsync**
+
+동기화 기능
+
+- 설치
+    ```
+    sudo apt-get install rsync
+    ```
+
+- 사용
+    ```
+    rsync -a src/ dest
+    ```
+    src 폴더 내 모든 파일을 dest폴더에 동기화(복사)
+
+    src/에 /를 안붙이면 dest 안에 src 폴더가 복사된다.
+
+    ```
+    rsync -av src/ dest
+    ```
+    
+
+    - 결과
+        ```
+        root@goorm:/workspace/linux/rsync# rsync -av src/ dest
+        sending incremental file list
+        ./
+        1.txt
+        2.txt
+        3.txt
+
+        sent 225 bytes  received 76 bytes  602.00 bytes/sec
+        total size is 0  speedup is 0.00
+        ```
+
+    - 파라미터 
+        - 파라미터에 `-v`를 붙이면 동기화 정보가 출력된다.
+        - 파라미터 `-a`는 아카이브 모드로 동작하게 한다.
+            - 두 폴더의 다른 부분만 동기화가 되도록 하고
+            - 파일의 권한설정같은 부분도 동기화가 된다.
+        - `-z`는 동기화하기 위해 데이터를 전송할때 압축해서 보낸다.
+        - `-P`는 전송되는 상황을 progress Bar로 보여준다.
+
+- 네트워크를 이용한 동기화
+
+    ```
+    rsync -azP /workspace/linux/rsync/ surimi@127.0.0.1:~/rsync
+    ```
+    하고 surimi 계정의 비밀번호를 입력하면,  
+    /workspace/linux/rsync/ 경로의 모든 파일을 
+    127.0.0.1 주소의 surimi 계정의 ~/rsync 경로에 동기화
+
+- ### **포트가 다른 ssh에 접속할때**
+    ```
+    rsync -rvz -e 'ssh -p 58451' --progress /workspace/linux/rsync/ surimi@54.180.119.182:~/rsync
+    ```
+___
+
+## **ssh 공개키 / 비공개키를 이용한 ssh 접속 로그인**
+
+-  키 생성
+    ```
+    ssh-keygen
+    ```
+    위 코드를 실행해 키 생성을 마치면 ~ 디렉토리에 .ssh 폴더가 생성된다.
+
+- .ssh 폴더 안을 보면
+    ```
+    drwxr-xr-x 2 root root 4096  8월 13 10:59 .
+    drwx------ 9 root root 4096  8월 13 10:54 ..
+    -rw------- 1 root root  400 10월 22  2018 authorized_keys
+    -rw------- 1 root root 1679  8월 13 10:59 id_rsa
+    -rw-r--r-- 1 root root  392  8월 13 10:59 id_rsa.pub
+    -rw-r--r-- 1 root root  444  8월 13 10:39 known_hosts
+    ```
+    id_rsa (private key)와 id_rsa.pub (public key)가 생성되어 있다.
+
+- 공개키를 접속하려는 다른 리눅스 컴퓨터의 authorized_keys에 복사
+    ```
+    ssh-copy-id surimi@127.0.0.1
+    ```
+    하고 surimi 계정의 비밀번호 입력하면 surimi 계정으로 ssh 공개키가 복사된다.
+
+    surimi@127.0.0.1에 접속을 시도하면 surimi는 authorized_keys에 담긴 key와 접속을 시도하는 계정의 rsa key를 이용한 인증 절차를 거쳐 통과하게 되면 비밀번호 입력 없이 원격 접속이 가능하게 된다.
+
+    ```
+    ssh surimi@127.0.0.1
+    ```
+
+- ssh 자동 로그인의 장점
+
+    ```
+    rsync -azP /workspace/linux/rsync/ surimi@127.0.0.1:~/rsync
+    ```
+    위 명령어는 원래 surimi@127.0.0.1에 접속하기 위해서 비밀번호를 입력해야했지만 surimi 계정의 authorized_key에 본 계정의 rsa 공개키를 입력해두었기 때문에 비밀번호 입력 절차가 생략된다.
+
+    즉, cron을 이용해 주기적으로 **자동 동기화**를 시킬수 있게 된다.
+
+___
+
+## **RSA**
+
+RSA는 비대칭성을 가진 암호화 방식
+
+ref : https://www.youtube.com/watch?v=lLdQAIXXcMs&list=PLuHgQVnccGMBT57a9dvEtd6OuWpugF9SH&index=66
+
+___
+
+## **포트포워딩**
+
+<img src="https://user-images.githubusercontent.com/66513003/129370437-c7ea122e-9f57-4304-81ef-42631d2f93d5.png">
+
+해당 ip의 외부포트로 접속하면 내부포트로 연결해준다.
+
+아파치 서버의 내부 포트가 80일 때,  
+54.180.119.182:54906에 접속하면 아파치 서버로 연결된다. 
+
+___
