@@ -355,5 +355,16 @@ label 태그의 for도 JS의 for loop와 겹치기 때문에 **htmlFor**를 쓴�
 
 
 ___
-___
 
+## react app을 build하고 index.html이 동작하지 않을때 (빈페이지만 뜰 때)
+
+- npm gh-pages를 쓰는 경우, package.json에서 homepage의 url을 "./"로 바꿔주면 된다.
+
+```json
+...
+  },
+  "homepage": "./"
+}
+```
+
+___
