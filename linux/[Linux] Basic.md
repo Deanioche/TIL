@@ -149,7 +149,7 @@ pwd;mkdir why;cd why;pwd
 
 ___
 
-## Pipeline
+## Pipeline 파이프
 
 한 커맨드의 실행 결과를 다른 커맨드의 입력으로 주기.
 
@@ -162,6 +162,12 @@ ___
     ```
     ps aux | grep bash
     ```
+
+- sudo 비밀번호 자동 입력
+    ```
+    echo '1234' | sudo 명령어 
+    ```
+    이런 식으로 사용은 가능하지만 history에 명령어 기록이 남는다
 
 ___
 
@@ -473,9 +479,26 @@ ___
 - `who` : 현재 접속중인 계정 리스트
 
 - 새 계정 생성
-    ```js
-    sudo useradd -m (유저명)
-    // -m은 해당 유저의 /home 디렉토리를 같이 생성해준다.
+    계정 생성에는 두가지 명령어가 있는데, useradd와 adduser이다.
+    - adduser는 실행시 기본 계정 정보를 자동으로 생성해준다.
+        ```
+        sudo adduser (유저명)
+        ```
+        http://w3devlabs.net/wp/?p=19877
+
+    - useradd는 계정만 생성하며 기타 계정 정보(홈 디렉터리와 패스워드)는 수동으로 생성 및 설정해주어야 한다. 
+        ```js
+        sudo useradd -m (유저명)
+        // -m은 해당 유저의 /home 디렉토리를 같이 생성해준다.
+        ```
+        http://w3devlabs.net/wp/?p=19879
+
+
+
+
+- 비밀번호가 없는 계정 비밀번호 설정
+    ```
+    sudo passwd (계정명)
     ```
 
 - 계정 전환
@@ -483,15 +506,56 @@ ___
     su - (유저명)
     ```
 
-- Ubuntu 기준 특정 유저에게 sudo 권한 할당
-    ```
-    sudo adduser (유저명) sudo
-    ```
-    또는
+- `usermod` : 계정의 옵션 변경처리를 위한 명령어
     ```js
-    sudo usermod -a -G sudo (유저명)
-    // sudo 그룹에 해당 유저를 넣음으로써 sudo권한 할당
+    사용법 : usermod [옵션] [계정명] – 계정수정
+
+    -c : 계정 Comment를 수정합니다.
+
+    -d : 계정 홈 디렉터리를 수정합니다.
+
+    -e : 계정 만기 날짜를 수정합니다. 
+
+    -L : 사용자 계정을 잠궈서 로그인 할 수 없도록 합니다.
+
+    -U : 잠금처리되어있는 계정을 로그인 할 수 있도록 풀어줍니다.
+
+    -h : 명령어 옵션 설명을 표시해 줍니다.
     ```
+
+    - Ubuntu 기준 특정 유저에게 sudo 권한 할당
+        ```js
+        sudo adduser (유저명) sudo // 계정을 생성할 때
+        ```
+        또는
+        ```js
+        sudo usermod -a -G sudo (유저명)
+        // sudo 그룹에 해당 유저를 넣음으로써 sudo권한 할당
+        ```
+
+- 계정 삭제
+
+    - 계정만 삭제 (계정과 관련된 파일은 남는다.)
+        ```
+        sudo deluser java
+        ```
+
+    - 계정과 관련 모든 파일 삭제
+        ```
+        sudo deluser -remove-all-files java
+        ```
+
+- user 리스트 보기
+    ```js
+    // 전체 목록
+    cut -f1 -d: /etc/passwd
+
+    // 사용자가 생성한 유저만 출력
+    grep /bin/bash /etc/passwd | cut -f1 -d: 
+    ```
+
+___
+
 
 ### **Permission**
 
@@ -629,6 +693,17 @@ ___
     ```
     ssh -p (포트) surimi@(ip주소)
     ```
+
+- 접속 허용하려는 컴퓨터의 id_rsa.pub 키를 ~/.ssh/authorized_keys에 입력해주고 sshd를 restart하면 ssh 접속이 허용된다.
+
+- ssh restart
+    ```
+    sudo service sshd restart
+    ```
+    ```
+    sudo /etc/init.d/ssh restart
+    ```
+    아마 둘다 같은 기능인듯
 
 ___
 
@@ -768,5 +843,107 @@ ___
 
 아파치 서버의 내부 포트가 80일 때,  
 54.180.119.182:54906에 접속하면 아파치 서버로 연결된다. 
+
+___
+
+## **Swapfile**
+
+- 리눅스의 메모리가 부족한 경우, 가상 메모리처럼 메모리의 일부 내용을 디스크로 스왑할 수 있다.
+
+- Swap 파일/파티션 존재여부 확인
+    ```js
+    sudo free -m 
+
+    sudo swapon -a 
+    ```
+    두 명령어 모두 swap 관련 내용이 없으면 스왑파일은 존재하지 않음
+
+- Swap file 생성
+
+    1. root경로에 "swapfile"이란 이름의 2GB 크기 스왑 파일을 생성한다.
+        ```
+        sudo fallocate -l 2G /swapfile
+        ```
+    
+    2. 파일 권한을 수정하고
+        ```
+        sudo chmod 600 /swapfile
+        ```
+    
+    3. 해당 파일이 스왑으로 동작하게 설정
+        ```
+        sudo mkswap /swapfile
+        ```
+    
+    4. 만들어진 스왑(/swapfile)이 동작하게 한다.
+        ```
+        sudo swapon /swapfile
+        ```
+
+
+    재부팅 이후에도 계속 사용하려면 /etc/fstab 파일을 수정해야한다.
+    ```
+    sudo nano /etc/fstab
+    ```
+    위 명령어로 fstab파일에 대한 편집기를 열어
+
+    ```
+    /swapfile swap swap defaults 0 0
+    ```
+    파일 하단에 위와 같은 내용을 추가하면 재부팅 이후에도 알아서 동작하게 된다.
+
+
+- Swap file 삭제
+
+    스왑 파일은 한 번 설정하면 용량이 부족하지 않는 한 굳이 삭제할 필요는 없다.
+
+    1. 스왑을 비활성화
+        ```
+        sudo swapoff -v /swapfile
+        ```
+
+    2. /etc/fstab에 추가했던 내용을 삭제한다.
+        ```js
+        /swapfile swap swap defaults 0 0 //삭제
+        ```
+
+    3. 생성했던 swapfile을 삭제
+        ```
+        sudo rm /swapfile
+        ```
+
+ref : https://psychoria.tistory.com/717?category=578334
+___
+
+## **리눅스 표준 시간대를 한국 시간(KST)으로 변경**
+
+```
+sudo ln -sf /usr/share/zoneinfo/Asia/Seoul /etc/localtime
+```
+
+명령어 입력 후 아무런 메세지가 뜨지 않으면 성공
+
+date 명령어로 확인 할 수 있다.
+
+___
+
+## **sudo 명령어 실행시 비밀번호 입력 생략하기**
+
+1. sudoers를 에디터로 실행
+    ```
+    sudo nano /etc/sudoers
+    ```
+
+2. 파일 맨 아래줄에 입력 후 저장
+    ```
+    (유저명) ALL=NOPASSWD: ALL
+    ```
+
+___
+
+
+## **리눅스 방화벽 포트 허용**
+
+    https://kibua20.tistory.com/124
 
 ___
