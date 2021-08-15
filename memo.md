@@ -55,3 +55,10 @@ ${fileDirname} : 파일 경로
     SSH로 repository를 클론해주면 아이디/비밀번호 입력 없이 push가 가능하다.
 
 ___
+
+- Git Bash에 Alias 영구 저장
+
+    ```
+    C:\Program Files\Git\etc\profile.d/aliases.sh
+    ```
+    에 저장할 alias 명령어 입력
