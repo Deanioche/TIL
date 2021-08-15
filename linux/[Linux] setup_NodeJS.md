@@ -10,3 +10,15 @@
     sudo apt-get install -y nodejs
     ```
     위 순서대로 해줘야 최신버전이 깔린다.
+    
+    ```
+    npm install -g npm@7.20.6
+    ```
+    그리고 npm 업데이트
+
+___
+
+- 리눅스 방화벽 포트 허용
+    https://kibua20.tistory.com/124
+
+___
