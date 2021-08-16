@@ -114,5 +114,35 @@ ___
 npm install --save react-router-dom
 ```
 
-리액트에 네비게이션 기능을 넣어줌
+리액트에 라우터 기능을 넣어줌
+
+____
+
+## **# styled-components**
+
+js에서 css를 작성할 수 있게 해준다.
+아래와 같이 삼항연산자를 사용할 수도 있다.
+
+```js
+import styled from "styled-components";
+
+const Button = styled.button`
+  background: ${(p) => (p.primary ? "red" : "blue")};
+`;
+
+export default function App() {
+  return (
+    <div className="App">
+      <h1>Hello CodeSandbox</h1>
+      <h2>Start editing to see some magic happen!</h2>
+      <Button primary>123</Button>
+      <button>345</button>
+    </div>
+  );
+}
+```
+
+간단한 컴포넌트 단위 CSS 작성에 유용
+
+___
 

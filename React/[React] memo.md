@@ -368,3 +368,68 @@ ___
 ```
 
 ___
+
+## Fragment
+
+- 컴포넌트를 <div>태그로 감싸는건 추첮되지 않는 방식
+    ```js
+    return (
+        <div>
+            ...
+        </div>
+    )
+    ```
+
+- 그래서 React에서는 HTML에서는 렌더링 되지 않는 Fragment라는 기능을 제공한다.
+    ```js
+    return (
+        <>
+            ...
+        </>
+    )
+    ```
+
+___
+
+## **React this**
+
+https://ljh86029926.gitbook.io/coding-apple-react/undefined/this
+
+this는 선언 시점에서 결정되는 것이 아니고, 메소드/함수를 **어떤 주체**가 실행 하는지에 따라서 결정한다. 이를 무시할 수 있는 방법 중 하나는 bind를 사용해서 강제로 지정하는 방법이 있다.
+
+### **.bind(실행 객체)**
+this를 강제로 선언 시점에 고정해 두는 메소드
+
+- 예제
+    ```js
+    const testObejct = {
+        a: '12345',
+        consoleA: function() {
+            console.log(this.a);
+        },
+    };
+
+    const globalConsoleA = testObejct.consoleA.bind(testObject);
+    globalConsoleA(); // 12345
+    ```
+
+- 클래스 예제
+    ```js
+    class testClass {
+    constructor() {
+        this.a = '12345';
+    }
+
+    consoleA() {
+        console.log(this.a);
+    }
+    }
+
+    const testClassInstance = new testClass();
+    testClassInstance.consoleA(); // 12345
+
+    const globalConsoleA = testClassInstance.consoleA.bind(testClassInstance);
+    globalConsoleA(); // 12345
+    ```
+
+___
