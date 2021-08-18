@@ -408,3 +408,9 @@ ___
         <img src="https://user-images.githubusercontent.com/66513003/125908461-17f89da3-b4f3-4552-b8f4-8a7b2660f464.png" width="400">
         
 ___
+
+# NodeJS Design Pattern
+
+https://yceffort.kr/2021/01/nodejs-4-design-pattern
+
+___
