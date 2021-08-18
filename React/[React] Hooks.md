@@ -1,7 +1,16 @@
 # **React Hooks**
 
-react hook은 funtional component에서 state를 가질 수 있게 해준다.
+react hook은 functional component에서 state를 가질 수 있게 해준다.
 앱을 리액트 Hook으로 만들면, class component, did mount, render 이런 것들을 쓰지 않아도 되어, 모든 것은 하나의 function이 된다. => functional programming [함수형 프로그래밍]
+
+# **Hook 사용 규칙**
+Hook은 그냥 JavaScript 함수이지만, 두 가지 규칙을 준수해야 합니다.
+
+최상위(at the top level)에서만 Hook을 호출해야 합니다. 반복문, 조건문, 중첩된 함수 내에서 Hook을 실행하지 마세요.
+
+React 함수 컴포넌트 내에서만 Hook을 호출해야 합니다. 일반 JavaScript 함수에서는 Hook을 호출해서는 안 됩니다. (Hook을 호출할 수 있는 곳이 딱 한 군데 더 있습니다. 바로 직접 작성한 custom Hook 내입니다. 이것에 대해서는 나중에 알아보겠습니다.)
+
+함수 이름은 "use"로 시작되어야한다.
 
 
 ### **기존 State 사용법**
@@ -107,6 +116,52 @@ ___
     input의 값을 변경하려 하면  
     Warning: You provided a `value` prop to a form field without an `onChange` handler. This will render a read-only field. If the field should be mutable use `defaultValue`. Otherwise, set either `onChange` or `readOnly`.  
     이런 에러가 뜨는데 왜???  
+
+
+## input 입력 길이를 제한하는 Hook
+
+```js
+import React, { useState } from "react";
+import styled from "styled-components";
+
+const useInput = (initVal, validator) => { 
+    // validator는 유효성 검사 조건이 입력되어있는 function을 받음. 
+  const [value, setValue] = useState(initVal);
+  const onChange = event => {
+    const {
+      target: { value }
+    } = event; // ES6
+    // ES6 이전 동일한 기능 => const value = event.target.value;
+
+    let willUpdate = true;
+    if (typeof validator === "function") {
+      willUpdate = validator(value);
+    }
+
+    if (willUpdate) {
+      setValue(value);
+    }
+  };
+
+  return { value, onChange };
+};
+
+
+const App = () => {
+  const maxLen = value => value.length < 10; // input 입력 길이 제한
+  const myName = useInput("surimi", maxLen);
+
+  return (
+    <div className="App">
+      <h1>Hello CodeSandbox</h1>
+      <h2>Start editing to see some magic happen!</h2>
+      <input {...myName} />
+    </div>
+  );
+};
+
+export default App;
+```
 
 
 ___
