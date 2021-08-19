@@ -162,8 +162,73 @@ const App = () => {
 
 export default App;
 ```
+___
 
+## **useTabs**
 
+데이터 배열 길이에 따라 탭이 생성되고 전환할 수 있는 Hook
+
+API
+```js
+const content = [
+  {
+    tab: "Section 1",
+    content: "I'm the content of the Section 1"
+  },
+  {
+    tab: "Section 2",
+    content: "I'm the content of the Section 2"
+  }
+  ,
+  {
+    tab: "Section 3",
+    content: "I'm the content of the Section 3"
+  }
+];
+```
+
+useTab.js
+```js
+import { useState } from 'react'
+
+export const useTabs = (initialTab, allTabs) => {
+    const [currentIndex, setCurrentIndex] = useState(initialTab);
+    if (!allTabs || !Array.isArray(allTabs)) {
+        // allTabs가 undefined이거나 배열이 아니면 return
+        return;
+    }
+    return {
+        currentItem: allTabs[currentIndex],
+        changeItem: setCurrentIndex // setter 함수 반환
+    };
+};
+```
+
+App.js
+```js
+const App = () => {
+  const inputCondition = value => value.length <= 10 && !value.includes("@");
+  const myName = useInput("surimi", inputCondition);
+
+  const { currentItem, changeItem } = useTabs(0, content);
+
+  return (
+    <div className="App">
+      <h1>Hello React Hook</h1>
+
+      <p>useInput</p>
+      <input {...myName} />
+
+      <p>useTabs</p>
+      {content.map((section, index) => (
+        <button onClick={() => changeItem(index)}>{section.tab}</button>
+      ))}
+      <p>{currentItem.content}</p>
+
+    </div>
+  );
+};
+```
 ___
 
 ## **useTitle**
@@ -175,7 +240,7 @@ ___
 ## **useHover**
 ## **useNetwork**
 ## **useScroll**
-## **useTabs**
+
 ## **usePreventLeave**
 ## **useConfirm**
 ## **useAxios**
