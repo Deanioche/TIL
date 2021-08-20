@@ -62,3 +62,12 @@ ___
     C:\Program Files\Git\etc\profile.d/aliases.sh
     ```
     에 저장할 alias 명령어 입력
+
+___
+
+- vscode indent (tab size) 설정
+
+    - ctrl + , 설정에선 4인데 2칸만 건너뛴다?  
+        -> vscode 우측 하단 파란 줄에 **Spaces:2** 확인하기
+
+___
