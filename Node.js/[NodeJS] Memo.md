@@ -409,8 +409,38 @@ ___
         
 ___
 
-# NodeJS Design Pattern
+# **NodeJS Design Pattern**
 
 https://yceffort.kr/2021/01/nodejs-4-design-pattern
+
+___
+
+# **import all files in once**
+
+ref : https://stackoverflow.com/questions/29722270/is-it-possible-to-import-modules-from-all-files-in-a-directory-using-a-wildcard
+
+빈 JS 파일 하나를 만들어 거기서 모두 export 시키고
+import 하려는 파일에 이 JS 파일 하나만 import 시키면 된다.
+
+exportHooks.js
+```js
+export { useInput } from "./useInput";
+export { useTabs } from "./useTab"; // useTabs만 export
+export * from "./useTitle"; // 전체 export
+```
+
+App.js
+```js
+import { useInput, useTabs, useTitle } from "./modules/exportHooks"
+
+// 바로사용
+const myName = useInput("surimi", inputCondition);
+
+// 또는 모두 불러오기
+import * as hook from "./modules/exportHooks"
+
+// 이 경우 hook.~~ 로 함수를 불러와야 한다.
+const myName = hook.useInput("surimi", inputCondition);
+```
 
 ___
