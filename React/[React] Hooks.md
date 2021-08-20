@@ -229,12 +229,143 @@ const App = () => {
   );
 };
 ```
+
+
+
+
+
 ___
+
+
+
+
+
+
+## **useEffect**
+
+useEffect는 ComponentDidMount와 ComponentWillUpdate, ComponentWillUnMount의 역할을 한다.
+
+- **ComponentDidMount**되거나 **ComponentWillUpdate**되면 sayHello() 함수 실행
+	```js
+	import { useEffect } from "react";
+
+	const App = () => {
+
+	const [num1, setNum1] = useState(0);
+	const [num2, setNum2] = useState(0);
+	const sayHello = () => console.log("hello, useEffect!")
+
+	useEffect(() => {
+		sayHello();
+	})
+
+	return (
+        <div className="App">
+            <button onClick={() => setNum1(num1 + 1)}>{num1}</button>
+            <button onClick={() => setNum2(num2 + 1)}>{num2}</button>
+        </div>
+	)
+	}
+	```
+	초기화시, 새로고침시, 어느 버튼을 누를 시에도 sayHello가 실행된다.
+
+- useEffect의 파라미터
+    1. useEffect의 첫번째 argument로는 익명함수를 생성할 필요 없이 실행하고자 하는 함수를 바로 넣을 수 있다.
+    2. 두번째 argument에는 useEffect가 반응할 state의 **배열**을 넣을 수 있다. 이 배열을 argument로 삽입할 경우, 배열에 들어있지 않은 state에는 useEffect가 동작하지 않는다. 어떤 state에도 동작하지 않게 하려면 빈 배열 '[]'을 삽입하면 된다.
+    3. useEffect로부터 return되는 함수는 ComponentWillUnMount로서 동작한다.
+
+	```js
+	import { useEffect } from "react";
+
+	const App = () => {
+
+        const [num1, setNum1] = useState(0);
+        const [num2, setNum2] = useState(0);
+        const sayHello = () => console.log("hello, useEffect!")
+
+        useEffect(sayHello, [num1]);
+        // 배열안에 있는 state에 의해서만 useEffect가 동작한다.
+
+        return (
+            <div className="App">
+                <button onClick={() => setNum1(num1 + 1)}>{num1}</button>
+                <button onClick={() => setNum2(num2 + 1)}>{num2}</button>
+            </div>
+        )
+	}
+	```
+    초기화, 새로고침, num1이 업데이트 될 때만 useEffect가 실행된다.
+
+
+    
+
+
+
+
+___
+
+
+
+
 
 ## **useTitle**
 
-## **usePageLeave**
+input 입력으로 실시간 HTML title 변경하기
+
+```js
+const App = () => {
+
+    // useEffect
+    const useTitle = initTitle => {
+        const [title, setTitle] = useState(initTitle);
+        const updateTitle = () => {
+            const htmlTitle = document.querySelector("title");
+            htmlTitle.innerText = title;
+        }
+        useEffect(updateTitle, [title]);
+        return setTitle
+    }
+
+    const titleUpdater = useTitle("Loading...");
+
+    return (
+        <div className="App">
+            <p>useEffect</p>
+            <input onChange={(p) => titleUpdater(p.target.value)} placeholder="change title" />
+        </div>
+    );
+};
+```
+
+
+
+___
+
+## **useRef**
+
+Component의 어떤 부분을 선택하는 방법
+
+
+
+
+
+___
+
+
+
 ## **useClick**
+
+
+
+
+
+
+___
+
+
+
+## **usePageLeave**
+
 ## **useFadeIn**
 ## **useFullscreen**
 ## **useHover**
