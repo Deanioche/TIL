@@ -123,6 +123,11 @@ ____
 js에서 css를 작성할 수 있게 해준다.
 아래와 같이 삼항연산자를 사용할 수도 있다.
 
+- 설치
+  ```
+  npm i styled-components --save
+  ```
+
 ```js
 import styled from "styled-components";
 
