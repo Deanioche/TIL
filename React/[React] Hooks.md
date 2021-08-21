@@ -344,7 +344,30 @@ ___
 ## **useRef**
 
 Component의 어떤 부분을 선택하는 방법
+getElementById 처럼 HTML에 접근할 수 있게 됨.
 
+```js
+import { useRef } from "react";
+
+const App = () => {
+
+    // useRef
+    const myInput = useRef();
+    setTimeout(() => myInput.current?.focus(), 3000);
+
+    // [Optional chaining]
+    // myInput.current?.focus()
+    // myInput.current 가 null 또는 undefined가 아니면
+    // focus()를 실행
+
+    return (
+        <div className="App">
+            <h3># useRef</h3>
+            <input ref={myInput} placeholder="useRef"></input>
+        </div>
+    );
+};
+```
 
 
 
@@ -355,8 +378,50 @@ ___
 
 ## **useClick**
 
+Component의 mount, unmount에 따라 useRef로 참조하는 HTMl 태그의 이벤트리스너 추가/ 제거.
 
+```js
+import { useEffect, useRef } from "react";
 
+// useClick
+const useClick = (fun) => {
+    const element = useRef();
+    useEffect(() => {
+        if (typeof fun !== "function") {
+            return;
+        }
+        // Component 가 mount 되었을 때,
+        if (element.current) {
+            element.current.addEventListener('click', fun)
+        }
+        // Component 가 unmount 되었을 때,
+        return () => {
+            // componentWillUnmount때 작동할 함수
+            if (element.current) {
+                element.current.removeEventListener("click", fun)
+            }
+        }
+    }, []); // dependency는 없음 = componentUpdate에는 반응하지 않음
+    return element;
+}
+
+const App = () => {
+
+    // useClick
+    const sayHello = () => console.log("say Hello");
+    const title = useClick(sayHello);
+
+    return (
+        <div className="App">
+
+            <h3># useClick</h3>
+            <h2 ref={title}>click me!</h2>
+
+            <hr />
+        </div>
+    );
+};
+```
 
 
 
