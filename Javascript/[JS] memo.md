@@ -359,17 +359,150 @@ console.log(sum)
 ```
 ___
 
-**#**
+## **기존방식과 ES6 ECMA script 방식 차이**
+```js
+// 기존 방식
+const movies = await axios.get("https://yts-proxy.now.sh/list_movies.json")
+console.log(movies.data.data.movies)
+
+// ES6 ECMA script 방식
+const { data: { data: { movies } } } = await axios.get("https://yts-proxy.now.sh/list_movies.json")
+console.log(movies)  // 받은 데이터(객체) 내부의 필요한 데이터만 저장할 수 있다
+```
 
 ___
 
-- 기존방식과 ES6 ECMA script 방식 차이
-    ```js
-    // 기존 방식
-    const movies = await axios.get("https://yts-proxy.now.sh/list_movies.json")
-    console.log(movies.data.data.movies)
+## **함수 파라미터에서 인수 기본값 삽입**
 
-    // ES6 ECMA script 방식
-    const { data: { data: { movies } } } = await axios.get("https://yts-proxy.now.sh/list_movies.json")
-    console.log(movies)  // 받은 데이터(객체) 내부의 필요한 데이터만 저장할 수 있다
+```js
+function abc(a = 7){
+    return a
+}
+
+console.log(abc(8)) // 8
+console.log(abc()) // 7
+```
+
+함수 abc의 인수 a에 **들어오는 값이 없으면** 7로 초기화된다.
+
+___
+
+## **함수 실행에 쿨타임 주기**
+
+```js
+const throttle = (func, delay) => {
+    let prev = Date.now() - delay;
+
+    return (...args) => {
+        let current = Date.now();
+        if (current - prev >= delay) {
+            console.log(args)
+            prev = current;
+            func.apply(null, args);
+        }
+    }
+};
+
+const fun () => {
+    console.log("mouse location:", e.clientX, e.clientY);
+}
+
+// 마우스가 움직이면 2초마다 함수 fun이 동작
+document.addEventListener('mousemove', throttle(fun, 2000));
+```
+
+___
+
+## 나머지 매개변수 
+
+[ko.javascript.info/rest-parameters-spread](https://ko.javascript.info/rest-parameters-spread)
+
+(...arg)
+
+
+```js
+function showName(firstName, lastName, ...titles) {
+  alert( firstName + ' ' + lastName ); // Julius Caesar
+
+  // 나머지 인수들은 배열 titles의 요소가 됩니다.
+  // titles = ["Consul", "Imperator"]
+  alert( titles[0] ); // Consul
+  alert( titles[1] ); // Imperator
+  alert( titles.length ); // 2
+}
+
+showName("Julius", "Caesar", "Consul", "Imperator");
+```
+
+## 전개 문법(spread syntax)
+
+함수를 호출할 때 `...arr`를 사용하면, **이터러블 객체 arr**이 인수 목록으로 '확장’됩니다.
+
+- 혼합 사용이 가능
+
+    ```js
+    let arr1 = [1, -2, 3, 4];
+    let arr2 = [8, 3, -8, 1];
+
+    alert( Math.max(1, ...arr1, 2, ...arr2, 25) ); // 25
     ```
+
+- 배열 선언에도 사용 가능
+
+    ```js
+    let arr = [3, 5, 1];
+    let arr2 = [8, 9, 15];
+
+    let merged = [0, ...arr, 2, ...arr2];
+
+    alert(merged); // 0,3,5,1,2,8,9,15 (0, arr, 2, arr2 순서로 합쳐집니다.)
+    ```
+
+- 문자열의 배열화
+    
+    ```js
+    let str = "Hello";
+
+    alert( [...str] ); // H,e,l,l,o
+
+    // Array.from은 이터러블을 배열로 바꿔줍니다.
+    alert( Array.from(str) ); // H,e,l,l,o
+    ```
+
+___
+
+## **apply**
+
+[call, apply, bind 설명](https://www.zerocho.com/category/JavaScript/post/57433645a48729787807c3fd)
+
+apply(this, args) 
+
+첫번째 인수 this에는 해당 함수에서의 this를 대체할 다른 this을 꽂아줄 수 있다.  
+    -> 다른 객체의 함수를 자기꺼마냥 쓸 수 있음.
+
+두번째 인수 arg는 전달할 **유사 배열** 객체
+
+```js
+var obj = {
+  string: 'zero',
+  yell: function() {
+    alert(this.string);
+  }
+};
+var obj2 = {
+  string: 'what?'
+};
+obj.yell(); // 'zero';
+obj.yell.call(obj2); // 'what?'
+```
+
+## **유사 배열**
+
+console.log로 찍어보면 배열처럼 나오지만 배열 함수를 사용할 수 없다.
+
+```js
+function example() {
+  console.log(arguments);
+}
+example(1, 'string', true); // [1, 'string', true]
+```
