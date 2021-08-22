@@ -427,6 +427,103 @@ const App = () => {
 
 ___
 
+## **useConfirm**
+
+useState와 useEffect를 사용하지 않기 때문에 Hook이 아니다
+
+사용자가 무언가 하기 전에 확인하는 기능
+
+**useConfirm.js**
+```js
+export const useConfirm = (msg, onConfirm, onCancel) => {
+    if (typeof onConfirm !== "function") return;
+
+    const confirmAction = () => {
+        if (window.confirm(msg)) onConfirm();
+        else
+            try { onCancel(); } // onCancel이 없는 경우
+            catch (err) { console.log("abort function doesn't exiest!"); return };
+    }
+
+    return confirmAction;
+}
+```
+
+**App.js**
+```js
+
+// Hooks 
+import { useConfirm } from "./modules/exports"
+
+const App = () => {
+
+    // useConfirm
+    const deleteConsole = () => console.clear();
+    const abort = () => console.log("Console clear aborted.");
+    const confirmDel = useConfirm("Are you sure?", deleteConsole, abort);
+
+    return (
+        <div className="App">
+            <h3># useConfirm</h3>
+            <button onClick={confirmDel}>delConsole</button>
+
+            <hr />
+        </div>
+    );
+};
+```
+
+
+___
+
+
+## **usePreventLeave**
+useState와 useEffect를 사용하지 않기 때문에 Hook이 아니다
+
+중요한 작업 중 실수로 페이지가 꺼지거나 이동되지 않게 방지하는 기능
+
+usePreventLeave.js
+```js
+export const usePreventLeave = () => {
+    const listener = event => {
+        event.preventDefault();
+        event.returnValue = "";
+    }
+    const enablePrevent = () => window.addEventListener("beforeunload", listener);
+    const disablePrevent = () => window.removeEventListener("beforeunload", listener);
+    return { enablePrevent, disablePrevent }
+}
+
+// return { enablePrevent, disablePrevent }는
+// return { enablePrevent : enablePrevent, disablePrevent : disablePrevent }와 같음
+```
+
+**App.js**
+```js
+import { usePreventLeave } from "./modules/exports"
+
+const App = () => {
+
+    // usePreventLeave
+    const { enablePrevent, disablePrevent } = usePreventLeave();
+
+    return (
+        <div className="App">
+            <h3># usePreventLeave</h3>
+            <button onClick={enablePrevent}>Protect</button>
+            <button onClick={disablePrevent}>UnProtect</button>
+            <br />
+            <span>Enable 'Protect' and refresh the window!</span>
+
+            <hr />
+        </div>
+    );
+};
+```
+
+___
+
+
 
 
 ## **usePageLeave**
@@ -436,7 +533,4 @@ ___
 ## **useHover**
 ## **useNetwork**
 ## **useScroll**
-
-## **usePreventLeave**
-## **useConfirm**
 ## **useAxios**
