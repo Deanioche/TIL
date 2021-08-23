@@ -506,3 +506,20 @@ function example() {
 }
 example(1, 'string', true); // [1, 'string', true]
 ```
+
+___
+
+## 배열을 ','없이 문자열로 만드는 법
+
+```js
+const arr = [0, 1, 2, 3, 4, 5];
+
+// arr.toString() => "0,1,2,3,4,5" 가 된다.
+
+arr.join("") // "012345"가 된다.
+
+console.log([...Array(9).fill(0), 5].join(""));
+// 0000000005
+```
+
+___
