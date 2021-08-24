@@ -545,16 +545,339 @@ export const useBeforeLeave = onBefore => {
     }
 ```
 
+**App.js**
+```js
+const begForLife = () => {
+    console.log("# useBeforeLeave : Plz, dont leave ;(");
+
+}
+useBeforeLeave(begForLife);
+```
 
 ___
 
-
-
-## **usePageLeave**
-
 ## **useFadeIn**
-## **useFullscreen**
-## **useHover**
+
+**useFadeIn.js**
+```js
+export const useFadeIn = (duration = 1, delay = 1) => {
+    const element = useRef();
+    useEffect(() => {
+        if (typeof duration != "number" || typeof delay != "number") return;
+        if (element.current) {
+            const { current } = element;
+            current.style.transition = `opacity ${duration}s ease-in-out ${delay}s`;
+            current.style.opacity = 1;
+
+            let span = document.createElement("span");
+            span.innerText = `(duration${duration}s, delay${delay}s)`;
+            current.appendChild(span);
+        }
+    }, []);
+    return { ref: element, style: { opacity: 0 } }
+};
+```
+
+**App.js**
+```js
+const fadeInH1 = useFadeIn(5, 1);
+
+const App = () => {
+
+    return(
+        <div className="App">
+            <h3># useFadeIn</h3>
+            <div {...fadeInH1}><b>
+                <p>Hello!!! :D</p></b>
+            </div>
+        <div>
+    )
+}
+```
+___
+
 ## **useNetwork**
+웹사이트가 online/ offline인지 판별해 function을 실행시킬 수 있다.
+
+"navigator.onLine" 이용
+
+**useNetwork.js**
+```js
+import { useEffect, useState } from "react";
+
+export const useNetwork = onChange => {
+    const [status, setStatus] = useState(navigator.onLine);
+    // navigator.onLine은 현재 웹사이트가 온라인인지 아닌지를 판별해 true/ false 반환
+    const handleChange = () => {
+        if (typeof onChange === "function") {
+            onChange(navigator.onLine);
+        }
+        setStatus(navigator.onLine);
+
+    };
+    useEffect(() => {
+        window.addEventListener("online", handleChange);
+        window.addEventListener("offline", handleChange);
+        return () => {
+            window.removeEventListener("online", handleChange);
+            window.removeEventListener("offline", handleChange);
+        }
+    }, [])
+
+    return status;
+};
+```
+
+**App.js**
+
+```js
+// useNetwork
+const handleNetworkChange = online => {
+    console.log(online ? "We just went online" : "We are now offline")
+}
+const onLine = useNetwork(handleNetworkChange);
+
+const App = () => {
+
+    return(
+        <h3># useNetwork</h3>
+        <h2>{onLine ? "onLine" : "offLine"}</h2>
+
+        <hr />
+    )
+}
+```
+
+
+___
 ## **useScroll**
+스크롤 움직임에 따라 함수 실행
+
+**useScroll.js**
+```js
+import { useEffect, useState } from "react";
+import { randomColor } from "./exports";
+
+export const useScroll = () => {
+    const [pos, setPos] = useState({ x: 0, y: 0, c: 'black' })
+    const onScroll = (event) => {
+
+        let c = randomColor();
+
+        setPos({ y: window.scrollY, x: window.scrollX, c: `#${c[0]}${c[1]}${c[2]}` });
+    }
+    useEffect(() => {
+        window.addEventListener("scroll", onScroll);
+        return () => window.removeEventListener("scroll", onScroll);
+    }, [])
+    return pos;
+}
+```
+
+**App.js**
+
+```js
+// useScroll
+const { y, c } = useScroll();
+
+const App = () => {
+
+    return(
+        <h2 style={{ right: "5vw", position: "fixed", color: c }}>Hello React Hook</h2>
+    )
+}
+```
+
+
+___
+
+## **useFullscreen**
+
+특정 element (img, div, ...)를 전체화면으로 보기
+
+**useFullScreen.js**
+```js
+import { useRef } from "react";
+
+export const useFullScreen = (callback) => {
+    const element = useRef();
+    const runCb = isFull => {
+        if (callback && typeof callback === "function") {
+            callback(isFull);
+        }
+    }
+    const triggerFull = () => {
+
+        if (element.current) {
+            // 브라우저 별 fullscreen 호출 함수가 다르다.
+            if (element.current.requestFullscreen) {
+                element.current.requestFullscreen(); // chrome
+            } else if (element.current.mozRequestFullScreen) {
+                element.current.mozRequestFullScreen();// firefox
+            } else if (element.current.webkitRequestFullScreen) {
+                element.current.webkitRequestFullScreen();// opera
+            } else if (element.current.msRequestFullScreen) {
+                element.current.msRequestFullScreen(); // MicroSoft
+            }
+            runCb(true);
+        }
+    }
+    const exitFull = () => {
+        if (document.exitFullscreen) {
+            document.exitFullscreen(); // chrome
+        } else if (document.mozExitFullScreen) {
+            document.mozExitFullScreen(); // firefox
+        } else if (document.webkitExitFullScreen) {
+            document.webkitExitFullScreen(); // opera
+        } else if (document.msExitFullScreen) {
+            document.msExitFullScreen(); // MicroSoft
+        }
+        // Fullscreen의 요청은 element에서 하지만
+        // Fullscreen에서 빠져나오는건 document에서 한다.
+        runCb(false);
+    }
+    return { element, triggerFull, exitFull };
+}
+```
+
+**App.js**
+
+```js
+const App = () => {
+
+    const checkFull = (bool) => {
+        console.log(bool ? "We are Full" : "We are small");
+    }
+    const { element: reqFull, triggerFull, exitFull } = useFullScreen(checkFull);
+
+    return(
+        <h3># useFullscreen</h3>
+        <img alt="click" onClick={exitFull} ref={reqFull} height="100" src="https://pbs.twimg.com/profile_images/770139154898382848/ndFg-IDH_400x400.jpg" />
+        <button onClick={triggerFull}>Image Fullscreen</button>
+        <hr />
+    )
+}
+```
+
+
+___
+
+## **useNotification**
+
+알림을 띄우는 기능.
+브라우저와 윈도우에서 알람을 허용해줘야 한다.
+
+**useNotification.js**
+```js
+export const useNotification = (title, options) => {
+
+    if (!("Notification" in window)) return;
+    // https://developer.mozilla.org/en-US/docs/Web/API/notification
+
+    const fireNotif = () => {
+
+        if (Notification.permission !== "granted") {
+            Notification.requestPermission().then(permission => {
+                if (permission === "granted") {
+                    new Notification(title, options);
+                } else {
+                    return;
+                }
+            });
+        } else {
+            new Notification(title, options);
+        }
+
+    }
+    return fireNotif;
+
+}
+```
+
+**App.js**
+```js
+
+const App = () => {
+
+    const options = {
+    icon: 'http://cdn.sstatic.net/stackexchange/img/logos/so/so-icon.png',
+    body: 'Hi!! :D'
+
+    // 추가할 수 있는 옵션
+    // https://developer.mozilla.org/en-US/docs/Web/API/notification
+    }
+
+    const triggerNotif = useNotification("Can I steal your Kimchi?", options);
+
+    return(
+        <h3># useNotification</h3>
+        <button onClick={triggerNotif}>Notification</button>
+    )
+}
+
+```
+
+___
+
 ## **useAxios**
+
+Axios는 HTTP request를 호출한다.
+
+**useAxios.js**
+```js
+import defaultAxios from "axios";
+import { useEffect, useState } from "react";
+
+const useAxios = (opts, axiosInstance = defaultAxios) => {
+    // 별도로 설정한 axiosInstance 인수가 없으면 defaultAxios를 대신 담는다.
+
+    const [state, setState] = useState({
+        loading: true,
+        error: null,
+        data: null
+    });
+    const [trigger, setTrigger] = useState(0);
+    const refetch = () => {
+        setState({
+            ...state,
+            loading: true
+        });
+        setTrigger(new Date()); // trigger가 어떤 수로든 변경되면 useEffect에서 감지하고 재실행된다.
+    }
+    useEffect(() => {
+        if (!opts.url) return;
+        axiosInstance(opts).then(data => {
+            setState({
+                ...state,
+                loading: false,
+                data
+            })
+        }).catch(error => {
+            setState({ ...state, loading: false, error })
+        })
+    }, [trigger])
+    return { ...state, refetch };
+}
+
+export default useAxios;
+```
+
+**App.js**
+```js
+
+const App = () => {
+
+    // useAxios
+    const { loading, data, error, refetch } = useAxios({ url: "https://yts.mx/api/v2/list_movies.json" });
+
+    // console.log(`loading : ${loading}\ndata : ${(JSON.stringify(data))}\nerror : ${error}`);
+
+    return(
+        <h3># useAxios</h3>
+        <button onClick={refetch}>Refetch!</button>
+        <span>{data && data.status}</span>
+        <span>{loading && "Loading"}</span>
+    )
+}
+
+```
