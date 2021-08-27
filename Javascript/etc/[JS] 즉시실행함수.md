@@ -12,6 +12,16 @@ function() {}
 
 //익명 즉시실행함수(더글러스 클락포드 권장표기법)
 (function() {}());
+
+const abc = function (a, b) {
+    // 자릿수 맞추기
+    console.log("1".padStart(3, "0")) // 001
+    console.log("1".padEnd(4, "0")) // 1000
+    console.log(a, b); // 123 456
+
+}(123, 456); // 뒤에 ()를 붙이는 건 함수 선언과 동시에 실행시키는 것.
 ```
+
+
 
 ___
