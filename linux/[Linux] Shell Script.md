@@ -209,3 +209,30 @@ ___
     - .bashrc에서 $PATH 환경변수 설정이 가능
 
 ___
+
+## Alias Parameter 쓰기.
+
+- 파라미터로 받은 인수를 출력시키는 예제
+    ```js
+    alias blah='function _blah(){ echo "First: $1"; echo "Second: $2"; };_blah' 
+    ```
+    blah hello linux 입력시,
+    ```
+    First: hello
+    Second: linux
+    ```
+
+- C 언어로 작성된 파일을 컴파일 해 실행시키는 alias
+    ```js
+    alias cr='function _cr(){ gcc "$1"; ./a.out; };_cr'
+    ```
+    cr [파일명].c 로 실행.
+
+- mkdir과 cd를 한번에
+    ```js
+    alias mkcd='function _mkcd(){ mkdir "$1"; cd "$1";};_mkcd'
+    ```
+
+    mkdir dirname && cd $_ 와 같다.  
+    여기서 $_은 이전 명령어의 output.  
+    unix.stackexchange.com/a/271693/169772
