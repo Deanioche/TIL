@@ -947,3 +947,12 @@ ___
     https://kibua20.tistory.com/124
 
 ___
+
+## **시스템 종료 및 재부팅**
+
+    https://jhnyang.tistory.com/50
+
+```
+sudo reboot (-f)
+```
+-f는 강제 재부팅
