@@ -116,3 +116,11 @@ NodeJS 서버 백그라운드 실행
     리스트에 뜨는 프로세스의 pid를 입력하면 된다.
 
 ___
+
+## **방화벽 포트 확인**
+
+apt install net-tools
+
+netstat -tnlp
+
+netstat -anp | grep LISTEN | grep :80
