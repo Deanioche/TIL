@@ -99,13 +99,16 @@ ___
 
 ## **ls -l 파일 출력 정보**
 ```
-파일권한      파일 소유자  크기  파일생성시간   파일이름
+파일권한 링크수 파일소유자  크기  파일생성시간   파일이름
 -rw-rw-r-- 1 root root    0  8월  8 05:46 empty_file.txt
 drwxrwxr-x 2 root root 4096  8월  8 05:42 hello_linux
 ```
 파일 권한 앞에 `d`가 붙어있으면 `directory`라는 뜻
 ___
 
+ls -l을 하면 순서대로
+file mode, number of links, owner name, group name, number of bytes in the file, abbreviated month, day-of-month file was last modified, hour file last modified, minute file last modified, and the pathname.
+가 출력된다.
 
 ## **파일 다운로드**
 
