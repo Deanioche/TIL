@@ -75,3 +75,14 @@ vi 편집기의 명령모드에서 반복 횟수를 입력 후 i로 입력모드
 "텍스트 내용"
 ```
 가 된다.
+
+
+___
+
+## **vim 자동완성 기능**
+
+https://johngrib.github.io/wiki/vim-auto-completion/
+
+- ctrl p, n : 키워드 자동 완성
+- ctrl x + ctrl f : 문장 자동 완성
+- 
