@@ -22,3 +22,18 @@ ___
     https://kibua20.tistory.com/124
 
 ___
+
+- 접속 timeout 뜰때 확인할거
+
+[link](https://okky.kr/article/1021878)
+
+[link2](https://okky.kr/article/894862)
+
+- 포트 확인
+    ```
+    sudo netstat -antp
+    ```
+- 포트 설정 초기화
+    ```
+    iptables -F
+    ```
