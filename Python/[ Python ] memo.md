@@ -1,11 +1,51 @@
 # Python memo
 
+## **import random**
+
+```py
+from random import *
+ 
+i = randint(1, 100)  # 1부터 100 사이의 임의의 정수
+print(i)
+ 
+f = random()   # 0부터 1 사이의 임의의 float
+print(f)
+ 
+f = uniform(1.0, 36.5)   # 1부터 36.5 사이의 임의의 float
+print(f)
+ 
+i = randrange(1, 101, 2) # 1부터 100 사이의 임의의 짝수
+print(i)
+ 
+i = randrange(10)  # 0부터 9 사이의 임의의 정수
+print(i)
+```
+
+**# 샘플링**
+
+리스트에서 랜덤으로 샘플 뽑기.
+```py
+import random
+
+# (1) 숫자리스트 샘플링
+numlist = [1,2,3,4,5,6,7,8,9]
+s = random.sample(numlist, 3)
+print(s)  # [1, 2, 8]
+ 
+# (2) 튜플 샘플링
+frutes = ('사과', '귤', '포도', '배')
+s = random.sample(frutes, 2)
+print(s)  # ['배', '사과']
+```
+___
+
 ## **퍼센테이지 포멧 출력 방법**
 ```py
 print(f"{-21.47483648:.0f}%")  # -21%
 print(f"{-21.47483648:.3f}%")  # -21.475%
 print(f"{-21.47483648:.5f}%")  # -21.47484%
 ``` 
+___
 
 ## **statistics 라이브러리 사용시 시간 차이**
 ![image](https://user-images.githubusercontent.com/66513003/138732347-9f9e6201-d94c-4b7b-b6ff-6dbd83c31f86.png)
