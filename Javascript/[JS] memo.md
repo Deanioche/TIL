@@ -2,6 +2,44 @@
 
 ___
 
+## **# 소수점 자리수 지정**
+
+```js
+console.log(21.47483648.toFixed(0)) // 21
+console.log(21.47483648.toFixed(3)) // 21.475
+console.log(21.47483648.toFixed(5)) // 21.47484
+```
+
+## **# 배열안의 원소 값 모두 합치기**
+
+```js
+let a = [1, 2, 3];
+
+console.log(a.reduce((a, b) => a + b)); // 6
+```
+
+## **# 배열에서 중복 제거하는 방법**
+
+[JS 배열 중복 제거](https://velog.io/@yunsungyang-omc/JS-%EB%B0%B0%EC%97%B4%EC%97%90%EC%84%9C-%EC%A4%91%EB%B3%B5-%EC%A0%9C%EA%B1%B0%ED%95%98%EA%B8%B0)
+
+```js
+const array = ['a' , 1, 2, 'a' , 'a', 3];
+
+// 1: 'Set'
+[...new Set(array)];
+// 2: 'Filter'
+array.filter((item, index) => array.indexOf(item) === index);
+// 3: 'Reduce'
+array.reduce((unique, item) =>
+  unique.includes(item) ? unique : [...unique, item], []);
+// RESULT:
+// ['a', 1, 2, 3]
+```
+
+**# 성능 비교**
+![image](https://user-images.githubusercontent.com/66513003/138716223-c299eafe-76a7-4ee2-9a58-2c974de5973d.png)
+___
+
 # **# Methods**
 
 ## **Array**
