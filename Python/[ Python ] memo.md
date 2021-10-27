@@ -1,8 +1,108 @@
 # Python memo
 
+## **퍼센테이지 포멧 출력 방법**
+```py
+print(f"{-21.47483648:.0f}%")  # -21%
+print(f"{-21.47483648:.3f}%")  # -21.475%
+print(f"{-21.47483648:.5f}%")  # -21.47484%
+``` 
+
+## **statistics 라이브러리 사용시 시간 차이**
+![image](https://user-images.githubusercontent.com/66513003/138732347-9f9e6201-d94c-4b7b-b6ff-6dbd83c31f86.png)
+
+위 - 안사용(72ms)  
+아래 - 사용(164ms)
+
+## **15. set 집합**
+
+- set 집합 안에서는 모든 원소가 고유한 값은 가진다. (중복 값이 없음)
+
+- list -> set으로의 변환은 list 안의 중복된 원소를 모두 제거한다.
+    ```py
+    import sys
+    input = sys.stdin.readline
+
+    lst = []
+    for i in range(0, 10):
+        lst.append(int(input()) % 42)
+
+    print(len(set(lst)))
+
+    # list -> set은 배열에서 중복값을 제거
+    ```
+
+https://wikidocs.net/16044
+
+## **14. join**
+
+```py
+lst = [0] * 5
+print("\n".join(map(str, lst)))
+
+# 출력 결과
+# 0
+# 0
+# 0
+# 0
+# 0
+```
 
 
-8. 파이썬 reduce 함수 사용법
+## **13. 리스트 0으로 초기화**
+```py
+lst = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0] 
+# 위와 같이 만들 때
+
+lst = [0] * 10 # 빠름
+lst = [0 for i in range(10)] # 느림
+lst = list(0 for i in range(10)) # 느림
+```
+
+## **12 . zfill(n) 함수**
+```py
+N = "26"
+print(N.zfill(5)) # 00026
+```
+문자열 N이 5자리보다 짧으면 앞을 zero(0)으로 채운다.  
+N이 정수형이면 에러.
+
+**### 예제** [BaekJoon_1110](https://www.acmicpc.net/problem/1110)
+```py
+N = "26"
+print(f"{sum(map(int, N.zfill(2)))}"[-1])
+# 1. 문자열 N이 2자리가 안되면 앞을 0으로 채우고(N.zfill(2))
+# 2. 각 자리를 int로 바꿔 sum() 하고 이걸 문자열로 다시 받아(f"{...}") 뒤에서 첫 문자([-1])를 출력.
+```
+
+
+## **11. 문자열[-n]**
+```py
+N = "12345" 
+print(N[-1]) # 5 - 뒤에서 첫번째 문자
+print(N[-4]) # 4 - 뒤에서 네번째 문자
+print(N[-3:]) # 345 - 뒤에서 세번째 문자부터 쭉
+print(N[:-2]) # 123 - 뒤에서 두번째 문자까지 제외하고 전부 출력
+```
+
+## **10. // 연산자**
+```py
+print(26 // 10) # 2
+print(71 // 10) # 7
+```
+소수점 이하를 버림. int형태로 출력.
+
+## **9. {aa=} '변수명=값' 출력**
+
+```py
+aa = 0
+bb = 1 if aa == 0 else aa
+print(f'{aa=} {bb=}')  # aa=0 bb=1
+```
+f'{변수명=}'는 '변수명=값'의 형태로 출력된다. (aa=0)
+
+___
+
+## **8. 파이썬 reduce 함수 사용법**
 
 https://www.daleseo.com/python-functools-reduce/
 
