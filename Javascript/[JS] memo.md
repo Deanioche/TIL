@@ -2,6 +2,47 @@
 
 ___
 
+## **console.log 대신 개행 없이 출력**
+
+```js
+process.stderr.write("1");
+process.stderr.write("2");
+// 12
+```
+
+## **0부터 n까지 정수 배열 생성**
+
+```js
+console.log([...Array(5)].map((v, i) => i))         // [0, 1, 2, 3, 4]
+console.log(Array.from({ length: 5 }, (v, i) => i)) // [0, 1, 2, 3, 4]
+
+// Set
+console.log(new Set([...Array(5)].map((v, i) => i))) // Set(5) { 0, 1, 2, 3, 4 }
+
+// key : value
+console.log({ ...[...Array(5)].map((v, i) => i) })   // { '0': 0, '1': 1, '2': 2, '3': 3, '4': 4 }
+```
+
+## **# str -> int**
+
+```js
+let n = '3';
+console.log(typeof +n) // number
+console.log(+n) // 3
+```
+
+## **# NaN 비교 isNaN()**
+
+```js
+let t = 'A';
+
+console.log(typeof t);   // string
+console.log(typeof +t);  // number
+console.log(+t);         // NaN   
+console.log(+t === NaN); // false 
+console.log(isNaN(+t));  // true
+```
+
 ## **# 소수점 자리수 지정**
 
 ```js
@@ -18,7 +59,7 @@ let a = [1, 2, 3];
 console.log(a.reduce((a, b) => a + b)); // 6
 ```
 
-## **# 배열에서 중복 제거하는 방법**
+## **# 배열에서 중복 제거하는 방법 set**
 
 [JS 배열 중복 제거](https://velog.io/@yunsungyang-omc/JS-%EB%B0%B0%EC%97%B4%EC%97%90%EC%84%9C-%EC%A4%91%EB%B3%B5-%EC%A0%9C%EA%B1%B0%ED%95%98%EA%B8%B0)
 

@@ -1,5 +1,18 @@
 # Python memo
 
+## **아스키코드 <-> 문자 ord(c) chr(n)**
+
+- ord(문자) : 문자를 10진법 아스키 코드로 표기
+- chr(숫자) : 10진법 아스키 코드를 문자로 표기
+
+```py
+print(ord('A')) # 65
+print(ord('a')) # 97
+print(chr(65))  # A
+print(chr(97))  # a
+print(chr(48))  # 0
+```
+
 ## **import random**
 
 ```py
