@@ -2,6 +2,18 @@
 
 ___
 
+## 문자 반복(Array.join(), repeat())
+
+```js
+console.log(Array(6).join('A'))          // AAAAA
+console.log(Array(5).fill('A').join('')) // AAAAA
+
+// ES6
+console.log('A'.repeat(5)) // AAAAA
+```
+
+___
+
 ## **console.log 대신 개행 없이 출력**
 
 ```js
@@ -9,6 +21,8 @@ process.stderr.write("1");
 process.stderr.write("2");
 // 12
 ```
+
+___
 
 ## **0부터 n까지 정수 배열 생성**
 
@@ -23,6 +37,8 @@ console.log(new Set([...Array(5)].map((v, i) => i))) // Set(5) { 0, 1, 2, 3, 4 }
 console.log({ ...[...Array(5)].map((v, i) => i) })   // { '0': 0, '1': 1, '2': 2, '3': 3, '4': 4 }
 ```
 
+___
+
 ## **# str -> int**
 
 ```js
@@ -30,6 +46,8 @@ let n = '3';
 console.log(typeof +n) // number
 console.log(+n) // 3
 ```
+
+___
 
 ## **# NaN 비교 isNaN()**
 
@@ -43,6 +61,8 @@ console.log(+t === NaN); // false
 console.log(isNaN(+t));  // true
 ```
 
+___
+
 ## **# 소수점 자리수 지정**
 
 ```js
@@ -51,6 +71,8 @@ console.log(21.47483648.toFixed(3)) // 21.475
 console.log(21.47483648.toFixed(5)) // 21.47484
 ```
 
+___
+
 ## **# 배열안의 원소 값 모두 합치기**
 
 ```js
@@ -58,6 +80,8 @@ let a = [1, 2, 3];
 
 console.log(a.reduce((a, b) => a + b)); // 6
 ```
+
+___
 
 ## **# 배열에서 중복 제거하는 방법 set**
 
