@@ -1,5 +1,16 @@
 # Python memo
 
+
+
+___
+
+## **문자열 반복**
+
+```py
+print('A' * 5) # AAAAA
+```
+___
+
 ## **아스키코드 <-> 문자 ord(c) chr(n)**
 
 - ord(문자) : 문자를 10진법 아스키 코드로 표기
@@ -12,6 +23,8 @@ print(chr(65))  # A
 print(chr(97))  # a
 print(chr(48))  # 0
 ```
+
+___
 
 ## **import random**
 
