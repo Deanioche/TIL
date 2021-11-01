@@ -1,8 +1,18 @@
 **# JS 메모**
 
+
+
+## **아스키 코드 변환**
+
+```js
+console.log("A".charCodeAt())           // 65
+console.log(String.fromCharCode(65))    // A
+console.log("BCD".charCodeAt())         // 66 맨 앞자리만 출력
+console.log(String.fromCharCode(65, 66, 67, 68, 69))    // ABCDE
+```
 ___
 
-## 문자 반복(Array.join(), repeat())
+## **문자 반복(Array.join(), repeat())**
 
 ```js
 console.log(Array(6).join('A'))          // AAAAA

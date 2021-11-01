@@ -1,7 +1,46 @@
 # Python memo
 
+## range() 역순으로 받기
 
+```py
+for i in range(5, 0, -1):
+    print(i) # 5 4 3 2 1
 
+for i in reversed(range(0, 5)):
+    print(i) # 4 3 2 1 0
+```
+
+___
+## **배열 뒤집는 방법 2가지**
+
+```py
+a = [1, 2, 3]
+a.reverse()
+print(a) # [3, 2, 1]
+
+a = [1, 2, 3]
+print(list(reversed(a))) # [3, 2, 1]
+```
+
+___
+## **for loop에서 index, value 둘다 받기**
+
+- enumerate() 함수 사용
+    ```py
+    for i, v in enumerate(['tic', 'tac', 'toe']):
+        print(i, v)
+        
+    # 0 tic
+    # 1 tac
+    # 2 toe
+    ```
+
+- dict 응용
+    ```py
+    dictionary = {'a': 0, 'z': 25}
+    for index, (key, value) in enumerate(dictionary.items()):
+        ## Code here ##
+    ```
 ___
 
 ## **문자열 반복**
