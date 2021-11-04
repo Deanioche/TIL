@@ -1,5 +1,65 @@
 # Python memo
 
+## **하위 문자열 비교**
+
+- in
+    가장 빠름
+    ```py
+    >>> 'foo' in '**foo**'
+    True
+
+    >>> 'foo' not in '**foo**'
+    False
+    ```
+
+- any()
+    가장 파이썬스러운 문법
+    ```py
+    names = ['bob', 'john', 'mike']
+    print(any(st in 'Hey bob!' for st in names))
+    ```
+
+- find
+    가장 먼저 발견된 문자열의 인덱스 리턴
+    ```py
+    s = "This be a string"
+    print(s.find("is"))  # 2
+    print(s.find("This"))  # 0
+    print(s.find("ing"))  # 13
+    ```
+    ```py
+    s = "This be a string"
+    for i in s:
+        print(i.find("s"))
+    # 출력 결과
+    # -1
+    # -1
+    # -1
+    # 0
+    # -1
+    # -1
+    # -1
+    # -1
+    # -1
+    # -1
+    # 0
+    # -1
+    # -1
+    # -1
+    # -1
+    # -1
+    ```
+
+- __contains__도 존재하지만 권장되지 않음.  
+    __함수명__은 사용자함수.
+
+## 리스트를 문자열로
+```py
+print(''.join(['1', '2', '3']))  # 123
+```
+
+___
+
 ## range() 역순으로 받기
 
 ```py

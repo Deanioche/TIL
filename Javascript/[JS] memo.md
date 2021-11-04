@@ -1,6 +1,29 @@
 **# JS 메모**
 
 
+## **문자열 뒤집기 reverse()**
+
+- reverse()는 원본 배열을 변형시키므로 원하지 않으면 배열을 복사해서 써야한다.
+
+```js
+let a = 'ABC'
+
+console.log([...a].reverse().join('')) // CBA
+console.log(a.split('').reverse().join('')) // CBA
+console.log(a) // ABC 원본은 안바뀜
+```
+- 재귀함수 이용
+    ```js
+    function reverse (str) {
+        if (str === "") {
+            return "";
+        } else {
+            return reverse(str.substr(1)) + str.charAt(0);
+        }
+    }
+    ```
+
+___
 
 ## **아스키 코드 변환**
 
