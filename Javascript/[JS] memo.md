@@ -1,5 +1,83 @@
 **# JS 메모**
 
+## **node.js에서 입력 받는 방법 두가지**
+
+### **1. readline 모듈 사용**
+
+- 소스 코드1 (한 줄 입력)
+    ```js
+    const readline = require('readline');
+
+    const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+    });
+
+    rl.on('line', function(line) {
+    console.log(line);
+
+    rl.close();
+    }).on("close", function() {
+    process.exit();
+    });
+    ```
+
+- 소스 코드2 (여러 줄 입력)
+    ```js
+    const readline = require('readline');
+
+    const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+    });
+
+    let input = [];
+
+    rl.on('line', function (line) {
+    input.push(line)
+    })
+    .on('close', function () {
+    console.log(input);
+    process.exit();
+    });
+    ```
+
+### **2. fs 모듈 사용**
+- 소스 코드1 (한 줄 입력)
+    ```js
+    let fs = require('fs');
+    let input = fs.readFileSync('/dev/stdin').toString().split(' ');
+
+    let num = Number(input);
+
+    for (let i = 1; i <= num; i++) {
+    console.log(i);
+    }
+    ```
+
+- 소스 코드2 (여러 줄 입력)
+    ```js
+    let fs = require('fs');
+    let input = fs.readFileSync('/dev/stdin').toString().split('\n');
+
+    let count = input[0];
+    let numbers = [];
+
+    for (let i = 1; i < input.length; i++) {
+    if (input[i] !== '') {
+        numbers.push(input[i].split(' '));
+    }
+    }
+
+    for (let i = 0; i < numbers.length; i++){
+    let num1 = Number(numbers[i][0]);
+    let num2 = Number(numbers[i][1]);
+
+    console.log(num1 + num2);
+    }
+    ```
+___
+
 ## **number타입 범위와 BigInt()**
 
 - number타입은 -(2⁵³-1) 부터 2⁵³ -1 까지는 정확히 IEEE-754로 표현될 수 있지만, 그 초과와 이하 는 IEEE-754로 직접 표현될 수 없으며 가까운 수나 0으로 반올림 한다.
