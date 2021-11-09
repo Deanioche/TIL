@@ -1,5 +1,35 @@
 # Python memo
 
+
+## **python 진수 변환**
+
+https://www.daleseo.com/python-int-bases/
+
+- n -> 10진수
+    ```py
+    n = input()
+    print(int(n, 16)) # 16진수 A -> 10
+    ```
+
+```py
+# 10 -> n 진수
+def solution(n, q):
+    rev_base = ''
+
+    while n > 0:
+        n, mod = divmod(n, q)
+        rev_base += str(mod)
+
+    return rev_base[::-1]
+    # 역순인 진수를 뒤집어 줘야 원래 변환 하고자하는 base가 출력
+
+
+print(solution(45, 3)) # 1200
+
+# n -> n 진수
+print(solution(int('c', 16), 4)) # 30
+```
+
 ## **하위 문자열 비교**
 
 - in
