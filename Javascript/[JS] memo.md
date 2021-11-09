@@ -1,5 +1,20 @@
 **# JS 메모**
 
+## **number타입 범위와 BigInt()**
+
+- number타입은 -(2⁵³-1) 부터 2⁵³ -1 까지는 정확히 IEEE-754로 표현될 수 있지만, 그 초과와 이하 는 IEEE-754로 직접 표현될 수 없으며 가까운 수나 0으로 반올림 한다.
+
+- number의 범위를 넘는 정수는 BigInt()로 나타낼 수 있다.
+
+[Bigint_doc](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/BigInt)
+
+```js
+i = 9223372036854775807
+j = 9223372036854775808
+console.log((BigInt(i) + BigInt(j)).toString()) // 18446744073709551615
+```
+
+___
 
 ## **문자열 뒤집기 reverse()**
 
