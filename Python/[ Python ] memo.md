@@ -32,6 +32,119 @@ for n in range(1, 26):
     # 37 ~ 45 => 9
     # 46 ~ 55 => 10
     ```
+
+___
+
+## while문 조건 입력 중, 변수에 값 지정
+
+```py
+while s := input(): # 아무것도 입력하지 않으면 while문 종료
+    print('yneos'[s != s[::-1]::2])
+    print(s[::-1])  # 뒤집기
+    print(s[::2])  # 인덱스 0, 2, 4, ...
+    print(s[::3])  # 인덱스 0, 3, 6, ...
+```
+___
+
+## exec() 함수
+파라미터로 들어오는 문자열을 코드로써 실행한다.
+
+특정 코드를 반복할 때 for문 대신 사용할 수 있다.
+
+```py
+exec('print("문자열을 여러번 반복");'*3)
+# print("문자열을 여러번 반복");print("문자열을 여러번 반복");print("문자열을 여러번 반복");
+
+a = 2
+n = int(input()) - 1
+exec('a *= 2;'*n)
+print(a)  # 10 입력시 -> 1024 
+# 2 ** n 와 같음
+```
+___
+
+## n의 보수 (숏코딩)
+
+음수로 바꾸고(-) 비트반전(~) 시켜주면 원래 값에 -1한 값이 된다.
+
+```py
+n = 10
+~-n == n-=1  # 9
+
+print(~-n)  # 9
+print(~n)  # -11
+```
+
+___
+
+## 두 리스트(배열)의 각 자리 원소 값 합치기
+https://itinerant.tistory.com/2
+```py
+a = [1,2,3,4,5]
+b = [5,4,3,2,1]
+c = [x+y for x,y in zip(a, b)]
+
+# [6, 6, 6, 6, 6]
+```
+
+```py
+c = [a[i] + b[i] for i in range(len(a))]
+
+# [6, 6, 6, 6, 6]
+```
+
+
+- 아래 두 식(1, 2)은 동일한 연산을 수행.
+    ```py
+    # 1
+    a = [1, 2, 3, 4, 5]
+    b = [5, 4, 3, 2, 1]
+
+    c = [aa+bb for aa in a for bb in b]
+    # [6, 5, 4, 3, 2, 7, 6, 5, 4, 3, 8, 7, 6, 5, 4, 9, 8, 7, 6, 5, 10, 9, 8, 7, 6]
+
+    print(c)
+
+    # 2
+    for aa in a:
+        for bb in b:
+            print(aa+bb, end=", ")
+    # 6, 5, 4, 3, 2, 7, 6, 5, 4, 3, 8, 7, 6, 5, 4, 9, 8, 7, 6, 5, 10, 9, 8, 7, 6,
+    ```
+___
+
+## 코드 실행시간 체크
+
+```py
+start = time.time()  # 시작 시간 저장
+
+# 실행할 코드
+
+print("WorkingTime: {:.3f} sec".format(time.time() - start))
+```
+___
+
+## **에라토스테네스의 채**
+2~10까지 소수 구하는 코드
+```py
+n = 10
+a = [False, False] + [True]*(n-1)
+primes = []
+
+for i in range(2, n+1):
+    if a[i]:
+        primes.append(i)
+        for j in range(2*i, n+1, i):
+            a[j] = False
+print(primes)
+```
+
+![image](https://blog.kakaocdn.net/dn/k46OV/btq2Nx3GU7j/hQiuyWWdNmIK9J0W96CEZ1/img.gif)
+
+[tistory](https://this-programmer.tistory.com/409)
+
+[wikidocs](https://wikidocs.net/21638)
+
 ___
 
 ## **zip() 함수**
@@ -162,9 +275,12 @@ for i in reversed(range(0, 5)):
 ```
 
 ___
-## **배열 뒤집는 방법 2가지**
+## **배열 뒤집는 방법 3가지**
 
 ```py
+print("ABCDEF"[::-1])  # FEDCBA
+print([1, 2, 3][::-1])  # [3, 2, 1]
+
 a = [1, 2, 3]
 a.reverse()
 print(a) # [3, 2, 1]
