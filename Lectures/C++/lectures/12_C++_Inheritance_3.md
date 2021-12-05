@@ -122,4 +122,56 @@ extern GrAttrib curAttrib; // 현재 속성을 나타내는 전역 객체
 ![image](https://user-images.githubusercontent.com/66513003/144037712-8fe5a560-3b9d-40aa-aa61-7f10e0d2df80.png)
 
 [Circle.h](examples\ex12\Circle.h)
-[Cir](examples\ex12\)
+[Circle.cpp](examples\ex12\Circle.cpp)
+[FigMain.cpp](examples\ex12\FigMain.cpp)
+[Triangle.h](examples\ex12\Triangle.h)
+[Triangle.cpp](examples\ex12\Triangle.cpp)
+[Figure.h](examples\ex12\Figure.h)
+[GrAttrib.h](examples\ex12\GrAttrib.h)
+
+___
+
+## **2. 다중상속**
+
+2개 이상의 기초 클래스로부터 상속을 받는 것
+
+![image](https://user-images.githubusercontent.com/66513003/144415643-2ea60ec7-cdb2-4d2d-8836-feb94f62df01.png)
+
+[MIStudent.h](examples\ex12\MIStudent.h)
+[MIEmployee.h](examples\ex12\MIEmployee.h)
+[MIParttime.h](examples\ex12\MIParttime.h)
+[MIMain.cpp](examples\ex12\MIMain.cpp)
+
+### **# 2개 이상의 기초 클래스로부터 동일한 이름의 멤버를 상속받은 경우 **
+
+![image](https://user-images.githubusercontent.com/66513003/144416521-48abf026-5314-4073-8c05-ee81d04bb9aa.png)
+
+### **# 다중상속에서 공통 기초 클래스의 중복 상속**
+
+![image](https://user-images.githubusercontent.com/66513003/144416594-b18e2e1c-1748-40e4-b6b3-6bf8921cb9fe.png)
+
+**# 가상 기초 클래스**
+
+[VBPerson.h](examples\ex12\VBPerson.h)
+[VBEmployee.h](examples\ex12\VBEmployee.h)
+[VBStudent.h](examples\ex12\VBStudent.h)
+[VBParttime.h](examples\ex12\VBParttime.h)
+[VBMain.cpp](examples\ex12\VBMain.cpp)
+
+```cpp
+#include "VBParttime.h"
+
+int main(int argc, char const *argv[])
+{
+    Parttime chulsoo("chulsoo", "ABC Univ.", "DEF Co.");
+    chulsoo.print(); // Student의 멤버함수 호출
+    return 0;
+}
+```
+
+**출력 결과**
+```
+chulsoo goes to ABC Univ.
+chulsoo is employed by DEF Co.
+chulsoo
+```

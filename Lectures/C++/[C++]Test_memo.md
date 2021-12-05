@@ -1,5 +1,48 @@
 # **test_memo**
 
+
+### const 위치에 따른 의미
+
+아시다시피 'const'의 기본 컨셉은 '해당 값을 변경하지 않는다.' 입니다.
+
+하지만 위치에 따라 그 범위와 가리키는게 약간씩 차이가 있어서 헷갈리기 쉽습니다.
+ 
+```cpp
+class Point {
+private:
+    int x;
+    int y;
+public:
+    Point(int _x = 0, int _y = 0) : x{_x}, y{_y} {}
+    void Print() const { cout << x << ", " << y << endl; }
+    const Point operator+(const Point& rhs) const
+    {
+    	Point p;
+        p.x = this->x + rhs.x;
+        p.y = this->y + rhs.y;
+        
+        return p;
+    }	
+};
+```
+
+1. 함수명 뒤의 'const'가 가지는 의미
+
+해당 함수에서 멤버변수를 읽기전용(RDONLY)으로 사용하겠다는 표시입니다.
+
+즉, '읽기'만 할뿐 '쓰기'는 하지않겠다는 의미입니다.
+ 
+2. 위의 함수 매개변수에서 'const'가 가지는 의미
+
+매개변수에서의 'const' 사용은 다들 익숙하시리라 생각됩니다. 
+
+'call by reference'로 복사 오버헤드없이 참조하는 변수를 마찬가지로 읽기전용(RDONLY)으로 사용하겠다는 표시입니다.
+
+3. 함수 반환타입 앞의 'const'가 가지는 의미
+
+함수의 반환값을 읽기전용(RDONLY)으로 사용하겠다는 표시입니다.
+
+함수가 반환하는 값은 right-hand-side(이하 rhs)에 해당합니다. 여기서 이 값을 '&&'(r-value 참조)로 받아버리면 수정할 여지가 생깁니다. 이러한 가능성을 제거하고 '해당 함수가 반환하는 값은 대입연산자를 통해 복사해서 사용하라'는 의미라 생각됩니다.
 ___
 
 ### vector<>, pair<>, set<>

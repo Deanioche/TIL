@@ -1,6 +1,6 @@
 # Python memo
 
-# **(미해결)Integet sequence 규칙 찾기**
+# **(미해결)Integer sequence 규칙 찾기**
 
 ```py
 for n in range(1, 26):
@@ -32,6 +32,31 @@ for n in range(1, 26):
     # 37 ~ 45 => 9
     # 46 ~ 55 => 10
     ```
+
+___
+
+## 콘솔 아이콘 움직이기
+
+```py
+import os
+import keyboard
+
+
+def clearConsole(): return os.system(
+    'cls' if os.name in ('nt', 'dos') else 'clear')
+
+
+n = "🙄"
+while 1:
+    clearConsole()
+    print(n)
+    if keyboard.read_key() == "d":
+        n = "  " + n
+    elif keyboard.read_key() == "a":
+        n = n[:-3] + n[-1]
+    elif keyboard.read_key() == "q":
+        quit()
+```
 ___
 
 ## 함수 앞 *의 의미
