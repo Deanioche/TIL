@@ -32,7 +32,28 @@ for n in range(1, 26):
     # 37 ~ 45 => 9
     # 46 ~ 55 => 10
     ```
+___
 
+## **입출력(I/O) 속도**
+
+- input() : \n 제거
+- print() : \n 직접 삽입 필요
+
+```py
+import sys
+input = sys.stdin.readline
+print = sys.stdout.write
+
+n = input()              # "1"을 입력 할 때,
+
+print(list(n))           # ['1', '\n']
+print([int(n)])          # [1]
+print(list(n.rstrip()))  # ['1']
+
+print("%s\n" % "123")  # 123
+print("%s\n" % ("12" + "3"))  # 123
+print("%d + %d = %d\n" % (1, 2, 1 + 2))  # 1 + 2 = 3
+```
 ___
 
 ## 콘솔 아이콘 움직이기
