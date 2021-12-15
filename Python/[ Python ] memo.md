@@ -34,6 +34,73 @@ for n in range(1, 26):
     ```
 ___
 
+## difflib.ndiff() 문자열, 리스트 비교
+
+```py
+import difflib
+
+a = 'BBBBBBBBWBWBW'
+b = 'BBBBBBBBBWBWB'
+for i, s in enumerate(difflib.ndiff(a, b)):
+    if s[0] == ' ':
+        continue
+    elif s[0] == '-':
+        print(u'Delete "{}" from position {}'.format(s[-1], i))
+    elif s[0] == '+':
+        print(u'Add "{}" to position {}'.format(s[-1], i))
+
+# Add "B" to position 0
+# Delete "W" from position 13
+```
+
+___
+
+## **zip() 함수**
+
+```py
+for a, b, c in zip([1, 2, 3], [4, 5, 6], [7, 8, 9]):
+    print(a, b, c)
+
+# 1 4 7
+# 2 5 8
+# 3 6 9
+```
+- 다수의 리스트를 한번에 묶어 for문을 돌릴 수 있다
+
+## **from itertools import combinations**
+
+```py
+from itertools import combinations
+combinations([1,2,3,4], 3) # (1, 2, 3) (1, 2, 4) (1, 3, 4) (2, 3, 4)
+```
+- 리스트에서 원소 3개로 만들어지는 모든 조합을 출력.
+
+```py
+# 2798
+from itertools import combinations as c
+n, t = map(int, input().split())
+l = map(int, input().split())
+print(max(i for i in map(sum, c(l, 3))if i <= t))
+```
+
+## **eval() 활용**
+
+```py
+from itertools import combinations as c
+n, m, d = eval('map(int,input().split()),'*3)
+print(*n, *m, *d)  # 1 2 3 4 5 6 7 8 9 0
+# * 안붙이면 <map object at 0x0000021349D37850>
+```
+___
+
+## **파이썬 'and'와 '&'는 다르다**
+
+- and는 다른 언어의 &&와 같은 and연산자
+- &는 비트 연산자
+
+[ref](https://codechacha.com/ko/python-difference-and-ampersand/)
+___
+
 ## **입출력(I/O) 속도**
 
 - input() : \n 제거
