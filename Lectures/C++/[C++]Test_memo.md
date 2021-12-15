@@ -1,6 +1,15 @@
 # **test_memo**
 
 
+## **여러 값 중에 최소, 최대값 찾기**
+
+```cpp
+#include <bits/stdc++.h>
+int v[] = {1, 2, 3, 4, 5};
+w = *min_element(v, v + sizeof(v) / sizeof(int));
+```
+
+___
 ### const 위치에 따른 의미
 
 아시다시피 'const'의 기본 컨셉은 '해당 값을 변경하지 않는다.' 입니다.
