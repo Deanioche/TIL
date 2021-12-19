@@ -9,18 +9,38 @@
 > - 단순 반복 작업 및 재작성을 최소화.
 
 s
-## **규칙**
+# **규칙**
 
 ```Makefile
-#Syntax
-targets : prerequisites
-	recipe
-	…
+# 메이크파일의 주석 : #부터 다음 개행까지는 주석으로 처리됩니다.
+# 목표 파일 과 의존성 사이에는 ':'이 와야합니다.
+# 레시피는 반드시 수평탭을 통한 들여쓰기를 해야합니다(space 안됨)
+목표 파일 : 전제 조건
+	레시피 
+
+# 예시
+target : target.c
+	gcc target.c
 ```
-- targets : 스페이스로 구분된 파일 이름들, 또는 와일드카드(*)를 사용할 수 있다.
-    - 보통 규칙당 한개의 타겟을 사용.
-- prerequisites : 스페이스로 구분된 파일 이름들
-- recipe : 레시피 줄은 'TAB' 문자로 시작한다
+
+- 좌측 "target"은 규칙(Rule)의 이름. 
+- 우측 "target.c"는 Rule의 의존성이자, **호출 전제조건**. 
+
+	- target.c라는 이름의 파일 또는 Rule이 존재해야 동작한다.
+
+	- 만약 전제조건이 Rule인 경우, 해당 규칙(target.c)을 먼저 호출한 뒤, 성공하면 target이 실행된다.
+
+	- 파일명을 지정하는 경우, 공백(space)으로 여러 파일을 지정할 수 있다. 
+		- 와일드 카드도 가능 -> *.c
+
+- "gcc target.c"는 규칙 호출시 동작할 코드로, 레시피(recipe)라 한다. 반드시 하나 이상의 TAB이 들어간다.
+
+- make는 인자 없이 실행했을 때, Makefile에서 **가장 먼저 나오는(가장 위에 있는)** Rule을 실행한다.
+
+- '리링크' 방지란?
+	- '리링크'에서 링크는 컴파일 단계 중 링크 단계의 동작이다.
+	- Makefile은 목표 파일과 의존성의 Time Stamp(최근 수정시간)을 비교해서 의존성이  파일보다 더 최신인 경우 해당 recipe를 실행한다.
+
 
 ## **# 패턴규칙**
 
@@ -35,7 +55,7 @@ $(OBJ_DIR)%.o : $(SRC_DIR)%.c
 	$(CC) $(CFLAGS) $(INCLUDE) -c $< -o $@
 ```
 
-### **# 자동 변수**
+## **# 자동 변수**
 
 - `$@` : 규칙의 목표 파일의 파일 이름입니다.
 - `$<` : 첫 번째 의존성의 이름입니다.
@@ -44,8 +64,80 @@ $(OBJ_DIR)%.o : $(SRC_DIR)%.c
 - `$(@D)` : 후행 슬래시가 제거 된 대상 파일 이름의 디렉토리 부분입니다.
 
 
+## **# 함수**
+
+- **dir** : 입력된 파일의 디렉토리 부분(상대경로)만 출력.
+	```Makefile
+	$(dir hello.c world.c) # src/ ./
+	```
+- **notdir** : 입력된 파일의 파일명 출력.
+	```Makefile
+	$(notdir hello.c world.c) # hello.c world.c
+	```
+- **suffix** : 입력된 파일의 확장자 출력
+	```Makefile
+	$(suffix hello.c world.c) # .c .c
+	```
+- **basename** : 입력된 파일의 확장자 빼고 전부 출력
+	```Makefile
+	$(basename hello.c world.c) # src/hello world
+	```
+- **addsuffix** : 입력된 이름에 접미사를 붙인다.
+	```Makefile
+	$(addsuffix .txt, hello world) # hello.txt world.txt
+	```
+- **addprefix** : 입력된 이름 앞에 접두사를 붙인다.
+	```Makefile
+	$(addprefix txt/, hello world) # txt/hello txt/world
+	```
+
+## **# 치환 함수**
+
+```Makefile
+OBJECTS = \
+		main.o \
+		hello.o
+PP = $(OBJECTS:.o=.pp) # main.pp hello.pp
+```
 
 
+## 파일 줄바꿈
+```Makefile
+SRCS = \
+		ft_atoi.c \
+		ft_bzero.c \
+		ft_calloc.c \
+```
+- 같은 줄에 써야 하는걸 다음줄에 적고 싶을땐 "\"을 붙인다.
+- 실행될 땐 요렇게 실행된다.
+	```Makefile
+	SRCS = ft_atoi.c ft_bzero.c ft_calloc.c ...
+	```
+
+___
+
+## make 뒤에 first.o 파일 넣어 실행시
+
+- 자동으로 cc -c -o first.o first.c 가 실행되는데, Makefile에 "cc"가 변수로서 지정되어 있지 않으면 다음과 같이 변환에 실패한다.
+	```py
+	# Makefile에 CC = gcc가 없는 경우
+	process_begin: CreateProcess(NULL, cc -c -o first.o first.c, ...) failed.
+	make (e=2):     .
+	<builtin>: recipe for target 'first.o' failed
+	mingw32-make: *** [first.o] Error 2
+	```
+
+- Makefile에 "CC = gcc"로 설정해주면 정상 동작한다.
+	```Makefile
+	# Makefile 전체 내용
+	CC = gcc
+	```
+	```sh
+	$ mingw32-make first.o 		 # <- 명령어 입력
+	gcc    -c -o first.o first.c # <- 실행되는 명령어 
+	```
+	- 위와 같이 gcc 명령어로 컴파일된다.
+___
 
 
 ## **가짜 목표 파일(Phony target)**
@@ -59,3 +151,44 @@ $(OBJ_DIR)%.o : $(SRC_DIR)%.c
 ```Makefile
 .PHONY: all bonus clean fclean re
 ```
+___
+
+## 쉘 스크립트 사용하기
+
+```Makefile
+e :
+	@if [ -e *.o ]; then echo "y"; fi
+	@if [ -e *.exe ]; then echo "t"; fi
+
+e :
+	@if [ -e *.o ] || [ -e *.exe ]; then \
+		rm -rf *.o *.exe; \
+	fi
+
+e :
+	@if [ -e *.o ] || [ -e *.exe ]; then \
+		rm -rf *.o *.exe; \
+	fi
+	echo "rm -rf *.o *.exe";
+```
+___
+
+## 아카이브 archive 메모
+
+```sh
+# STEP1. 오브젝트 파일 생성 [ *.c -> *.o ]
+gcc -c first.c second.c third.c
+
+# STEP2. 오브젝트 파일로 정적 라이브러리 파일 생성 [ *.o -> *.a ]
+ar rcs libft.a first.o second.o third.o
+```
+
+### **ar 유틸리티**
+- 사용법 :: ar [옵션들] [라이브러리 이름] [오브젝트 파일들]
+
+**# 주요 옵션**
+
+- **r** : 새로운 오브젝트 파일이면 아카이브에 추가, 기존 파일이면 치환함.
+- **c** : 라이브러리 파일이 존재하지 않아도 경고 메시지를 출력하지 않음.
+- **s** : 아카이브 인덱스를 생성 
+			→ 아카이브 인덱스를 생성하지 않으면 링크 속도가 느려지고, 시스템 환경에 따라서는 에러가 발생.
