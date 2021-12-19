@@ -55,18 +55,37 @@
 
 - `ps` : 현재 실행되고 있는 프로세스 출력
 
-- `head` (파일명) : 파일의 앞 10줄만 출력
-    - `-n`(줄 수) : 줄 수 만큼만 출력
-        ```js
-        head -n2 linux.txt
-        // linux.txt 파일의 첫 두 줄만 출력
-        ```
-
 - `whereis (프로그램 이름)` : 프로그램이 설치되어있는 위치를 출력
     ```
     # whereis htop
     htop: /usr/bin/htop
     ```
+___
+
+## head & tail 명령어
+
+- 플래그가 없으면 head, tail 둘 다 앞, 뒤부터 10개씩 출력
+
+```py
+cat abc.txt # 줄마다 1 ~ 20까지 출력됨
+
+abc.txt | head -n 5  # 1 ~ 5
+abc.txt | head -n -5 # 1 ~ 15
+
+cat abc.txt | tail -n 5  # 5 ~ 20
+cat abc.txt | tail -n -5 # 5 ~ 20
+cat abc.txt | tail -n +5 # 16 ~ 20
+```
+
+```py
+man()
+{
+        curl "http://man.he.net/?topic=$1&section=all" | head -n -9 | tail -n +12 | less
+}
+```
+- man "명령어"로 메뉴얼을 출력하는 쉘 명령어
+
+___
 
 ## **파라미터**
 - (명령어) --help : 해당 명령어에 대한 도움말
