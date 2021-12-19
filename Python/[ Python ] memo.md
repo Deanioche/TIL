@@ -32,6 +32,219 @@ for n in range(1, 26):
     # 37 ~ 45 => 9
     # 46 ~ 55 => 10
     ```
+___ 
+
+# **👻 collections 모듈** 
+
+## **# Counter 클래스**
+
+https://www.daleseo.com/python-collections-counter/
+https://docs.python.org/3/library/collections.html#collections.Counter
+
+- 단어 카운트 함수를 짤 때, 딕셔너리로는 다음과 같이 짠다.
+    ```py
+    def countAlpha(w):
+        d = {}
+        for i in w:
+            if i not in d:
+                d[i] = 0
+            d[i] += 1
+        return d
+
+
+    print(countAlpha('hello world'))
+    # {'h': 1, 'e': 1, 'l': 3, 'o': 2, ' ': 1, 'w': 1, 'r': 1, 'd': 1}
+    ```
+
+- collections.Counter를 사용하면 한 줄로 줄일 수 있다.
+    ```py
+    from collections import Counter
+
+    print(Counter('hello world'))
+    # Counter({'l': 3, 'o': 2, 'h': 1, 'e': 1, ' ': 1, 'w': 1, 'r': 1, 'd': 1})
+    
+    # 갯수가 많은 순으로 정렬
+    print(Counter('hello world').most_common())
+    # [('l', 3), ('o', 2), ('h', 1), ('e', 1), (' ', 1), ('w', 1), ('r', 1), ('d', 1)]
+
+    # 갯수가 많은 순으로 n개 자르기
+    print(Counter('hello world').most_common(5))
+    # [('l', 3), ('o', 2), ('h', 1), ('e', 1), (' ', 1)]
+    print(Counter('hello world').most_common(1))
+    # [('l', 3)]
+    print(Counter('hello world').most_common(-1))
+    # []
+    ```
+
+
+
+___
+
+## 딕셔너리 정렬
+
+```py
+import operator
+d = dict.fromkeys([1, 2, 3], 0)
+s = {-10: 1, 10: -1}
+
+s.update(d)
+d.update(s)
+
+# 정렬하기 -> 튜플리스트가 된다.
+print(sorted(s.items()))  # False - 오름차순
+# [(-10, 1), (1, 0), (2, 0), (3, 0), (10, -1)]
+print(sorted(s.items(), key=operator.itemgetter(0)))  # False
+# [(-10, 1), (1, 0), (2, 0), (3, 0), (10, -1)]
+
+print(sorted(s.items(), key=operator.itemgetter(1)))  # True - 내림차순
+# [(10, -1), (3, 0), (2, 0), (1, 0), (-10, 1)]
+print(sorted(s.items(), key=operator.itemgetter(-1)))  # True
+# [(10, -1), (3, 0), (2, 0), (1, 0), (-10, 1)]
+
+# 다시 dict로 만들기
+print(dict(sorted(s.items())))  # {-10: 1, 1: 0, 2: 0, 3: 0, 10: -1}
+```
+
+
+
+___
+
+## 딕셔너리 병합
+
+https://code.tutsplus.com/ko/tutorials/how-to-merge-two-python-dictionaries--cms-26230
+
+```py
+dict1 = {'bookA': 1, 'bookB': 2, 'bookC': 3}
+dict2 = {'bookC': 2, 'bookD': 4, 'bookE': 5}
+
+dict2.update(dict1) # dic1을 dic2에 덮어씌움
+print(dict2) # {'bookA': 1, 'bookB': 2, 'bookC': 3, 'bookD': 4, 'bookE': 5}
+
+dict1.update(dict2)
+print dict1 # {'bookA': 1, 'bookB': 2, 'bookC': 2, 'bookD': 4, 'bookE': 5}
+
+print dict(dict2, **dict1)
+# {'bookA': 1, 'bookB': 2, 'bookC': 3, 'bookD': 4, 'bookE': 5}
+
+print dict(dict1, **dict2)
+# {'bookA': 1, 'bookB': 2, 'bookC': 2, 'bookD': 4, 'bookE': 5}
+
+# 키/값 유지하기
+from itertools import chain
+from collections import defaultdict
+dict1 = {'bookA': 1, 'bookB': 2, 'bookC': 3}
+dict2 = {'bookC': 2, 'bookD': 4, 'bookE': 5}
+dict3 = defaultdict(list)
+for k, v in chain(dict1.items(), dict2.items()):
+    dict3[k].append(v)
+ 
+for k, v in dict3.items():
+    print(k, v)
+
+# ('bookA', [1])
+# ('bookB', [2])
+# ('bookC', [3, 2])
+# ('bookD', [4])
+# ('bookE', [5])
+``` 
+___
+
+## **리스트 -> 딕셔너리 변환**
+
+- **# 딕셔너리 활용**
+    https://wikidocs.net/16
+
+```py
+
+string_list = ['A', 'B', 'C']
+dictionary = {string: 0 for string in string_list}
+print(dictionary)  # {'A': 0, 'B': 0, 'C': 0}
+
+string_list = ['A', 'B', 'C']
+dictionary = {string: i for i, string in enumerate(string_list)}
+print(dictionary)  # {'A': 0, 'B': 1, 'C': 2}
+
+string_list = ['A', 'B', 'C']
+dictionary = dict.fromkeys(string_list, 0)
+print(dictionary)  # {'A': 0, 'B': 0, 'C': 0}
+
+string_list = ['A', 'B', 'C']
+dictionary = dict.fromkeys(string_list)
+print(dictionary)  # {'A': None, 'B': None, 'C': None}
+
+string_list = ['A', 'B', 'C']
+int_list = [1, 2, 3]
+dictionary = dict(zip(string_list, int_list))
+print(dictionary)  # {'A': 1, 'B': 2, 'C': 3}
+
+# 튜플 리스트
+tuple_list = [('A', 1), ('B', 2), ('C', 3)]
+dictionary = dict(tuple_list)
+print(dictionary)  # {'A': 1, 'B': 2, 'C': 3}
+```
+___
+
+## **배열 홀수, 짝수 인덱스만 출력하기**
+
+```py
+print([1, 2, 3, 4, 5, 6, 7][0::2])  # [1, 3, 5, 7]
+print([1, 2, 3, 4, 5, 6, 7][1::2])  # [2, 4, 6]
+
+print('yneos'[s != s[::-1]::2]) 
+# s != s[::-1] 가 true면 [1::2]로 no
+# s != s[::-1] 가 false면 [0::2]로 yes
+```
+
+___
+
+## **리스트, 문자열 자르기, 뒤집기, 건너뛰기**
+```py
+print(s[::-1])  # 뒤집기
+print(s[::2])  # 인덱스 0, 2, 4, ...
+print(s[::3])  # 인덱스 0, 3, 6, ...
+print('12345'[2:])  # 345
+print('12345'[:2])  # 12
+print('12345'[:-2])  # 123
+print('12345'[-2:])  # 45
+print('12345'[::-1])  # 54321
+print('12345'[-3::-1])  # 321
+print('12345'[::2])  # 135
+print('12345'[2::2])  # 35
+```
+___
+
+## **이진탐색 (Binary search)**
+
+```py
+def BS(arr, start, end, target):
+
+    if start == (end-1):
+        if target == arr[start] or target == arr[end]:
+            return 1
+        else:
+            return 0
+    mid = (start + end)//2
+    if arr[mid] > target:
+        return BS(arr, start, mid, target)
+    elif arr[mid] < target:
+        return BS(arr, mid, end, target)
+    else:
+        return 1
+```
+
+```py
+def binary(l, N, start, end):
+    if start > end:
+        return 0
+    m = (start+end)//2
+    if l == N[m]:
+        return 1
+    elif l < N[m]:
+        return binary(l, N, start, m-1)
+    else:
+        return binary(l, N, m+1, end)
+```
+- (배열, 시작값, 끝값, 찾으려는 값)
 ___
 
 ## difflib.ndiff() 문자열, 리스트 비교
@@ -161,6 +374,7 @@ ___
 ## while문 조건 입력 중, 변수에 값 지정
 
 ```py
+
 while s := input(): # 아무것도 입력하지 않으면 while문 종료
     print('yneos'[s != s[::-1]::2])
     print(s[::-1])  # 뒤집기

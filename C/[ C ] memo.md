@@ -1,5 +1,66 @@
 # **C - memo**
 
+## 아카이브(archive) 파일 안 들여다보기
+
+https://nomad-programmer.tistory.com/104
+
+- 터미널에서 "nm libft.a" 실행하면
+```
+ft_strncmp.o:
+00000000 b .bss
+00000000 d .data
+00000000 r .eh_frame
+00000000 r .rdata$zzz
+00000000 t .text
+00000000 T _ft_strncmp
+
+ft_strnstr.o:
+00000000 b .bss
+00000000 d .data
+00000000 r .eh_frame
+00000000 r .rdata$zzz
+00000000 t .text
+         U _ft_memcmp
+         U _ft_strlen
+00000000 T _ft_strnstr
+
+ft_strrchr.o:
+00000000 b .bss
+00000000 d .data
+00000000 r .eh_frame
+00000000 r .rdata$zzz
+00000000 t .text
+00000000 T _ft_strrchr
+
+ft_strtrim.o:
+00000000 b .bss
+00000000 d .data
+00000000 r .eh_frame
+00000000 r .rdata$zzz
+00000000 t .text
+         U _ft_strchr
+         U _ft_strdup
+         U _ft_strlcpy
+         U _ft_strlen
+00000000 T _ft_strtrim
+         U _malloc
+
+ft_substr.o:
+00000000 b .bss
+00000000 d .data
+00000000 r .eh_frame
+00000000 r .rdata
+00000000 r .rdata$zzz
+00000000 t .text
+         U _ft_strdup
+         U _ft_strlcpy
+         U _ft_strlen
+00000000 T _ft_substr
+         U _malloc
+
+```
+___
+
 ## 배열 n으로 채우기 (memset())
 ```cpp
 #include <stdio.h>
