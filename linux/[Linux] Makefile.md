@@ -8,8 +8,10 @@
 > - 프로그램의 종속 구조를 빠르게 파악 할 수 있으며 관리가 용이.
 > - 단순 반복 작업 및 재작성을 최소화.
 
-s
+
 # **규칙**
+
+![image](https://user-images.githubusercontent.com/66513003/146716927-23d953de-c808-4417-82a9-d51b1fa3d6ea.png)
 
 ```Makefile
 # 메이크파일의 주석 : #부터 다음 개행까지는 주석으로 처리됩니다.
@@ -54,15 +56,15 @@ $(OBJ_DIR)%.o : $(SRC_DIR)%.c
 	@mkdir -p $(OBJ_DIR)
 	$(CC) $(CFLAGS) $(INCLUDE) -c $< -o $@
 ```
+___
 
-## **# 자동 변수**
+## **대입** [ref](https://jayy-h.tistory.com/20)
+- NAME1 = string: 재귀적 확장 매크로, 대입문에 post-defined variable이 사용될 경우 이를 계속적으로 스캔하며 대입한다.
+- NAME2 := string: 단순 확장 매크로, 대입문에 pre-defined variable만이 대입된다.
+- NAME3 += string: 기존의 매크로에 공백을 두고 덧 붙인다.
+- NAME4 ?= string: NAME4가 기존에 정의되어있지 않은 경우 이 명령을 통해 정의하고, 그렇지 않다면 무시한다.
 
-- `$@` : 규칙의 목표 파일의 파일 이름입니다.
-- `$<` : 첫 번째 의존성의 이름입니다.
-- `$?` : 목표 파일보다 새로운 모든 의존성의 이름 (사이에 공백이 있음)입니다.
-- `$^` : 모든 전제 조건의 이름입니다(사이에 공백이 있음).
-- `$(@D)` : 후행 슬래시가 제거 된 대상 파일 이름의 디렉토리 부분입니다.
-
+___
 
 ## **# 함수**
 
@@ -91,6 +93,31 @@ $(OBJ_DIR)%.o : $(SRC_DIR)%.c
 	$(addprefix txt/, hello world) # txt/hello txt/world
 	```
 
+- 그 외 [ref](https://jayy-h.tistory.com/20)
+	```Makefile
+	# 현재 디렉토리의 전체 파일 출력
+	p :
+		echo $(wildcard *)
+
+	# 현재 디렉토리의 전체 .c 파일 출력
+	p :
+		echo $(wildcard *.c)
+
+	# 현재 디렉토리의 전체 .c 파일 출력
+	p :
+		echo $(shell ls *.c)
+
+	# FF에 현재 디렉토리의 모든 .c파일을 담고
+	# 모든 파일의 .c 부분을 .o 로 바꿔 출력
+	FF = $(wildcard *.c)
+	p :
+		echo $(FF:.c=.o)
+	```
+
+	- $(shell 실행할 셸 명령): 셸 명령을 수행하고 결과를 리턴한다.
+	- $(wildcard *.c): *.c와 일치하는 파일들을 공백으로 구분하여 대입
+	- $(SRCS:.c=.o): 대입 참조기법을 사용해 .c가 .o로 바뀐다.
+
 ## **# 치환 함수**
 
 ```Makefile
@@ -113,7 +140,115 @@ SRCS = \
 	```Makefile
 	SRCS = ft_atoi.c ft_bzero.c ft_calloc.c ...
 	```
+___
 
+## **# 자동 변수**
+
+- `$?` : 전제조건에 담긴 모든 의존성 또는 파일의 이름.
+	```Makefile
+	p : all clean
+		echo $(?)
+	# all, clean 규칙 호출 후, echo "all clean"
+	```
+
+- `$<` : 첫번째 의존성의 이름.
+	```Makefile
+	p : first.o second.o third.o
+		echo $(<) # first.o
+	
+	p : all
+		echo $(<) # all 규칙 호출 후, echo "all"
+	```
+
+- `$*` : 현재 타겟보다 최근에 변경된 종속 항목의 이름(확장자 제외) (확장자 규칙에서만 사용 가능)
+
+- `$@` : 현재 타겟의 이름
+	```Makefile
+	print :
+		echo $(@) # print
+	```
+
+- `$(@D)` : 후행 슬래시가 제거 된 대상 파일 이름의 디렉토리 부분.
+
+- `$%` : 현재 타겟이 라이브러리 모듈일 때, .o 파일에 대응되는 이름
+
+- `$^` : 모든 전제 조건의 이름입니다(사이에 공백이 있음).
+	```Makefile
+	p : all
+		echo $(^) # all 규칙이 호출된 뒤, "all" 출력
+	```
+		 현재 타겟의 종속 항목 리스트 (확장자 규칙에서 사용 불가)
+
+
+- `%.o: %.c` : .o와 대응되는 .c를 발견 시 아래 명령어를 수행한다.
+	- 여기서 `%`는 해당하는 파일의 확장자를 제외한 파일명
+___
+
+## **makefile에서 미리 정의된 매크로**
+
+- Makefile에서 미리 정의 되어있는 환경 변수
+- `make -p`로 확인할 수 있다.
+- 주요 매크로
+	- DEFS  Define 추가 할때 사용한다. 
+	- CFLAGS gcc의 옵션을 추가 할때 사용한다. 
+```sh
+# default
+CC = cc
+# environment
+_ = /usr/bin/make
+# default
+CHECKOUT,v = +$(if $(wildcard $@),,$(CO) $(COFLAGS) $< $@)
+# environment
+MANAGERPID = 1220
+# environment
+CLUTTER_IM_MODULE = ibus
+# environment
+LESSOPEN = | /usr/bin/lesspipe %s
+# environment
+LC_NAME = ko_KR.UTF-8
+# default
+CPP = $(CC) -E
+# default
+LINK.cc = $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(LDFLAGS) $(TARGET_ARCH)
+# default
+MAKE_HOST := x86_64-pc-linux-gnu
+# environment
+PATH = /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+# default
+LD = ld
+
+# Implicit Rules
+
+%: %.o
+#  recipe to execute (built-in):
+    $(LINK.o) $^ $(LOADLIBES) $(LDLIBS) -o $@
+
+%.c:
+
+%: %.c
+#  recipe to execute (built-in):
+    $(LINK.c) $^ $(LOADLIBES) $(LDLIBS) -o $@
+
+%.ln: %.c
+#  recipe to execute (built-in):
+    $(LINT.c) -C$* $<
+
+%.o: %.c
+#  recipe to execute (built-in):
+    $(COMPILE.c) $(OUTPUT_OPTION) $<
+
+%.cc:
+
+%: %.cc
+#  recipe to execute (built-in):
+    $(LINK.cc) $^ $(LOADLIBES) $(LDLIBS) -o $@
+
+%.o: %.cc
+#  recipe to execute (built-in):
+    $(COMPILE.cc) $(OUTPUT_OPTION) $<
+```
+
+ 
 ___
 
 ## make 뒤에 first.o 파일 넣어 실행시
