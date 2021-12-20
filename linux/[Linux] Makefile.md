@@ -8,6 +8,15 @@
 > - 프로그램의 종속 구조를 빠르게 파악 할 수 있으며 관리가 용이.
 > - 단순 반복 작업 및 재작성을 최소화.
 
+## **Makefile 실행**
+
+```sh
+make
+
+또는
+
+make -f Makefile
+```
 
 # **규칙**
 
@@ -59,9 +68,13 @@ $(OBJ_DIR)%.o : $(SRC_DIR)%.c
 ___
 
 ## **대입** [ref](https://jayy-h.tistory.com/20)
+
 - NAME1 = string: 재귀적 확장 매크로, 대입문에 post-defined variable이 사용될 경우 이를 계속적으로 스캔하며 대입한다.
+
 - NAME2 := string: 단순 확장 매크로, 대입문에 pre-defined variable만이 대입된다.
+
 - NAME3 += string: 기존의 매크로에 공백을 두고 덧 붙인다.
+
 - NAME4 ?= string: NAME4가 기존에 정의되어있지 않은 경우 이 명령을 통해 정의하고, 그렇지 않다면 무시한다.
 
 ___
@@ -144,6 +157,8 @@ ___
 
 ## **# 자동 변수**
 
+![image](https://user-images.githubusercontent.com/66513003/146780949-3fc391ca-76e4-4359-b0fe-1f88e5fff59a.png)
+
 - `$?` : 전제조건에 담긴 모든 의존성 또는 파일의 이름.
 	```Makefile
 	p : all clean
@@ -177,11 +192,12 @@ ___
 	p : all
 		echo $(^) # all 규칙이 호출된 뒤, "all" 출력
 	```
-		 현재 타겟의 종속 항목 리스트 (확장자 규칙에서 사용 불가)
+	현재 타겟의 종속 항목 리스트 (확장자 규칙에서 사용 불가)
 
 
 - `%.o: %.c` : .o와 대응되는 .c를 발견 시 아래 명령어를 수행한다.
 	- 여기서 `%`는 해당하는 파일의 확장자를 제외한 파일명
+	![image](https://user-images.githubusercontent.com/66513003/146780940-5d269909-01e4-4712-8858-5cbabdb29a50.png)
 ___
 
 ## **makefile에서 미리 정의된 매크로**
