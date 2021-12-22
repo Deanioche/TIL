@@ -324,6 +324,28 @@ e :
 ```
 ___
 
+## **mkdir -p**
+
+- 필요하면 해당 경로에 폴더를 생성할 때까지 거치는 상위 디렉토리도 함께 생성하는 옵션
+
+## **gcc에 헤더파일 경로 지정**
+
+## **gcc -I**
+```
+gcc -I./header -c src/first.c -o obj/first.o
+```
+- ./header 경로의 헤더파일과 함께 first.c를 오브젝트 파일로 변환
+
+```Makefile
+CC = gcc
+CFLAGS = -Wall -Wextra -Werror
+INCLUDE = -I./include
+# 헤더파일 경로를 지정하는 옵션
+# -I 다음에 공백 없이 디렉토리 경로를 지정한다.
+# 참고 ) 소문자 엘은 라이브러리 파일 링크 거는 옵션.
+```
+
+
 ## 아카이브 archive 메모
 
 ```sh
@@ -333,6 +355,9 @@ gcc -c first.c second.c third.c
 # STEP2. 오브젝트 파일로 정적 라이브러리 파일 생성 [ *.o -> *.a ]
 ar rcs libft.a first.o second.o third.o
 ```
+
+___
+
 
 ### **ar 유틸리티**
 - 사용법 :: ar [옵션들] [라이브러리 이름] [오브젝트 파일들]
