@@ -328,6 +328,19 @@ ___
 
 - 필요하면 해당 경로에 폴더를 생성할 때까지 거치는 상위 디렉토리도 함께 생성하는 옵션
 
+___
+
+## gcc 컴파일
+
+```
+gcc main.c -o main libft.h libft.a
+```
+- main.c를 libft.h libft.a와 함께 컴파일 해 main.exe생성
+- libft.h는 main.c와 함께 컴파일 되어야 함. (헤더파일 이므로)
+
+
+___
+
 ## **gcc에 헤더파일 경로 지정**
 
 ## **gcc -I**
