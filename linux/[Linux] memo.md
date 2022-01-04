@@ -1,5 +1,9 @@
 # linux memo
 
+## **수정한 .zshrc 쉘 재시작 없이 적용하는 법**
+```sh
+cd ~ && source .zshrc
+```
 ___
 
 
